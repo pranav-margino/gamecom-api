@@ -1,0 +1,35 @@
+{
+  "name": "deal",
+  "plural": "deals",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "liveOn": {
+      "type": "date",
+      "required": false
+    },
+    "duration": {
+      "type": "number",
+      "required": false
+    },
+    "value": {
+      "type": "number",
+      "required": false
+    },
+    "volume": {
+      "type": "number",
+      "required": false
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
