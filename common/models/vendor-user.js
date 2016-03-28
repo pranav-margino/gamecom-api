@@ -86,7 +86,7 @@ module.exports = function(VendorUser) {
         next();
     });
     VendorUser.afterRemote('**', function(ctx, model, next) {
-        if (ctx.result) {
+        /*if (ctx.result) {
             if (Array.isArray(ctx.result)) {
                 ctx.result.forEach(function(result) {
                     delete result.password;
@@ -94,7 +94,7 @@ module.exports = function(VendorUser) {
             } else {
                 delete ctx.result.password;
             }
-        }
+        }*/
         next();
     });
 };

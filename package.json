@@ -18,7 +18,9 @@
     "loopback-connector-mongodb": "^1.13.3",
     "loopback-datasource-juggler": "^2.39.0",
     "nodemailer": "^2.3.0",
-    "serve-favicon": "^2.0.1"
+    "redis": "^2.6.0-0",
+    "serve-favicon": "^2.0.1",
+    "socket.io": "^1.4.5"
   },
   "devDependencies": {
     "jshint": "^2.5.6",

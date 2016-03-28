@@ -10,6 +10,98 @@
     "name": {
       "type": "string",
       "required": true
+    },
+    "displayName":{
+      "type": "string",
+      "required": true
+    },
+    "legalName":{
+      "type": "string",
+      "required": true
+    },
+    "email":{
+      "type": "string",
+      "required": true
+    },
+    "addressLine1":{
+      "type": "string",
+      "required": true
+    },
+    "addressLine2":{
+      "type": "string",
+      "required": true
+    },
+    "city":{
+      "type": "string",
+      "required": true
+    },
+    "pincode":{
+      "type": "number",
+      "required": true,
+      "min":6,
+      "max":6
+    },
+    "country":{
+      "type":"string",
+      "default":"india"
+    },
+    "mobile":{
+      "type": "number",
+      "required": true,
+      "length": 10
+    },
+    "alternateMobile":{
+      "type": "number",
+      "length": 10
+    },
+    "landline":{
+      "type":"number"
+    },
+    "fax":{
+      "type":"number"
+    },
+    "website":{
+      "type": "string"
+    },
+    "googlePlayLink":{
+      "type": "string"
+    },
+    "appStroreLink":{
+      "type": "string"
+    },
+    "facebookPageLink":{
+      "type": "string"
+    },
+    "twitterHandleLink":{
+      "type": "string"
+    },
+    "pinterestPageLink":{
+      "type": "string"
+    },
+    "tumblrPageLink":{
+      "type": "string"
+    },
+    "linkedinPageLink":{
+      "type": "string"
+    },
+    "VATNumber":{
+      "type":"number"
+    },
+    "PANNumber":{
+      "type": "number"
+    },
+    "CSTNumber":{
+      "type": "number"
+    },
+    "beneficiaryName":{
+      "type": "string"
+    },
+    "accountNumber":{
+      "type": "number"
+    },
+    "IFSCCode":{
+      "type": "number",
+      "length": 11
     }
   },
   "validations": [],

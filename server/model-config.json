@@ -43,5 +43,9 @@
   "vendorUser": {
     "dataSource": "mongoDs",
     "public": true
+  },
+  "survey":{
+    "dataSource": "mongoDs",
+    "public": true
   }
 }
