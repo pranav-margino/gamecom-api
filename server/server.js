@@ -1,6 +1,7 @@
 var loopback = require('loopback');
 var boot = require('loopback-boot');
 var app = module.exports = loopback();
+var survey = require('../modules/survey');
 app.start = function() {
     // start the web server
     return app.listen(function() {
@@ -20,21 +21,28 @@ boot(app, __dirname, function(err) {
     // start the server if `$ node server.js`
     if (require.main === module) { //app.start();
         app.io = require('socket.io')(app.start());
-        app.io.on('connection', function(socket){
-            console.log('a user connected');
-            //socket.emit('hello',{data:'i am your mothership.'});
+        app.io.on('connection', function(socket) {
+            console.log('Connected to ' + socket.request.connection.remoteAddress);
+            survey(socket);
             var initialPrice = 10000;
-            setInterval(function(){
-              initialPrice = initialPrice - 100;
-              socket.emit('hello',{data:initialPrice,timestamp:new Date().getTime()});
-            },700);
-            socket.on('chat message', function(msg){
-              console.log('message: ' + msg);
-              app.io.emit('chat message', msg);
+            setInterval(function() {
+                if (initialPrice < 1000) {
+                    initialPrice = 10000
+                } else {
+                    initialPrice = initialPrice - parseInt(Math.random() * 100);
+                }
+                socket.emit('hello', {
+                    price: initialPrice,
+                    timestamp: new Date().getTime()
+                });
+            }, 1700);
+            socket.on('chat message', function(msg) {
+                console.log('message: ' + msg);
+                app.io.emit('chat message', msg);
             });
-            socket.on('disconnect', function(){
-              console.log('user disconnected');
+            socket.on('disconnect', function() {
+                console.log('user disconnected');
             });
-          });
+        });
     }
 });

@@ -1,24 +1,25 @@
 {
-    "name": "survey",
-    "plural": "surveys",
+    "name": "question",
+    "plural": "questions",
     "base": "PersistedModel",
     "idInjection": true,
     "options": {
         "validateUpsert": true
     },
     "properties": {
-        "title": {
+        "body": {
+            "type": "string"
+        },
+        "options": {
+            "type": ["object"]
+        },
+        "format": {
             "type": "string"
         }
     },
     "validations": [],
-    "relations": {
-        "questions": {
-            "type": "embedsMany",
-            "model": "question",
-            "property": "questions"
-        }
-    },
+    "hidden": [],
+    "relations": {},
     "acls": [],
     "methods": {}
 }
