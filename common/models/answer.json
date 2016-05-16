@@ -1,0 +1,26 @@
+{
+    "name": "Answer",
+    "plural": "answers",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "body": {
+            "type": "object"
+        },
+        "userId": {
+            "type": "string",
+            "required": true
+        },
+        "format": {
+            "type": "string"
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}

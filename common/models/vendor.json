@@ -1,5 +1,5 @@
 {
-  "name": "vendor",
+  "name": "Vendor",
   "plural": "vendors",
   "base": "PersistedModel",
   "idInjection": true,

@@ -32,24 +32,37 @@
     "dataSource": "db",
     "public": false
   },
-  "deal": {
+  "Deal": {
     "dataSource": "mongoDs",
     "public": true
   },
-  "vendor": {
+  "Vendor": {
     "dataSource": "mongoDs",
     "public": true
   },
-  "vendorUser": {
+  "VendorUser": {
     "dataSource": "mongoDs",
     "public": true
   },
-  "question":{
+  "Question":{
     "dataSource":"mongoDs",
-    "public": true
+    "public": false
     },
-  "survey":{
+  "Survey":{
+    "dataSource": "mongoDs",
+    "public": true
+  },
+  "Answer":{
+    "dataSource": "mongoDs",
+    "public": true
+  },
+  "PresignupStatus":{
+    "dataSource": "mongoDs",
+    "public": true
+  },
+  "PresignupVendor":{
     "dataSource": "mongoDs",
     "public": true
   }
+
 }

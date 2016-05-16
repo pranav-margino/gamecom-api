@@ -1,5 +1,5 @@
 {
-  "name": "deal",
+  "name": "Deal",
   "plural": "deals",
   "base": "PersistedModel",
   "idInjection": true,

@@ -25,7 +25,7 @@ boot(app, __dirname, function(err) {
             console.log('Connected to ' + socket.request.connection.remoteAddress);
             survey(socket);
             var initialPrice = 10000;
-            setInterval(function() {
+            setInterval(function priceFunc() {
                 if (initialPrice < 1000) {
                     initialPrice = 10000
                 } else {
@@ -35,13 +35,10 @@ boot(app, __dirname, function(err) {
                     price: initialPrice,
                     timestamp: new Date().getTime()
                 });
-            }, 1700);
-            socket.on('chat message', function(msg) {
-                console.log('message: ' + msg);
-                app.io.emit('chat message', msg);
-            });
+                return priceFunc;
+            }(), 1700);
             socket.on('disconnect', function() {
-                console.log('user disconnected');
+                console.log('Disconnected from' + socket.request.connection.remoteAddress);
             });
         });
     }

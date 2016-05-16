@@ -1,0 +1,28 @@
+{
+  "name": "VendorUser",
+  "plural": "vendorUsers",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "email": {
+      "type": "string",
+      "required": true
+    },
+    "mobile":{
+      "type": "number",
+      "required": true
+      },
+    "password":{
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "hidden": ["password"],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

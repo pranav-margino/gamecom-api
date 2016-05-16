@@ -1,5 +1,5 @@
 {
-    "name": "survey",
+    "name": "Survey",
     "plural": "surveys",
     "base": "PersistedModel",
     "idInjection": true,
@@ -16,7 +16,11 @@
         "questions": {
             "type": "embedsMany",
             "model": "question",
-            "property": "questions"
+            "property": "questions",
+            "options": {
+                "forceId": true,
+                "persistent": true
+            }
         }
     },
     "acls": [],

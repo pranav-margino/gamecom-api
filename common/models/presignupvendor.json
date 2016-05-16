@@ -1,6 +1,6 @@
 {
-    "name": "Question",
-    "plural": "questions",
+    "name": "PresignupVendor",
+    "plural": "presignupvendors",
     "base": "PersistedModel",
     "idInjection": true,
     "options": {
@@ -8,11 +8,10 @@
     },
     "properties": {
         "body": {
-            "type": "string",
-            "required": true
+            "type": "object"
         },
-        "options": {
-            "type": ["object"],
+        "userId": {
+            "type": "string",
             "required": true
         },
         "format": {
@@ -22,12 +21,12 @@
     "validations": [],
     "hidden": [],
     "relations": {
-        "answers": {
-            "type": "embedsMany",
-            "model": "answer",
-            "property": "answers",
+        "presignupStatus": {
+            "type": "embedsOne",
+            "model": "PresignupStatus",
+            "property": "presignupStatus",
             "options": {
-                "forceId": true,
+                "forceId": false,
                 "persistent": true
             }
         }

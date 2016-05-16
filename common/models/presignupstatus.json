@@ -1,0 +1,30 @@
+{
+    "name": "PresignupStatus",
+    "plural": "presignupstatus",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "otherDealServices": {
+            "type": "string"
+        },
+        "logisticsPaymentServices": {
+            "type": "string"
+        },
+        "poscrmServices": {
+            "type": "string"
+        },
+        "modesOfPayment": {
+            "type": "string"
+        },
+        "feedback": {
+            "type": "string"
+        }
+    },
+    "validations": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}
