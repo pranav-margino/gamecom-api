@@ -23,13 +23,25 @@
   "validations": [],
   "hidden": ["password"],
   "relations": {},
-  "acls": [{
-    "model":"VendorUser",
-    "propery":"existsMobile",
-    "accessType":"*",
+  "acls": [
+    {"property":"existsEmail",
+    "accessType":"READ",
     "principalType":"ROLE",
     "principalId":"$everyone",
     "permission":"ALLOW"
-    }],
+    },
+  {
+  "property":"existsMobile",
+    "accessType":"READ",
+    "principalType":"ROLE",
+    "principalId":"$everyone",
+    "permission":"ALLOW"
+    },{
+      "property":"login",
+      "accessType":"READ",
+      "principalType":"ROLE",
+      "principalId":"$everyone",
+      "permission":"ALLOW"
+      }],
   "methods": {}
 }

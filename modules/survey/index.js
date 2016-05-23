@@ -13,12 +13,13 @@ function getProducer() {
 function survey(socket) {
     var index = 0;
     app.models.Survey.find({}, function(err, data) {
-        var questions = data[0]._questions;
+        /*var questions = data[0]._questions;
         setInterval(function setQuesion() {
             socket.emit('question', questions[index % (questions.length)]);
             index++;
             return setQuesion;
         }(), 4000);
+        */
     });
     socket.on('answer', function(answerData) {
         var producer = getProducer();

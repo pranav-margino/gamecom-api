@@ -19,6 +19,9 @@ module.exports = function(VendorUser) {
             return cb(err, result)
         });
     };
+    /*VendorUser.logIn = function(email,password,cb){
+        cb(false,true);
+    }*/
     VendorUser.remoteMethod('existsEmail', {
         http: {
             path: '/existsEmail',
@@ -47,7 +50,25 @@ module.exports = function(VendorUser) {
             type: 'object'
         }
     });
-    VendorUser.observe('before save', function(ctx, next) {
+    /*VendorUser.remoteMethod('logIn', {
+        http: {
+            path: '/logIn',
+            verb: 'post'
+        },
+        accepts: [{
+            arg: 'email',
+            type: 'string'
+        },{
+            arg:'password',
+            type:'string'
+        }],
+        returns: {
+            arg: 'users',
+            type: 'object'
+        }
+    });
+*/
+    /*VendorUser.observe('before save', function(ctx, next) {
         if (!ctx.isNewInstance) {
             next();
         };
@@ -58,6 +79,7 @@ module.exports = function(VendorUser) {
             });
         });
     });
+    */
     VendorUser.observe('after save', function(ctx, next) {
         if (ctx.isNewInstance) {
             var transporter = nodemailer.createTransport({
