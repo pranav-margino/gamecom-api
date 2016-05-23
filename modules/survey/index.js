@@ -12,7 +12,7 @@ function getProducer() {
 
 function survey(socket) {
     var index = 0;
-    app.models.survey.find({}, function(err, data) {
+    app.models.Survey.find({}, function(err, data) {
         var questions = data[0]._questions;
         setInterval(function setQuesion() {
             socket.emit('question', questions[index % (questions.length)]);

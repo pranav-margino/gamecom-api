@@ -1,7 +1,7 @@
 {
   "name": "VendorUser",
   "plural": "vendorUsers",
-  "base": "PersistedModel",
+  "base": "User",
   "idInjection": true,
   "options": {
     "validateUpsert": true
@@ -23,6 +23,13 @@
   "validations": [],
   "hidden": ["password"],
   "relations": {},
-  "acls": [],
+  "acls": [{
+    "model":"VendorUser",
+    "propery":"existsMobile",
+    "accessType":"*",
+    "principalType":"ROLE",
+    "principalId":"$everyone",
+    "permission":"ALLOW"
+    }],
   "methods": {}
 }

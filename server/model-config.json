@@ -46,23 +46,10 @@
   },
   "Question":{
     "dataSource":"mongoDs",
-    "public": false
+    "public": true
     },
   "Survey":{
     "dataSource": "mongoDs",
     "public": true
-  },
-  "Answer":{
-    "dataSource": "mongoDs",
-    "public": true
-  },
-  "PresignupStatus":{
-    "dataSource": "mongoDs",
-    "public": true
-  },
-  "PresignupVendor":{
-    "dataSource": "mongoDs",
-    "public": true
   }
-
 }

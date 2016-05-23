@@ -7,15 +7,41 @@
         "validateUpsert": true
     },
     "properties": {
-        "body": {
-            "type": "object"
-        },
-        "userId": {
+        "name": {
             "type": "string",
             "required": true
         },
-        "format": {
+        "type": {
             "type": "string"
+        },
+        "email": {
+            "type": "string"
+        },
+        "mobile": {
+            "type": "number"
+        },
+        "altNo": {
+            "type": "number"
+        },
+        "addressLine1": {
+            "type": "string"
+        },
+        "addressLine2": {
+            "type": "string"
+        },
+        "contactPerson": {
+            "type": "string"
+        },
+        "contactPersonDesignation": {
+            "type": "string"
+        },
+        "city": {
+            "type": "string",
+            "default": "Bangalore"
+        },
+        "signupStatus": {
+            "type": "string",
+            "default": "unsigned"
         }
     },
     "validations": [],
