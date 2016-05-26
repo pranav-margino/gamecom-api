@@ -51,5 +51,9 @@
   "Survey":{
     "dataSource": "mongoDs",
     "public": true
+  },
+  "FieldUser":{
+    "dataSource": "mongoDs",
+    "public": true
   }
 }

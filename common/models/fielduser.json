@@ -1,0 +1,19 @@
+{
+    "name": "FieldUser",
+    "plural": "fieldUsers",
+    "base": "User",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "mobile":{
+            "type": "number"
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}
