@@ -1,47 +1,52 @@
 {
-  "name": "VendorUser",
-  "plural": "vendorUsers",
-  "base": "User",
-  "idInjection": true,
-  "options": {
-    "validateUpsert": true
-  },
-  "properties": {
-    "email": {
-      "type": "string",
-      "required": true
+    "name": "VendorUser",
+    "plural": "vendorUsers",
+    "base": "User",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
     },
-    "mobile":{
-      "type": "number",
-      "required": true
-      },
-    "password":{
-      "type": "string",
-      "required": true
-    }
-  },
-  "validations": [],
-  "hidden": ["password"],
-  "relations": {},
-  "acls": [
-    {"property":"existsEmail",
-    "accessType":"READ",
-    "principalType":"ROLE",
-    "principalId":"$everyone",
-    "permission":"ALLOW"
+    "properties": {
+        "email": {
+            "type": "string",
+            "required": true
+        },
+        "mobile": {
+            "type": "number",
+            "required": true
+        },
+        "password": {
+            "type": "string",
+            "required": true
+        }
     },
-  {
-  "property":"existsMobile",
-    "accessType":"READ",
-    "principalType":"ROLE",
-    "principalId":"$everyone",
-    "permission":"ALLOW"
-    },{
-      "property":"login",
-      "accessType":"READ",
-      "principalType":"ROLE",
-      "principalId":"$everyone",
-      "permission":"ALLOW"
-      }],
-  "methods": {}
+    "validations": [],
+    "hidden": ["password"],
+    "relations": {
+        "vendor": {
+            "type": "belongsTo",
+            "model": "Vendor",
+            "foreignKey": ""
+        }
+    },
+    "acls": [{
+        "property": "existsEmail",
+        "accessType": "READ",
+        "principalType": "ROLE",
+        "principalId": "$everyone",
+        "permission": "ALLOW"
+    }, {
+        "property": "existsMobile",
+        "accessType": "READ",
+        "principalType": "ROLE",
+        "principalId": "$everyone",
+        "permission": "ALLOW"
+    }, {
+        "property": "login",
+        "accessType": "READ",
+        "principalType": "ROLE",
+        "principalId": "$everyone",
+        "permission": "ALLOW"
+    }],
+    "methods": {}
 }

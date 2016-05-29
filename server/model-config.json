@@ -55,5 +55,21 @@
   "FieldUser":{
     "dataSource": "mongoDs",
     "public": true
+  },
+  "Customer":{
+    "dataSource":"mongoDs",
+    "public": true
+  },
+  "StoreManagerUser":{
+    "dataSource":"mongoDs",
+    "public": true
+  },
+  "POSUser":{
+    "dataSource":"mongoDs",
+    "public": true
+  },
+  "Store":{
+    "dataSource":"mongoDs",
+    "public": true
   }
 }
