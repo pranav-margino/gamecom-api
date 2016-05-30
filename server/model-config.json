@@ -71,5 +71,17 @@
   "Store":{
     "dataSource":"mongoDs",
     "public": true
+  },
+  "Address":{
+    "dataSource":"mongoDs",
+    "public":true
+  },
+  "Amenity":{
+    "dataSource": "mongoDs",
+    "public": true
+  },
+  "Contact":{
+    "dataSource":"mongoDs",
+    "public": true
   }
 }

@@ -1,0 +1,34 @@
+{
+    "name": "Contact",
+    "plural": "contacts",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "mobile": {
+            "type": "number"
+        },
+        "email": {
+            "type": "string"
+        },
+        "altMobile": {
+            "type": "number"
+        },
+        "landline": {
+            "type": "number"
+        },
+        "prefix": {
+            "type": "number"
+        },
+        "fax": {
+            "type": "number"
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}

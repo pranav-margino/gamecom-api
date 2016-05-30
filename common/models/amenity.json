@@ -1,0 +1,29 @@
+{
+    "name": "Amenity",
+    "plural": "amenities",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "title": {
+            "type": "string"
+        },
+        "isAvailable": {
+            "type": "boolean",
+            "default":false
+        },
+        "detail": {
+            "type": "string"
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}

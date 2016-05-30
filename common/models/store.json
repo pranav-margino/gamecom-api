@@ -8,12 +8,52 @@
     },
     "properties": {
         "name": {
-            "type": "string"
+            "type": "String"
+        },
+        "opensAt": {
+            "type": "String"
+        },
+        "closesAt": {
+            "type": "String"
+        },
+        "closedOn": {
+            "type": "String"
+        },
+        "description":{
+            "type": "String"
         }
     },
     "validations": [],
     "hidden": [],
-    "relations": {},
+    "relations": {
+        "address": {
+            "type": "embedsOne",
+            "model": "Address",
+            "property": "address",
+            "options": {
+                "persistent": true,
+                "forceId": true
+            }
+        },
+        "amenity": {
+            "type": "embedsMany",
+            "model": "Amenity",
+            "property": "amenities",
+            "options": {
+                "persistent": true,
+                "forceId": true
+            }
+        },
+        "contact": {
+            "type": "embedsOne",
+            "model": "Contact",
+            "property": "contact",
+            "options": {
+                "persistent": true,
+                "forceId": true
+            }
+        }
+    },
     "acls": [],
     "methods": {}
 }

@@ -97,7 +97,10 @@
     },
     "validations": [],
     "relations": {
-        
+        "stores": {
+            "type": "hasMany",
+            "model": "Store"
+        }
     },
     "acls": [],
     "methods": {}
