@@ -1,30 +1,26 @@
 {
-    "name": "Address",
-    "plural": "addresses",
+    "name": "Social",
+    "plural": "socials",
     "base": "PersistedModel",
     "idInjection": true,
     "options": {
         "validateUpsert": true
     },
     "properties": {
-        "addressLine1": {
+        "facebookLink": {
             "type": "string"
         },
-        "addressLine2": {
+        "twitterLink": {
             "type": "string"
         },
-        "city": {
+        "pinterestLink": {
             "type": "string"
         },
-        "pincode":{
+        "tumblrLink": {
             "type": "number"
         },
-        "country": {
-            "type": "string",
-            "default": "India"
-        },
-        "location": {
-            "type": "GeoPoint"
+        "linkedinLink": {
+            "type": "string"
         }
     },
     "validations": [],

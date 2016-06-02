@@ -74,25 +74,6 @@
         },
         "linkedinPageLink": {
             "type": "string"
-        },
-        "VATNumber": {
-            "type": "number"
-        },
-        "PANNumber": {
-            "type": "number"
-        },
-        "CSTNumber": {
-            "type": "number"
-        },
-        "beneficiaryName": {
-            "type": "string"
-        },
-        "accountNumber": {
-            "type": "number"
-        },
-        "IFSCCode": {
-            "type": "number",
-            "length": 11
         }
     },
     "validations": [],
@@ -100,6 +81,46 @@
         "stores": {
             "type": "hasMany",
             "model": "Store"
+        },
+        "address": {
+            "type": "embedsOne",
+            "model": "Address",
+            "property": "address",
+            "options": {
+                "validate": true,
+                "forceId": true,
+                "presistent": true
+            }
+        },
+        "social": {
+            "type": "embedsOne",
+            "model": "Social",
+            "property": "social",
+            "options": {
+                "validate": true,
+                "forceId": true,
+                "presistent": true
+            }
+        },
+        "banking": {
+            "type": "embedsOne",
+            "model": "Banking",
+            "property": "banking",
+            "options": {
+                "validate": true,
+                "forceId": true,
+                "presistent": true
+            }
+        },
+        "online": {
+            "type": "embedsOne",
+            "model": "Online",
+            "property": "online",
+            "options": {
+                "validate": true,
+                "forceId": true,
+                "presistent": true
+            }
         }
     },
     "acls": [],

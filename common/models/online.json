@@ -1,0 +1,25 @@
+{
+    "name": "Online",
+    "plural": "onlines",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "website": {
+            "type": "String"
+        },
+        "googlePlayLink": {
+            "type": "String"
+        },
+        "appStoreLink": {
+            "type": "String"
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}

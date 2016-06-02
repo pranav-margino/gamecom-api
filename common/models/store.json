@@ -52,6 +52,11 @@
                 "persistent": true,
                 "forceId": true
             }
+        },
+        "POSUser":{
+            "type" : "hasMany",
+            "model": "POSUser",
+            "property": "POSUsers"
         }
     },
     "acls": [],

@@ -1,0 +1,35 @@
+{
+    "name": "Banking",
+    "plural": "bankings",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "VATNumber": {
+            "type": "number"
+        },
+        "PANNumber": {
+            "type": "number"
+        },
+        "CSTNumber": {
+            "type": "number"
+        },
+        "beneficiaryName": {
+            "type": "String"
+        },
+        "accountNumber": {
+            "type": "number"
+        },
+        "IFSCCode": {
+            "type": "number",
+            "length": 11
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}

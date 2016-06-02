@@ -1,87 +1,89 @@
 {
-  "_meta": {
-    "sources": [
-      "loopback/common/models",
-      "loopback/server/models",
-      "../common/models",
-      "./models"
-    ],
-    "mixins": [
-      "loopback/common/mixins",
-      "loopback/server/mixins",
-      "../common/mixins",
-      "./mixins"
-    ]
-  },
-  "User": {
-    "dataSource": "db"
-  },
-  "AccessToken": {
-    "dataSource": "db",
-    "public": false
-  },
-  "ACL": {
-    "dataSource": "db",
-    "public": false
-  },
-  "RoleMapping": {
-    "dataSource": "db",
-    "public": false
-  },
-  "Role": {
-    "dataSource": "db",
-    "public": false
-  },
-  "Deal": {
-    "dataSource": "mongoDs",
-    "public": true
-  },
-  "Vendor": {
-    "dataSource": "mongoDs",
-    "public": true
-  },
-  "VendorUser": {
-    "dataSource": "mongoDs",
-    "public": true
-  },
-  "Question":{
-    "dataSource":"mongoDs",
-    "public": true
+    "_meta": {
+        "sources": ["loopback/common/models", "loopback/server/models", "../common/models", "./models"],
+        "mixins": ["loopback/common/mixins", "loopback/server/mixins", "../common/mixins", "./mixins"]
     },
-  "Survey":{
-    "dataSource": "mongoDs",
-    "public": true
-  },
-  "FieldUser":{
-    "dataSource": "mongoDs",
-    "public": true
-  },
-  "Customer":{
-    "dataSource":"mongoDs",
-    "public": true
-  },
-  "StoreManagerUser":{
-    "dataSource":"mongoDs",
-    "public": true
-  },
-  "POSUser":{
-    "dataSource":"mongoDs",
-    "public": true
-  },
-  "Store":{
-    "dataSource":"mongoDs",
-    "public": true
-  },
-  "Address":{
-    "dataSource":"mongoDs",
-    "public":true
-  },
-  "Amenity":{
-    "dataSource": "mongoDs",
-    "public": true
-  },
-  "Contact":{
-    "dataSource":"mongoDs",
-    "public": true
-  }
+    "User": {
+        "dataSource": "db"
+    },
+    "AccessToken": {
+        "dataSource": "db",
+        "public": false
+    },
+    "ACL": {
+        "dataSource": "db",
+        "public": false
+    },
+    "RoleMapping": {
+        "dataSource": "db",
+        "public": false
+    },
+    "Role": {
+        "dataSource": "db",
+        "public": false
+    },
+    "Deal": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Vendor": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "VendorUser": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Question": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Survey": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "FieldUser": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Customer": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "StoreManagerUser": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "POSUser": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Store": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Address": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Amenity": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Contact": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Social": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Banking": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Online": {
+        "dataSource": "mongoDs",
+        "public": true
+    }
 }
