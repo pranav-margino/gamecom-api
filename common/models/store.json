@@ -19,8 +19,16 @@
         "closedOn": {
             "type": "String"
         },
-        "description":{
+        "description": {
             "type": "String"
+        },
+        "isActive": {
+            "type": "Boolean",
+            "default": false
+        },
+        "isOnboarding": {
+            "type": "Boolean",
+            "default": true
         }
     },
     "validations": [],
@@ -53,8 +61,8 @@
                 "forceId": true
             }
         },
-        "POSUser":{
-            "type" : "hasMany",
+        "POSUser": {
+            "type": "hasMany",
             "model": "POSUser",
             "property": "POSUsers"
         }
