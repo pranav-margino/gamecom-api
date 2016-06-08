@@ -123,13 +123,8 @@
             }
         },
         "coupons": {
-            "type": "embedsMany",
-            "model": "Coupon",
-            "property": "coupons",
-            "options": {
-                "forceId": true,
-                "presistent": true
-            }
+            "type": "hasMany",
+            "model": "Coupon"
         }
     },
     "acls": [],
