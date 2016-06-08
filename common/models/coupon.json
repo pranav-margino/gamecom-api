@@ -1,0 +1,47 @@
+{
+    "name": "Coupon",
+    "plural": "coupons",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "title": {
+            "type": "String"
+        },
+        "isFlat": {
+            "type": "Boolean",
+            "default": false
+        },
+        "isUpto": {
+            "type": "Boolean",
+            "default": true
+        },
+        "percent": {
+            "type": "Number",
+            "default": 0
+        },
+        "amount": {
+            "type": "Number",
+            "default": 0
+        },
+        "isOff": {
+            "type": "Boolean",
+            "default": true
+        },
+        "isCashback": {
+            "type": "Boolean",
+            "default": false
+        },
+        "consumerCount": {
+            "type": "Number",
+            "default": 1
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}

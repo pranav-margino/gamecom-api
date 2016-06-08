@@ -15,7 +15,7 @@
     "relations": {
         "questions": {
             "type": "embedsMany",
-            "model": "question",
+            "model": "Question",
             "property": "questions",
             "options": {
                 "forceId": true,

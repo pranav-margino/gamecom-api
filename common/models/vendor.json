@@ -121,6 +121,15 @@
                 "forceId": true,
                 "presistent": true
             }
+        },
+        "coupons": {
+            "type": "embedsMany",
+            "model": "Coupon",
+            "property": "coupons",
+            "options": {
+                "forceId": true,
+                "presistent": true
+            }
         }
     },
     "acls": [],
