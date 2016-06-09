@@ -102,6 +102,16 @@
                 "presistent": true
             }
         },
+        "contact": {
+            "type": "embedsOne",
+            "model": "Contact",
+            "property": "contact",
+            "options": {
+                "validate": true,
+                "forceId": true,
+                "presistent": true
+            }
+        },
         "banking": {
             "type": "embedsOne",
             "model": "Banking",
