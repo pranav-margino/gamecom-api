@@ -26,6 +26,14 @@
             "type": "Number",
             "default": 0
         },
+        "isPercent": {
+            "type": "Boolean",
+            "default": true
+        },
+        "isAmount": {
+            "type": "Boolean",
+            "default": false
+        },
         "isOff": {
             "type": "Boolean",
             "default": true
