@@ -65,6 +65,15 @@
             "type": "hasMany",
             "model": "POSUser",
             "property": "POSUsers"
+        },
+        "coupons": {
+            "type": "embedsMany",
+            "model": "Coupon",
+            "property": "coupons",
+            "options": {
+                "persistent": true,
+                "forceId": true
+            }
         }
     },
     "acls": [],
