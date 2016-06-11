@@ -134,7 +134,13 @@
         },
         "coupons": {
             "type": "hasMany",
-            "model": "Coupon"
+            "model": "Coupon",
+            "property": "coupons"
+        },
+        "deals": {
+            "type": "hasMany",
+            "model": "Deal",
+            "property": "deals"
         }
     },
     "acls": [],
