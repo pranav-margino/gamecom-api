@@ -66,10 +66,10 @@
             "model": "POSUser",
             "property": "POSUsers"
         },
-        "coupons": {
+        "storeCoupons": {
             "type": "embedsMany",
-            "model": "Coupon",
-            "property": "coupons",
+            "model": "Available",
+            "property": "storeCoupons",
             "options": {
                 "persistent": true,
                 "forceId": true

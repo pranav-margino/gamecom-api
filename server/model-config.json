@@ -26,7 +26,7 @@
         "dataSource": "mongoDs",
         "public": true
     },
-    "Coupon":{
+    "Coupon": {
         "dataSource": "mongoDs",
         "public": true
     },
@@ -89,6 +89,9 @@
     "Online": {
         "dataSource": "mongoDs",
         "public": true
+    },
+    "Available": {
+        "dataSource": "mongoDs",
+        "public": true
     }
-
 }

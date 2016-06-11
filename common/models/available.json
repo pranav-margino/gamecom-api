@@ -1,0 +1,29 @@
+{
+    "name": "Available",
+    "plural": "availables",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "modelId": {
+            "type": "String"
+        },
+        "modelName": {
+            "type": "String"
+        },
+        "model": {
+            "type": "Object"
+        },
+        "active": {
+            "type": "Boolean",
+            "default": false
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}
