@@ -7,6 +7,30 @@
         "validateUpsert": true
     },
     "properties": {
+        "superTitle": {
+            "type": "String"
+        },
+        "hasCode": {
+            "type": "Boolean",
+            "default": false
+        },
+        "isExclusive": {
+            "type": "Boolean",
+            "default": false
+        },
+        "isInternal": {
+            "type": "Boolean",
+            "default": true
+        },
+        "code": {
+            "type": "String"
+        },
+        "detail": {
+            "type": "String"
+        },
+        "t&c": {
+            "type": "String"
+        },
         "title": {
             "type": "String"
         },

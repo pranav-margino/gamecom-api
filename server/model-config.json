@@ -93,5 +93,9 @@
     "Available": {
         "dataSource": "mongoDs",
         "public": true
+    },
+    "Feed":{
+        "dataSource":"mongoDs",
+        "public":true
     }
 }

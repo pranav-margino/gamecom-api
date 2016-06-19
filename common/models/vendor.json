@@ -74,6 +74,10 @@
         },
         "linkedinPageLink": {
             "type": "string"
+        },
+        "isInternal": {
+            "type": "Boolean",
+            "default": false
         }
     },
     "validations": [],
