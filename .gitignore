@@ -17,4 +17,5 @@
 coverage
 node_modules
 npm-debug.log
-server/storage
+server/storage/container1/*
+server/storage/container2/*
