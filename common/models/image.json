@@ -1,0 +1,37 @@
+{
+    "name": "Image",
+    "plural": "images",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "format": {
+            "type": "String"
+        },
+        "size": {
+            "type": "Number"
+        },
+        "description": {
+            "type": "String"
+        },
+        "url": {
+            "type": "String"
+        },
+        "width": {
+            "type": "Number"
+        },
+        "height": {
+            "type": "Number"
+        },
+        "label":{
+            "type":"String"
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}

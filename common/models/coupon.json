@@ -28,7 +28,7 @@
         "detail": {
             "type": "String"
         },
-        "t&c": {
+        "termsAndConditions": {
             "type": "String"
         },
         "title": {
@@ -69,6 +69,32 @@
         "consumerCount": {
             "type": "Number",
             "default": 1
+        },
+        "validFrom": {
+            "type": "Date"
+        },
+        "validTill": {
+            "type": "Date"
+        },
+        "category": {
+            "type": "String"
+        },
+        "tags": {
+            "type": "String"
+        },
+        "lastUsed": {
+            "type": "Date"
+        },
+        "firstUsed": {
+            "type": "Date"
+        },
+        "countUsed": {
+            "type": "Number",
+            "default": 0
+        },
+        "isActive":{
+            "type":"Boolean",
+            "default":false
         }
     },
     "validations": [],

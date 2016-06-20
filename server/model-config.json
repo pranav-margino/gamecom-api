@@ -94,8 +94,12 @@
         "dataSource": "mongoDs",
         "public": true
     },
-    "Feed":{
-        "dataSource":"mongoDs",
-        "public":true
+    "Feed": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Image": {
+        "dataSource": "mongoDs",
+        "public": true
     }
 }
