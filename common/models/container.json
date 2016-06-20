@@ -1,0 +1,9 @@
+{
+    "name": "Container",
+    "base": "PersistedModel",
+    "properties": {},
+    "validations": [],
+    "relations": {},
+    "acls": [],
+    "methods": []
+}
