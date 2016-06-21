@@ -2,6 +2,7 @@ var _ = require('lodash');
 var async = require('async');
 module.exports = function(Vendor) {
     Vendor.getNames = function(idsArray, cb) {
+        idsArray = Object.prototype.toString.call(idsArray) == '[object Array]' ? idsArray : [idsArray];
         async.map(idsArray, function(id, callback) {
             Vendor.findById(id, {
                 fields: {

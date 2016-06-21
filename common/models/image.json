@@ -27,7 +27,11 @@
         },
         "label":{
             "type":"String"
+        },
+        "name":{
+            "type":"String"
         }
+
     },
     "validations": [],
     "hidden": [],

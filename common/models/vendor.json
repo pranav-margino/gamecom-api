@@ -145,6 +145,16 @@
             "type": "hasMany",
             "model": "Deal",
             "property": "deals"
+        },
+        "brandLogo": {
+            "type": "embedsOne",
+            "model": "Image",
+            "property": "brandLogo",
+            "options": {
+                "validate": true,
+                "forceId": true,
+                "presistent": true
+            }
         }
     },
     "acls": [],
