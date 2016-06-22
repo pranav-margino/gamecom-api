@@ -92,14 +92,33 @@
             "type": "Number",
             "default": 0
         },
-        "isActive":{
-            "type":"Boolean",
-            "default":false
+        "isActive": {
+            "type": "Boolean",
+            "default": false
+        },
+        "isFeaturedToday": {
+            "type": "Boolean",
+            "default": false
+        },
+        "isFeaturedThisWeek": {
+            "type": "Boolean",
+            "default": false
         }
     },
     "validations": [],
     "hidden": [],
-    "relations": {},
+    "relations": {
+        "featuredImage": {
+            "type": "embedsOne",
+            "model": "Image",
+            "property": "featuredImage",
+            "options": {
+                "validate": true,
+                "forceId": true,
+                "presistent": true
+            }
+        }
+    },
     "acls": [],
     "methods": {}
 }

@@ -16,6 +16,9 @@
         "legalName": {
             "type": "string"
         },
+        "description": {
+            "type": "String"
+        },
         "email": {
             "type": "string"
         },
