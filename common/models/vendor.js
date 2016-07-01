@@ -1,15 +1,16 @@
 var _ = require('lodash');
 var async = require('async');
 module.exports = function(Vendor) {
-    Vendor.getNames = function(idsArray, cb) {
-        idsArray = Object.prototype.toString.call(idsArray) == '[object Array]' ? idsArray : [idsArray];
-        async.map(idsArray, function(id, callback) {
+    Vendor.getNames = function(ids, cb) {
+        ids = Object.prototype.toString.call(ids) == '[object Array]' ? ids : [ids];
+        async.map(ids, function(id, callback) {
             Vendor.findById(id, {
                 fields: {
                     id: true,
                     name: true,
                     displayName: true,
-                    legalName: true
+                    legalName: true,
+                    _brandLogo: true
                 }
             }, function(err, vendor) {
                 callback(null, vendor);

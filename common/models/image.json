@@ -25,13 +25,15 @@
         "height": {
             "type": "Number"
         },
-        "label":{
-            "type":"String"
+        "aspectRatio": {
+            "type": "Number"
         },
-        "name":{
-            "type":"String"
+        "label": {
+            "type": "String"
+        },
+        "name": {
+            "type": "String"
         }
-
     },
     "validations": [],
     "hidden": [],

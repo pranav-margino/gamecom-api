@@ -88,8 +88,8 @@
         "validTill": {
             "type": "Date"
         },
-        "category": {
-            "type": "String"
+        "categories": {
+            "type": "[String]"
         },
         "tags": {
             "type": "String"

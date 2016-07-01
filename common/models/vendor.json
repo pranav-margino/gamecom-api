@@ -81,6 +81,14 @@
         "isInternal": {
             "type": "Boolean",
             "default": false
+        },
+        "isActive": {
+            "type": "Boolean",
+            "default": false
+        },
+        "isFeatured": {
+            "type": "Boolean",
+            "default": false
         }
     },
     "validations": [],
@@ -153,6 +161,16 @@
             "type": "embedsOne",
             "model": "Image",
             "property": "brandLogo",
+            "options": {
+                "validate": true,
+                "forceId": true,
+                "presistent": true
+            }
+        },
+        "brandLogoSqr": {
+            "type": "embedsOne",
+            "model": "Image",
+            "property": "brandLogoSqr",
             "options": {
                 "validate": true,
                 "forceId": true,
