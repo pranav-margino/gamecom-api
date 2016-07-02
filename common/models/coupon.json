@@ -115,6 +115,9 @@
         "isFeaturedThisWeek": {
             "type": "Boolean",
             "default": false
+        },
+        "vendorUrl": {
+            "type": "String"
         }
     },
     "validations": [],
