@@ -1,0 +1,19 @@
+{
+    "name": "NewsLetter",
+    "plural": "newsLetters",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "email": {
+            "type": "string"
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}

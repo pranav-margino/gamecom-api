@@ -105,5 +105,9 @@
     "Container": {
         "dataSource": "storage",
         "public": true
+    },
+    "NewsLetter":{
+        "dataSource": "mongoDs",
+        "public": true
     }
 }
