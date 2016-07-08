@@ -1,0 +1,45 @@
+{
+    "name": "Blog",
+    "plural": "blogs",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "title": {
+            "type": "String"
+        },
+        "categories": {
+            "type": ["String"]
+        },
+        "body": {
+            "type": "String"
+        },
+        "createdAt": {
+            "type": "Date"
+        },
+        "updatedAt": {
+            "type": "Date"
+        },
+        "isDraft":{
+            "type": "Boolean",
+            "default": true
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {
+        "blogCoupons": {
+            "type": "embedsMany",
+            "model": "Available",
+            "property": "blogCoupons",
+            "options": {
+                "persistent": true,
+                "forceId": true
+            }
+        }
+    },
+    "acls": [],
+    "methods": {}
+}

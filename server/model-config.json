@@ -106,7 +106,11 @@
         "dataSource": "storage",
         "public": true
     },
-    "NewsLetter":{
+    "NewsLetter": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Blog": {
         "dataSource": "mongoDs",
         "public": true
     }
