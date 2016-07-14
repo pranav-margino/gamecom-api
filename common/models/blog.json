@@ -22,18 +22,21 @@
         "updatedAt": {
             "type": "Date"
         },
-        "isDraft":{
+        "isDraft": {
             "type": "Boolean",
             "default": true
+        },
+        "blogCouponIds": {
+            "type": ["String"]
         }
     },
     "validations": [],
     "hidden": [],
     "relations": {
-        "blogCoupons": {
+        "coupon": {
             "type": "embedsMany",
-            "model": "Available",
-            "property": "blogCoupons",
+            "model": "Coupon",
+            "property": "coupons",
             "options": {
                 "persistent": true,
                 "forceId": true

@@ -1,0 +1,33 @@
+{
+    "name": "SampleImage",
+    "plural": "sampleImages",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "url": {
+            "type": "string"
+        },
+        "fileName": {
+            "type": "string"
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {
+        "sqrImage": {
+            "type": "embedsOne",
+            "model": "Image",
+            "property": "sqrImage",
+            "options": {
+                "validate": true,
+                "forceId": true,
+                "presistent": true
+            }
+        }
+    },
+    "acls": [],
+    "methods": {}
+}

@@ -113,5 +113,9 @@
     "Blog": {
         "dataSource": "mongoDs",
         "public": true
+    },
+    "SampleImage": {
+        "dataSource": "mongoDs",
+        "public": true
     }
 }
