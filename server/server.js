@@ -20,25 +20,17 @@ boot(app, __dirname, function(err) {
     if (err) throw err;
     // start the server if `$ node server.js`
     if (require.main === module) { //app.start();
-        app.io = require('socket.io')(app.start());
+        app.io = require('socket.io')(app.start(),{
+            path:'/socket.io-client'
+        });
         app.io.on('connection', function(socket) {
             console.log('Connected to ' + socket.request.connection.remoteAddress);
             survey(socket);
-            var initialPrice = 10000;
-            setInterval(function priceFunc() {
-                if (initialPrice < 1000) {
-                    initialPrice = 10000
-                } else {
-                    initialPrice = initialPrice - parseInt(Math.random() * 100);
-                }
-                socket.emit('hello', {
-                    price: initialPrice,
-                    timestamp: new Date().getTime()
-                });
-                return priceFunc;
-            }(), 1700);
+            socket.on('addModel',function(data){
+                console.log(data);
+            });
             socket.on('disconnect', function() {
-                console.log('Disconnected from' + socket.request.connection.remoteAddress);
+                console.log('Disconnected from ' + socket.request.connection.remoteAddress);
             });
         });
     }

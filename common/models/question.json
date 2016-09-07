@@ -12,26 +12,23 @@
             "required": true
         },
         "options": {
-            "type": ["object"],
+            "type": "object",
             "required": true
         },
         "format": {
             "type": "string"
+        },
+        "expected": {
+            "type": "string"
+        },
+        "isActive": {
+            "type": "Boolean",
+            "default": true
         }
     },
     "validations": [],
     "hidden": [],
-    "relations": {
-        "answers": {
-            "type": "embedsMany",
-            "model": "answer",
-            "property": "answers",
-            "options": {
-                "forceId": true,
-                "persistent": true
-            }
-        }
-    },
+    "relations": {},
     "acls": [],
     "methods": {}
 }

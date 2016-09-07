@@ -7,15 +7,29 @@
         "validateUpsert": true
     },
     "properties": {
-        "body": {
-            "type": "object"
+        "initialTimestamp": {
+            "type": "Number"
+        },
+        "finalTimestamp": {
+            "type": "Number"
+        },
+        "expected": {
+            "type": "String"
         },
         "userId": {
-            "type": "string",
-            "required": true
+            "type": "String"
         },
-        "format": {
-            "type": "string"
+        "pollId": {
+            "type": "String"
+        },
+        "questionId": {
+            "type": "String"
+        },
+        "input": {
+            "type": "String"
+        },
+        "interval":{
+            "type" : "Number"
         }
     },
     "validations": [],
