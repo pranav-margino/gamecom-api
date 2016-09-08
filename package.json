@@ -26,7 +26,8 @@
     "redis": "^2.6.0-0",
     "request": "^2.73.0",
     "serve-favicon": "^2.0.1",
-    "socket.io": "^1.4.5"
+    "socket.io": "^1.4.5",
+    "winston": "^2.2.0"
   },
   "devDependencies": {
     "jshint": "^2.5.6",

@@ -1,9 +1,10 @@
 var kafka = require('kafka-node');
 var _ = require('lodash');
+var logger = require('../logger')();
 
 function getProducer() {
     var Producer = kafka.Producer,
-        client = new kafka.Client("192.168.0.3:2181"),
+        client = new kafka.Client(process.env.KAFKA_BASE || "127.0.0.1:2181"),
         producer = new Producer(client);
     return producer;
 };
@@ -11,8 +12,10 @@ function getProducer() {
 function queue() {
     var isReady = false;
     var producer = getProducer();
+    logger.log("Queue initialised");
 
     producer.on('ready', function() {
+        logger.log("Queue ready");
         isReady = true;
     });
 
@@ -22,14 +25,19 @@ function queue() {
 
     return {
         push: function(topic, data) {
+
             if (!producer) {
-                console.log('Failed to get producer');
+                logger.log('warning', "Queue not ready");
                 return;
             }
             if (isReady) {
                 producer.send([{ topic: topic, messages: [data] }], function(err, data) {
-                    console.log(err);
-                    console.log(data);
+                    if (!err) {
+                        logger.log(data);
+                        logger.log('debug', data);
+                    } else {
+                        logger.log('error', err);
+                    }
                 });
             }
         }
