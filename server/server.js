@@ -1,7 +1,7 @@
 var loopback = require('loopback');
 var boot = require('loopback-boot');
 var app = module.exports = loopback();
-var survey = require('../modules/survey');
+var answer = require('../modules/answer');
 app.start = function() {
     // start the web server
     return app.listen(function() {
@@ -25,10 +25,7 @@ boot(app, __dirname, function(err) {
         });
         app.io.on('connection', function(socket) {
             console.log('Connected to ' + socket.request.connection.remoteAddress);
-            survey(socket);
-            socket.on('addModel',function(data){
-                console.log(data);
-            });
+            answer(socket);
             socket.on('disconnect', function() {
                 console.log('Disconnected from ' + socket.request.connection.remoteAddress);
             });
