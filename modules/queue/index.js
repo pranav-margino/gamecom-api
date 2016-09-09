@@ -36,7 +36,8 @@ function queue() {
                         logger.log(data);
                         logger.log('debug', data);
                     } else {
-                        logger.log('error', err);
+                        console.log(err);
+                        logger.log('error', err.toString());
                     }
                 });
             }
