@@ -5,7 +5,7 @@ var io = io || function(app, config) {
     var self = this;
     self.socket = null;
     self._io = null;
-    events.EventEmitter.call(this);
+    //events.EventEmitter.call(this);
 
 }
 

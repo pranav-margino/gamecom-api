@@ -9,6 +9,12 @@
     "properties": {
         "title": {
             "type": "string"
+        },
+        "scheduleDate":{
+            "type": "Date"
+        },
+        "scheduleTime":{
+            "type": "Date"
         }
     },
     "validations": [],
