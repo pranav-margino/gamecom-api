@@ -1,5 +1,5 @@
-var queue = require("../queue")();
-var logger = require('../logger')();
+var queue = require("../queue");
+var logger = require('../logger');
 
 
 function answer(socket) {

@@ -1,9 +1,10 @@
 var loopback = require('loopback');
 var boot = require('loopback-boot');
 var app = module.exports = loopback();
-var queue = require('../modules/queue')();
+var queue = require('../modules/queue');
 var answer = require('../modules/answer');
-var logger = require('../modules/logger')();
+var logger = require('../modules/logger');
+var io = require('../modules/io');
 app.start = function() {
     // start the web server
     return app.listen(function() {
@@ -22,15 +23,20 @@ boot(app, __dirname, function(err) {
     if (err) throw err;
     // start the server if `$ node server.js`
     if (require.main === module) { //app.start();
-        app.io = require('socket.io')(app.start(),{
+        io.init(app);
+        /*app.io = require('socket.io')(app.start(),{
             path:'/socket.io-client'
         });
         app.io.on('connection', function(socket) {
-            console.log('Socekt connected to ' + socket.request.connection.remoteAddress);
-            answer(socket);
+            logger.log('Socket connected to ' + socket.request.connection.remoteAddress);
+            //answer(socket);
             socket.on('disconnect', function() {
-                console.log('Socket disconnected from ' + socket.request.connection.remoteAddress);
+                logger.log('Socket disconnected from ' + socket.request.connection.remoteAddress);
             });
         });
+        */
+
+        io
+
     }
 });
