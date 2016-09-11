@@ -25,10 +25,8 @@ boot(app, __dirname, function(err) {
     // start the server if `$ node server.js`
     if (require.main === module) { //app.start();
         io.init(app);
-        cron.addEvent('startPoll', '1sec', {});
-        cron.addTask('sampleTask','1sec',function(){
-            console.log('sample task');
-        });
+        //cron.addEvent('startPoll', '15 10 * * *', {});
+        
 
 
     }

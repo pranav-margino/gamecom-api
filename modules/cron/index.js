@@ -79,7 +79,7 @@ cron.prototype.addEvent = function(cronEvent, cronTime, payload) {
 cron.prototype.addTask = function(cronTask, cronTime, cb) {
     var self = this;
 
-    if (typeof cb != 'function') {
+    if (typeof cb !== 'function') {
         logger.log('warning', 'Cron task ' + cronTask + 'is not a function');
         return;
     }
