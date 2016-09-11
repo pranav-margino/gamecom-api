@@ -1,6 +1,7 @@
 var io = require('../../modules/io');
 var logger = require('../../modules/logger');
 var queue = require('../../modules/queue');
+var cron = require('../../modules/cron');
 
 
 module.exports = function(Answer) {
@@ -10,6 +11,10 @@ module.exports = function(Answer) {
             logger.log('debug', data);
             queue.push('game0', data);
         });
+    });
+
+    cron.on('startPoll',function(){
+        console.log('startPoll Answer');
     });
 
 

@@ -121,5 +121,9 @@
     "SampleImage": {
         "dataSource": "mongoDs",
         "public": true
+    },
+    "Poll": {
+        "dataSource": "mongoDs",
+        "public": true
     }
 }
