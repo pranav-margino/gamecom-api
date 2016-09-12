@@ -6,6 +6,8 @@ var logger = require('../modules/logger');
 var io = require('../modules/io');
 var cron = require('../modules/cron');
 
+//var consumerAcls = require('./acls/consumer.json');
+
 app.start = function() {
     // start the web server
     return app.listen(function() {
@@ -26,7 +28,7 @@ boot(app, __dirname, function(err) {
     if (require.main === module) { //app.start();
         io.init(app);
         //cron.addEvent('startPoll', '15 10 * * *', {});
-        
+        //app.models.Consumer.settings.acl = consumerAcls;
 
 
     }

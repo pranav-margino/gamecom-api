@@ -54,7 +54,7 @@
         "dataSource": "mongoDs",
         "public": true
     },
-    "Customer": {
+    "Consumer": {
         "dataSource": "mongoDs",
         "public": true
     },

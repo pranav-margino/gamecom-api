@@ -29,7 +29,7 @@ module.exports = function(Poll) {
     var self = this;
     self.sockets = null;
     self.model = Poll;
-    cron.addEvent('startPoll', '30sec');
+    //cron.addEvent('startPoll', '30sec');
     cron.on('startPoll', function() {
         logger.log('executing startPoll');
         PollRunner.bind(self)();
