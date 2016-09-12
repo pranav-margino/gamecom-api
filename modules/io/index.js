@@ -15,7 +15,7 @@ io.prototype.init = function(app, config) {
     self._io.on('connection', function(socket) {
         logger.log('Socket connected to ' + socket.request.connection.remoteAddress);
 	    self.socket = socket;
-	    self.emit('ready',self.socket);
+	    self.emit('ready',self.socket,self._io.sockets);
         self.socket.on('disconnect', function() {
             logger.log('Socket disconnected from ' + socket.request.connection.remoteAddress);
         });

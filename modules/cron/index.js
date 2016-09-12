@@ -20,6 +20,9 @@ cron.prototype.parseCronTime = function(cronTime) {
         case '1min':
             parsedCronTime = '* * * * *';
             break;
+        case '2min':
+            parsedCronTime = '*/2 * * * *';
+            break;    
         case '3min':
             parsedCronTime = '*/3 * * * *';
             break;
@@ -71,7 +74,7 @@ cron.prototype.addEvent = function(cronEvent, cronTime, payload) {
             logger.log('Cron event ' + cronEvent + ' emitting @' + cronTime);
             self.emit(cronEvent, payload || {});
         },
-        start: true
+        start: false
     });
     job.start();
 }

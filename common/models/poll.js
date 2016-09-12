@@ -12,14 +12,14 @@ function PollRunner() {
             var index = 0;
 
             setInterval(function() {
-                if (index < questions.length) {
-                    if (self.socket !== null) {
-                        self.socket.emit('readModel:Question', questions[index]);
+                if (index < 3) {
+                    if (self.sockets !== null) {
+                        self.sockets.emit('readModel:Question', questions[index]);
                     }
-                    console.log(questions[index]);
+                    logger.log("Running question no " + index);
                     index++;
                 }
-            }, 1000);
+            }, 3000);
 
         }
     });
@@ -27,14 +27,14 @@ function PollRunner() {
 
 module.exports = function(Poll) {
     var self = this;
-    self.socket = null;
+    self.sockets = null;
     self.model = Poll;
-    //cron.addEvent('startPoll', '1min');
+    cron.addEvent('startPoll', '30sec');
     cron.on('startPoll', function() {
         logger.log('executing startPoll');
         PollRunner.bind(self)();
     });
-    io.on('ready', function(socket) {
-        self.socket = socket;
+    io.on('ready', function(socket, sockets) {
+        self.sockets = sockets;
     });
 }

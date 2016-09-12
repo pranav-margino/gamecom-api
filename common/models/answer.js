@@ -5,16 +5,12 @@ var cron = require('../../modules/cron');
 
 
 module.exports = function(Answer) {
-    io.on('ready', function(socket) {
+    io.on('ready', function(socket, sockets) {
         socket.on('addModel:Answer', function(data) {
             logger.log('addModel:Answer');
             logger.log('debug', data);
-            queue.push('game0', data);
+            queue.push('test', data);
         });
-    });
-
-    cron.on('startPoll',function(){
-        console.log('startPoll Answer');
     });
 
 
@@ -22,7 +18,7 @@ module.exports = function(Answer) {
         if (ctx.isNewInstance) {
             logger.log(ctx.instance);
             producer.send([{
-                topic: 'game0',
+                topic: 'test',
                 messages: [JSON.stringify(ctx.instance)]
             }], function(err, data) {
                 logger.log(err);
