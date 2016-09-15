@@ -1,0 +1,55 @@
+{
+    "name": "Game",
+    "plural": "games",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "title": {
+            "type": "String"
+        },
+        "categories": {
+            "type": ["String"]
+        },
+        "winnables": {
+            "type": "String"
+        },
+        "type": {
+            "type": "string"
+        },
+        "scheduledDate": {
+            "type": "Date"
+        },
+        "scheduledTime": {
+            "type": "Date"
+        },
+        "isActive": {
+            "type": "Boolean",
+            "default": "false"
+        },
+        "description": {
+            "type": "string"
+        },
+        "artifacts":{
+        	"type": "object"
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {
+        "contestants": {
+            "type": "embedsMany",
+            "model": "Consumer",
+            "property": "Contestants",
+            "options": {
+                "persistent": true,
+                "forceId": true,
+                "validate": false
+            }
+        }
+    },
+    "acls": [],
+    "methods": {}
+}

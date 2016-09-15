@@ -125,5 +125,9 @@
     "Poll": {
         "dataSource": "mongoDs",
         "public": true
+    },
+    "Game":{
+        "dataSource":"mongoDs",
+        "public": true
     }
 }
