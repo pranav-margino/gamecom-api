@@ -25,6 +25,9 @@
         "scheduledTime": {
             "type": "Date"
         },
+        "scheduledAt": {
+            "type": "Date"
+        },
         "isActive": {
             "type": "Boolean",
             "default": "false"
@@ -32,8 +35,12 @@
         "description": {
             "type": "string"
         },
-        "artifacts":{
-        	"type": "object"
+        "artifacts": {
+            "type": "object"
+        },
+        "isScheduled": {
+            "type": "Boolean",
+            "default": false
         }
     },
     "validations": [],

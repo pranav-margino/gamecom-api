@@ -1,6 +1,7 @@
 var logger = require('../logger');
 var events = require('events');
 var CronJob = require('cron').CronJob;
+var moment = require('moment');
 
 
 var cron = function() {};
@@ -14,6 +15,9 @@ cron.prototype.parseCronTime = function(cronTime) {
         case '5sec':
             parsedCronTime = '*/5 * * * * *';
             break;
+        case '10sec':
+            parsedCronTime = '*/10 * * * * *';
+            break;
         case '30sec':
             parsedCronTime = '*/30 * * * * *';
             break;
@@ -22,7 +26,7 @@ cron.prototype.parseCronTime = function(cronTime) {
             break;
         case '2min':
             parsedCronTime = '*/2 * * * *';
-            break;    
+            break;
         case '3min':
             parsedCronTime = '*/3 * * * *';
             break;
@@ -62,6 +66,15 @@ cron.prototype.parseCronTime = function(cronTime) {
         default:
             parsedCronTime = cronTime;
             break;
+    }
+    if (Object.prototype.toString.call(cronTime) === '[object Date]') {
+        var s = moment(cronTime).get('second');
+        var m = moment(cronTime).get('minute');
+        var h = moment(cronTime).get('hour');
+        var d = moment(cronTime).get('day');
+        var M = moment(cronTime).get('month');
+        var y = moment(cronTime).get('year');
+        parsedCronTime = s + " " + m + " " + h + " " + d + " " + M + " " + "*";
     }
     return parsedCronTime;
 }
