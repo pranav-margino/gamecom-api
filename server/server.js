@@ -28,7 +28,7 @@ boot(app, __dirname, function(err) {
     if (require.main === module) { //app.start();
         io.init(app);
         //cron.addEvent('startPoll', '15 10 * * *', {});
-        //app.models.Consumer.settings.acl = consumerAcls;
+        app.models.Game.resetSchedule();
 
 
     }

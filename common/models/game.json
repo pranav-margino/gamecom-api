@@ -17,7 +17,7 @@
             "type": "String"
         },
         "type": {
-            "type": "string"
+            "type": "String"
         },
         "scheduledDate": {
             "type": "Date"
@@ -33,10 +33,10 @@
             "default": "false"
         },
         "description": {
-            "type": "string"
+            "type": "String"
         },
-        "artifacts": {
-            "type": "object"
+        "pollId": {
+            "type": "String"
         },
         "isScheduled": {
             "type": "Boolean",
@@ -54,6 +54,16 @@
                 "persistent": true,
                 "forceId": true,
                 "validate": false
+            }
+        },
+        "featuredImage": {
+            "type": "embedsOne",
+            "model": "Image",
+            "property": "featuredImage",
+            "options": {
+                "validate": true,
+                "forceId": true,
+                "presistent": true
             }
         }
     },

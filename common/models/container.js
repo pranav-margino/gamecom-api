@@ -4,11 +4,11 @@ module.exports = function(Container) {
         var result = res.result;
         var file = result.files.file[0];
         var fields = result.fields;
-        var model = getModel(fields.model.toString());
+        var model = app.models[fields.model.toString()];
         if (model) {
             model.findById(fields.id.toString(), function(err, instance) {
                 if (!err) {
-                    var fileModel = getFileModel(fields.type.toString(), instance);
+                    var fileModel = instance[fields.type.toString()];
                     fileModel.create({
                         format: file.type,
                         size: file.size,
@@ -20,36 +20,5 @@ module.exports = function(Container) {
         next();
     });
 
-    function getModel(modelName) {
-        var model;
-        switch (modelName) {
-            case 'Vendor':
-                model = app.models.Vendor;
-                break;
-            case 'Store':
-                model = app.models.Store;
-                break;
-            case 'Coupon':
-                model = app.models.Coupon;
-                break;
-            default:
-                break;
-        }
-        return model;
-    }
 
-    function getFileModel(fileModelName, modelInstance) {
-        var fileModel;
-        switch (fileModelName) {
-            case 'brandLogo':
-                fileModel = modelInstance.brandLogo;
-                break;
-            case 'featuredImage':
-                fileModel = modelInstance.featuredImage;
-                break;
-            default:
-                break;
-        }
-        return fileModel;
-    }
 };
