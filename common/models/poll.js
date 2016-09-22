@@ -4,39 +4,65 @@ var queue = require('../../modules/queue');
 var cron = require('../../modules/cron');
 var event = require('../../modules/event');
 
-function run(pollId) {
+function run(data) {
     var self = this;
-    self.model.findOne({ where: { id: pollId } }, function(err, doc) {
+    self.data = data;
+    self.model.findOne({ where: { id: data.id } }, function(err, poll) {
         if (!err) {
-            var questions = doc._questions || [];
+
+            var questions = poll._questions || [];
             var index = 0;
-            setInterval(function() {
+            readQuestion.bind(self)(questions, index);
+            var ticker = setInterval(function() {
                 if (index < (questions.length - 1)) {
-                    if (self.sockets !== null) {
-                        self.sockets.emit('readModel:Question', { pollId: pollId, question: questions[index] });
-                    }
-                    logger.log("Running question no " + index);
                     index++;
+                    readQuestion.bind(self)(questions, index);
+                    logger.log("Running question no " + index);
+                } else {
+                    event.emit('poll:end', data);
+                    clearInterval(ticker);
                 }
-            }, 3000);
+            }, 5000);
         }
     });
+}
+
+function readQuestion(questions, index) {
+    var data = this.data;
+    if (this.sockets !== null) {
+        this.sockets.emit('readModel:Question', { pollId: data.id, question: questions[index], questionIndex: index, questionsCount: questions.length });
+    }
 }
 
 module.exports = function(Poll) {
     var self = this;
     self.sockets = null;
     self.model = Poll;
-    cron.on('poll:start', function(data) {
-        logger.log('executing startPoll');
-        run.bind(self)(data, modelId);
-    });
+    //io
     io.on('ready', function(socket, sockets) {
         self.sockets = sockets;
     });
+    //poll:start by cron
+    cron.on('poll:start', function(data) {
+        logger.log('poll:start');
+        run.bind(self)(data);
+    });
+
+    //poll:start
     event.on('poll:start', function(data) {
         logger.log("poll:start");
-        run.bind(self)(data.modelId);
+        if (self.sockets) {
+            self.sockets.emit('startModel:Poll', data);
+        }
+        run.bind(self)(data);
+    });
+    //poll:end
+    event.on('poll:end', function(data) {
+        logger.log("poll:end " + data.id);
+
+        if (self.sockets) {
+            self.sockets.emit('endModel:Poll', data);
+        }
     });
 
 }

@@ -15,6 +15,9 @@
         },
         "facebook": {
             "type": "object"
+        },
+        "pictureUrl":{
+            "type":"string"
         }
     },
     "validations": [],

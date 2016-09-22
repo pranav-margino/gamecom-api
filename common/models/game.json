@@ -19,11 +19,11 @@
         "type": {
             "type": "String"
         },
-        "scheduledDate": {
-            "type": "Date"
+        "difficulty": {
+            "type": "String"
         },
-        "scheduledTime": {
-            "type": "Date"
+        "reference": {
+            "type": "String"
         },
         "scheduledAt": {
             "type": "Date"
@@ -41,6 +41,10 @@
         "isScheduled": {
             "type": "Boolean",
             "default": false
+        },
+        "hasStarted":{
+            "type": "Boolean",
+            "default": false
         }
     },
     "validations": [],
@@ -49,7 +53,7 @@
         "contestants": {
             "type": "embedsMany",
             "model": "Consumer",
-            "property": "Contestants",
+            "property": "contestants",
             "options": {
                 "persistent": true,
                 "forceId": true,
