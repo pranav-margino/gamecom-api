@@ -1,0 +1,32 @@
+{
+    "name": "First",
+    "plural": "firsts",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "email": {
+            "type": "String"
+        },
+        "mobile": {
+            "type": "Number"
+        },
+        "name": {
+            "type": "String"
+        },
+        "expertise": {
+            "type": "String"
+        },
+        "likeMoreFreeStuff": {
+            "type": "Boolean",
+            "default": false
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}

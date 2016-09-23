@@ -126,8 +126,12 @@
         "dataSource": "mongoDs",
         "public": true
     },
-    "Game":{
-        "dataSource":"mongoDs",
+    "Game": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "First": {
+        "dataSource": "mongoDs",
         "public": true
     }
 }
