@@ -18,15 +18,12 @@ module.exports = function(First) {
             winners = firsts;
             return winners;
         }
-
         for (var i = 0; i < winnersCount; i++) {
             var index = parseInt(Math.random() * firsts.length);
             winners.push(firsts[index]);
             firsts.splice(index, 1);
         }
-
         return winners;
-
     }
 
 
@@ -37,7 +34,7 @@ module.exports = function(First) {
         next();
     });
 
-    cron.addTask('getResult', new Date(moment().add(1, 'minute').format()), function() {
+    cron.addTask('getResult', new Date("2016-09-25T20:00:00+05:30"), function() {
         console.log("cron just ran");
         First.find({}, function(err, firsts) {
             var winners = getResult(firsts, 2);
