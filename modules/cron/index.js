@@ -99,6 +99,7 @@ cron.prototype.addTask = function(cronTask, cronTime, cb) {
         logger.log('warning', 'Cron task ' + cronTask + 'is not a function');
         return;
     }
+    logger.log('info','Cron task ' + 'added ' + cronTask);
     var job = new CronJob({
         cronTime: self.parseCronTime(cronTime),
         onTick: function() {
