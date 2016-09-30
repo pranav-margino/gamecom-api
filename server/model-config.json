@@ -133,5 +133,17 @@
     "First": {
         "dataSource": "mongoDs",
         "public": true
+    },
+    "Preference": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Product": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Favourite": {
+        "dataSource": "mongoDs",
+        "public": true
     }
 }

@@ -1,0 +1,28 @@
+{
+    "name": "Preference",
+    "plural": "preferences",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "title": {
+            "type": "string"
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {
+        "products": {
+            "type": "hasMany",
+            "model": "Product"
+        },
+        "favourites": {
+            "type": "hasMany",
+            "model": "Favourite"
+        }
+    },
+    "acls": [],
+    "methods": {}
+}
