@@ -64,7 +64,7 @@ module.exports = function(First) {
         }
     });
 
-
+    //
     First.observe('after save', function(ctx, next) {
         if (ctx.isNewInstance) {
             logger.log('info', ctx.instance);
