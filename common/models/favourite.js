@@ -66,9 +66,9 @@ module.exports = function(Favourite) {
 
 
     Favourite.result = function(cb) {
-        /*if (new Date().getTime() < new Date("2016-09-25T19:55:00+05:30").getTime()) {
+        if (new Date().getTime() < new Date("2016-10-01T23:00:00+05:30").getTime()) {
             return cb(null, []);
-        }*/
+        }
         Favourite.find({}, function(err, favourites) {
             if (!err) {
                 var winners = getResult(favourites, winnersCount);
@@ -90,9 +90,21 @@ module.exports = function(Favourite) {
         },
         accepts: [],
         returns: {
-            arg: 'data',
+            arg: 'result',
             type: 'object'
         }
+    });
+
+    cron.addTask('getResultFavourites', new Date("2016-10-01T23:00:00+05:30"), function() {
+        logger.log('info', 'getting result');
+        Favourite.find({}, function(err, favourites) {
+            if (!err) {
+                var winners = getResult(favourites, winnersCount);
+                logger.log('info', winners);
+            } else {
+                logger.log('error', err);
+            }
+        });
     });
 
 
