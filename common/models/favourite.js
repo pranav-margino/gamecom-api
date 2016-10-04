@@ -31,12 +31,17 @@ module.exports = function(Favourite) {
                 productUserCountHash[favourite.product.id] = productUserCountHash[favourite.product.id] + 1;
                 console.log("product ids " + favourite.product.id);
             });
-            console.log("productUserCount " + JSON.stringify(productUserCountHash));
+            for (var key in productUserCountHash) {
+                console.log(key + " " + productUserCountHash[key]);
+            }
+            console.log(productUserCountHash);
             var userCount = [];
             for (var key in productUserCountHash) {
                 userCount.push(productUserCountHash[key]);
             }
-            var maxUserCount = _.uniq(userCount.sort()).pop();
+            console.log(userCount);
+            var maxUserCount = _.uniq(userCount).sort(function(p, q) {
+                return p - q }).pop();
             console.log("maxUserCount " + maxUserCount);
             var probableProductIds = [];
             for (var key in productUserCountHash) {
@@ -66,9 +71,10 @@ module.exports = function(Favourite) {
 
 
     Favourite.result = function(cb) {
-        if (new Date().getTime() < new Date("2016-10-01T23:00:00+05:30").getTime()) {
+        /*if (new Date().getTime() < new Date("2016-10-01T23:00:00+05:30").getTime()) {
             return cb(null, []);
         }
+        */
         Favourite.find({}, function(err, favourites) {
             if (!err) {
                 var winners = getResult(favourites, winnersCount);
