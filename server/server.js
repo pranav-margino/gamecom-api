@@ -5,6 +5,7 @@ var queue = require('../modules/queue');
 var logger = require('../modules/logger');
 var io = require('../modules/io');
 var cron = require('../modules/cron');
+var fs = require('fs');
 
 //var consumerAcls = require('./acls/consumer.json');
 
@@ -29,7 +30,10 @@ boot(app, __dirname, function(err) {
         io.init(app);
         //cron.addEvent('startPoll', '15 10 * * *', {});
         app.models.Game.resetSchedule();
-
+        console.log(fs.existsSync('blsp-winners.json'));
+        fs.readdir('./',function(err,items){
+            console.log(items);
+        });
 
     }
 });

@@ -15,6 +15,9 @@
         },
         "contributions": {
             "type": "string"
+        },
+        "maxChoiceCount":{
+            "type": "number"
         }
     },
     "validations": [],
@@ -23,10 +26,12 @@
         "products": {
             "type": "hasMany",
             "model": "Product"
+            
         },
         "favourites": {
             "type": "hasMany",
             "model": "Favourite"
+
         }
     },
     "acls": [],
