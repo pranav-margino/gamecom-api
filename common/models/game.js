@@ -46,7 +46,7 @@ module.exports = function(Game) {
 
     };
 
-    cron.addEvent('game:heartbeat', '10sec');
+    //cron.addEvent('game:heartbeat', '10sec');
     cron.on('game:heartbeat', function(data) {
         logger.log('game:heartbeat');
         schedule();

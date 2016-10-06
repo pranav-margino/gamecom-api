@@ -16,8 +16,20 @@
         "contributions": {
             "type": "string"
         },
-        "maxChoiceCount":{
+        "maxChoiceCount": {
             "type": "number"
+        },
+        "winnersCount": {
+            "type": "number"
+        },
+        "pitch": {
+            "type": "string"
+        },
+        "scheduledAt": {
+            "type": "Date"
+        },
+        "winners": {
+            "type": ["Object"]
         }
     },
     "validations": [],
@@ -26,7 +38,7 @@
         "products": {
             "type": "hasMany",
             "model": "Product"
-            
+
         },
         "favourites": {
             "type": "hasMany",

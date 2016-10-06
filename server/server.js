@@ -30,10 +30,5 @@ boot(app, __dirname, function(err) {
         io.init(app);
         //cron.addEvent('startPoll', '15 10 * * *', {});
         app.models.Game.resetSchedule();
-        console.log(fs.existsSync('blsp-winners.json'));
-        fs.readdir('./',function(err,items){
-            console.log(items);
-        });
-
     }
 });
