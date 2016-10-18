@@ -14,9 +14,18 @@
     "validations": [],
     "relations": {
         "questions": {
-            "type": "embedsMany",
-            "model": "Question",
+            "type": "hasMany",
+            "model": "PollQuestion",
             "property": "questions",
+            "options": {
+                "forceId": true,
+                "persistent": true
+            }
+        },
+        "answers": {
+            "type": "hasMany",
+            "model": "PollAnswer",
+            "property": "answers",
             "options": {
                 "forceId": true,
                 "persistent": true

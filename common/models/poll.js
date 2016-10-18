@@ -65,4 +65,32 @@ module.exports = function(Poll) {
         }
     });
 
+    Poll.getQuestion = function(id, userId, cb) {
+        Poll.findById(id, function(err, poll) {
+            poll.questions({}, function(err, questions) {
+                return cb(null, questions[0]);
+            });
+
+        })
+
+    };
+
+    Poll.remoteMethod('getQuestion', {
+        http: {
+            path: '/question',
+            verb: 'get'
+        },
+        accepts: [{
+            arg: 'id',
+            type: 'string'
+        }, {
+            arg: 'userId',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'question',
+            type: 'object'
+        }
+    });
+
 }

@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var app = require('../../server/server');
 
 /*
 var cron = require('../../modules/cron');
@@ -31,6 +32,7 @@ module.exports = function(Preference) {
         })
     }
 
+    
 
     Preference.getResult = function(id, cb) {
         if (id == null || id == undefined) {
@@ -73,6 +75,54 @@ module.exports = function(Preference) {
         })
     };
 
+    //winners && products do not repeat
+    Preference.getResultNoRepeat = function(id, cb) {
+        if (id == null || id == undefined) {
+            return cb(null, []);
+        }
+        Preference.findById(id, function(err, preference) {
+            if (!err) {
+                if (!preference.scheduledAt || new Date().getTime() < new Date(preference.scheduledAt).getTime()) {
+                    return cb(null, []);
+                }
+                //if no favourites return empty array
+                if (!preference.favourites) {
+                    return cb(null, []);
+                }
+                //if winners already exist
+                /*if (preference.winners && preference.winners.length > 0) {
+                    return cb(null, preference.winners);
+                }*/
+
+                //choose winners randomly
+                var winners = [];
+                preference.favourites({}, function(err, favourites) {
+
+                    if (preference.winnersCount >= favourites.length) {
+                        winners = favourites;
+                    } else {
+                        for (var i = 0; i < preference.winnersCount; i++) {
+                            var index = parseInt(Math.random() * favourites.length);
+
+                            var winner = favourites[index];
+                            winners.push(winner);
+                            var remainingFavourites = (_.partition(favourites, function(favourite) {
+                                return (favourite.product.id.toString() == winner.product.id.toString() || favourite.user.id.toString() == winner.user.id.toString())
+                            })[1]);
+                            favourites = remainingFavourites;
+                        }
+                        console.log("###");
+                    }
+                    preference.winners = winners;
+                    preference.save();
+                    return cb(err, preference.winners);
+                });
+            } else {
+                logger.log('error', err);
+                return cb(err, []);
+            }
+        })
+    };
 
     Preference.remoteMethod('getResult', {
         http: {
@@ -88,6 +138,22 @@ module.exports = function(Preference) {
             type: 'object'
         }
     });
+
+    Preference.remoteMethod('getResultNoRepeat', {
+        http: {
+            path: '/resultnorepeat',
+            verb: 'get'
+        },
+        accepts: [{
+            arg: 'id',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'object'
+        }
+    });
+
     Preference.remoteMethod('setResult', {
         http: {
             path: '/result',
@@ -105,6 +171,56 @@ module.exports = function(Preference) {
             type: 'object'
         }
     });
+
+    Preference.listConsumers = function() {
+        Preference.find({}, function(err, preferences) {
+            _.forEach(preferences, function(preference) {
+                //console.log(preference);
+                preference.favourites({}, function(err, favourites) {
+                    var consumerIds = [];
+                    _.forEach(favourites, function(favourite) {
+                        consumerIds.push(favourite.user.id);
+                    })
+                    console.log(_.uniq(consumerIds));
+                });
+            });
+        });
+    }
+
+    Preference.cleanup = function() {
+        app.models.Favourite.find({}, { fields: { 'product.title': true, 'user.name': true } }, function(err, favourites) {
+            //console.log(favourites);
+            var preferenceProducts = [];
+            Preference.find({}, function(err, preferences) {
+                //console.log(preferences);
+                _.forEach(preferences, function(preference) {
+                    preference.products(function(err, products) {
+                        //console.log(product);
+                        _.forEach(products, function(product) {
+                            preferenceProducts.push(product);
+                        });
+                    });
+                })
+                setTimeout(function() {
+                    //console.log(preferenceProducts);
+                    for (var i = 0; i < favourites.length; i++) {
+                        for (var j = 0; j < preferenceProducts.length; j++) {
+                            if (favourites[i].product.title == preferenceProducts[j].title) {
+                                console.log("matched");
+                                console.log(favourites[i].product.title);
+                                console.log(favourites[i].product.id);
+                                console.log(preferenceProducts[j].id);
+                                console.log("###");
+                                favourites[i].product = preferenceProducts[j];
+                                favourites[i].save();
+                            }
+                        }
+                    }
+                }, 2000);
+
+            });
+        });
+    }
 
     /*function getResultTrendiest(favourites, winnersCount, title) {
         var winnersFile = title + ' winners.json';

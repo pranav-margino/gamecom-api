@@ -29,6 +29,9 @@ boot(app, __dirname, function(err) {
     if (require.main === module) { //app.start();
         io.init(app);
         //cron.addEvent('startPoll', '15 10 * * *', {});
-        app.models.Game.resetSchedule();
+        //app.models.Game.resetSchedule();
+        //app.models.Preference.listConsumers();
+        //app.models.Consumer.assignPoints();
+        //app.models.Poll.getQuestion();
     }
 });

@@ -18,6 +18,10 @@
         },
         "pictureUrl":{
             "type":"string"
+        },
+        "points":{
+            "type": "Number",
+            "default": 200
         }
     },
     "validations": [],

@@ -1,0 +1,24 @@
+{
+    "name": "PreferenceProduct",
+    "plural": "preferenceProducts",
+    "base": "Product",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "maxWinnersCount": {
+            "type": "Number"
+        },
+        "minWinnersCount": {
+            "type": "Number"
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {
+
+    },
+    "acls": [],
+    "methods": {}
+}

@@ -142,7 +142,19 @@
         "dataSource": "mongoDs",
         "public": true
     },
+    "PreferenceProduct": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
     "Favourite": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "PollQuestion":{
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "PollAnswer":{
         "dataSource": "mongoDs",
         "public": true
     }

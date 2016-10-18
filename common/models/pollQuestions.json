@@ -1,0 +1,20 @@
+{
+    "name": "PollQuestion",
+    "plural": "pollQuestions",
+    "base": "Question",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "points": {
+            "type": "Number",
+            "default": 20
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}

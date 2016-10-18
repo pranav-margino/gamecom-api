@@ -1,0 +1,15 @@
+{
+    "name": "PollAnswer",
+    "plural": "pollAnswers",
+    "base": "Answer",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {},
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}

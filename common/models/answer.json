@@ -13,23 +13,11 @@
         "finalTimestamp": {
             "type": "Number"
         },
-        "expected": {
-            "type": "String"
+        "user":{
+            "type": "Object"
         },
-        "userId": {
-            "type": "String"
-        },
-        "pollId": {
-            "type": "String"
-        },
-        "questionId": {
-            "type": "String"
-        },
-        "input": {
-            "type": "String"
-        },
-        "interval":{
-            "type" : "Number"
+        "question":{
+            "type": "Object"
         }
     },
     "validations": [],

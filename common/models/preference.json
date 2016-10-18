@@ -37,7 +37,7 @@
     "relations": {
         "products": {
             "type": "hasMany",
-            "model": "Product"
+            "model": "PreferenceProduct"
 
         },
         "favourites": {
