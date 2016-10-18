@@ -3,6 +3,9 @@ var logger = require('../../modules/logger');
 var queue = require('../../modules/queue');
 var cron = require('../../modules/cron');
 var event = require('../../modules/event');
+var _ = require('lodash');
+var app = require('../../server/server');
+
 
 function run(data) {
     var self = this;
@@ -65,17 +68,29 @@ module.exports = function(Poll) {
         }
     });
 
-    Poll.getQuestion = function(id, userId, cb) {
+    Poll.nextQuestion = function(id, userId, cb) {
         Poll.findById(id, function(err, poll) {
             poll.questions({}, function(err, questions) {
-                return cb(null, questions[0]);
+                poll.answers({}, function(err, answers) {
+                    var answered = _.uniq(_.map(_.partition(answers, function(answer) {
+                        return answer.user.id.toString() == userId;
+                    })[0], function(obj) {
+                        return obj.question.id;
+                    }));
+                    var unanswered = _.partition(questions, function(question) {
+                        return answered.indexOf(question.id.toString()) == -1;
+                    })[0];
+                    app.models.Consumer.getPoints(userId,function(err,data){
+                        console.log(err);
+                        console.log(data);
+                    })
+                    return cb(null, unanswered[0]);
+                });
             });
-
         })
-
     };
 
-    Poll.remoteMethod('getQuestion', {
+    Poll.remoteMethod('nextQuestion', {
         http: {
             path: '/question',
             verb: 'get'

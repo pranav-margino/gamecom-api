@@ -5,7 +5,7 @@ var cron = require('../../modules/cron');
 
 
 module.exports = function(Answer) {
-    io.on('ready', function(socket, sockets) {
+    /*io.on('ready', function(socket, sockets) {
         socket.on('addModel:Answer', function(data) {
             logger.log('addModel:Answer');
             logger.log('debug', data);
@@ -27,4 +27,5 @@ module.exports = function(Answer) {
         }
         next();
     });
+    */
 }

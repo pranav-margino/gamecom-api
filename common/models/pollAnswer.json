@@ -6,7 +6,11 @@
     "options": {
         "validateUpsert": true
     },
-    "properties": {},
+    "properties": {
+        "input": {
+            "type": "Object"
+        }
+    },
     "validations": [],
     "hidden": [],
     "relations": {},

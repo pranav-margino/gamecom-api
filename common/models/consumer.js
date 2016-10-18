@@ -30,6 +30,43 @@ module.exports = function(Consumer) {
         next();
     });
 
+    Consumer.getPoints = function(id, cb) {
+        Consumer.findById(id, function(err, consumer) {
+            if (!err) {
+                return cb(null, consumer.points);
+            } else {
+                return cb(true, null);
+            }
+        });
+    }
+
+    Consumer.updatePoints = function(id, points, cb) {
+        if (isNaN(points)) {
+            return cb(true, null);
+        }
+        Consumer.findById(id, function(err, consumer) {
+            consumer.points = points
+            consumer.save();
+            return cb(null, true);
+        });
+    }
+
+
+    Consumer.remoteMethod('getPoints', {
+        http: {
+            path: '/points',
+            verb: 'get'
+        },
+        accepts: {
+            arg: 'id',
+            type: 'string'
+        },
+        returns: {
+            arg: 'data',
+            type: 'object'
+        }
+    });
+
     /* var firstgamers = [ '57efb52a9013ab8f38ddf433',
   '57efbb4d9013ab8f38ddf468',
   '57efbd309013ab8f38ddf475',
