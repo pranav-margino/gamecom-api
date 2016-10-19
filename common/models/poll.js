@@ -69,6 +69,7 @@ module.exports = function(Poll) {
     });
 
     Poll.nextQuestion = function(id, userId, cb) {
+        //var questionData = {points:0, question:[], hasCompleted:true, index:1, count:0};
         Poll.findById(id, function(err, poll) {
             poll.questions({}, function(err, questions) {
                 poll.answers({}, function(err, answers) {
@@ -80,11 +81,16 @@ module.exports = function(Poll) {
                     var unanswered = _.partition(questions, function(question) {
                         return answered.indexOf(question.id.toString()) == -1;
                     })[0];
-                    app.models.Consumer.getPoints(userId,function(err,data){
-                        console.log(err);
-                        console.log(data);
+                    var hasCompleted = (unanswered && unanswered.length > 0) ? false : true;
+                    app.models.Consumer.getPoints(userId, function(err, data) {
+                        return cb(err, {
+                            points: data,
+                            question: unanswered[0],
+                            hasCompleted: hasCompleted,
+                            index: (questions.length - unanswered.length) + 1,
+                            count: questions.length
+                        });
                     })
-                    return cb(null, unanswered[0]);
                 });
             });
         })
@@ -103,7 +109,7 @@ module.exports = function(Poll) {
             type: 'string'
         }],
         returns: {
-            arg: 'question',
+            arg: 'questionData',
             type: 'object'
         }
     });
