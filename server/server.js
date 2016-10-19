@@ -33,6 +33,6 @@ boot(app, __dirname, function(err) {
         //app.models.Preference.listConsumers();
         //app.models.Consumer.assignPoints();
         //app.models.Poll.getQuestion();
-        app.models.Preference.cleanup();
+        //app.models.Preference.cleanup();
     }
 });
