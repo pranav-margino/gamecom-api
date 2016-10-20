@@ -12,6 +12,9 @@
         },
         "minWinnersCount": {
             "type": "Number"
+        },
+        "value":{
+            "type": "Number"
         }
     },
     "validations": [],

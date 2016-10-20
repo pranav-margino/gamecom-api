@@ -25,11 +25,18 @@
         "pitch": {
             "type": "string"
         },
+        "distributionType": {
+            "type": "string",
+            "default": "random"
+        },
         "scheduledAt": {
             "type": "Date"
         },
         "winners": {
             "type": ["Object"]
+        },
+        "poll": {
+            "type": "object"
         }
     },
     "validations": [],

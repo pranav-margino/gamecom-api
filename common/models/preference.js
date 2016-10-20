@@ -32,7 +32,16 @@ module.exports = function(Preference) {
         })
     }
 
-    
+
+    Preference.getPoints = function(userId, cb) {
+        app.models.Consumer.getPoints(userId, function(err, data) {
+            cb(err, data);
+        })
+    }
+
+
+
+
 
     Preference.getResult = function(id, cb) {
         if (id == null || id == undefined) {
@@ -151,6 +160,21 @@ module.exports = function(Preference) {
         returns: {
             arg: 'result',
             type: 'object'
+        }
+    });
+
+    Preference.remoteMethod('getPoints', {
+        http: {
+            path: '/points',
+            verb: 'get'
+        },
+        accepts: [{
+            arg: 'userId',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'points',
+            type: 'number'
         }
     });
 
