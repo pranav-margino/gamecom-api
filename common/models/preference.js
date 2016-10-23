@@ -99,9 +99,9 @@ module.exports = function(Preference) {
                     return cb(null, []);
                 }
                 //if winners already exist
-                /*if (preference.winners && preference.winners.length > 0) {
+                if (preference.winners && preference.winners.length > 0) {
                     return cb(null, preference.winners);
-                }*/
+                }
 
                 //choose winners randomly
                 var winners = [];
