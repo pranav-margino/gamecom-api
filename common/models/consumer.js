@@ -1,5 +1,6 @@
 var queue = require('../../modules/queue');
 var _ = require('lodash');
+var stats = require("stats-lite");
 
 module.exports = function(Consumer) {
     Consumer.getFacebookUser = function(id, cb) {
@@ -51,6 +52,30 @@ module.exports = function(Consumer) {
         });
     }
 
+    Consumer.cleanupPoints = function() {
+        Consumer.find({}, { fields: { name: true, points: true } }, function(err, consumers) {
+            _.forEach(consumers, function(consumer) {
+                if (consumer.points < 0) {
+                    console.log(consumer.name);
+                    console.log(consumer.points);
+                    consumer.points = 0;
+                    consumer.save();
+                }
+
+            });
+        });
+    }
+
+
+    Consumer.statsPoints = function(cb) {
+        Consumer.find({}, { fields: { name: true, points: true } }, function(err, consumers) {
+            var points = [];
+            for (var i = 0; i < consumers.length; i++) {
+                points.push(parseInt(consumers[i].points));
+            }
+            cb(err, { mean: stats.mean(points), median: stats.median(points), mode: stats.mode(points) });
+        });
+    }
 
     Consumer.remoteMethod('getPoints', {
         http: {
@@ -63,6 +88,18 @@ module.exports = function(Consumer) {
         },
         returns: {
             arg: 'data',
+            type: 'object'
+        }
+    });
+
+    Consumer.remoteMethod('statsPoints', {
+        http: {
+            path: '/statsPoints',
+            verb: 'get'
+        },
+        accepts: [],
+        returns: {
+            arg: 'stats',
             type: 'object'
         }
     });

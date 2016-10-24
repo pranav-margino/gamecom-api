@@ -34,5 +34,11 @@ boot(app, __dirname, function(err) {
         //app.models.Consumer.assignPoints();
         //app.models.Poll.getQuestion();
         //app.models.Preference.cleanup();
+        //app.models.Consumer.cleanupPoints();
+        //app.models.Consumer.statsPoints(function(err,data){
+        //    console.log(err);
+        //    console.log(data);
+        //});
+        app.models.PollAnswer.cleanup();
     }
 });

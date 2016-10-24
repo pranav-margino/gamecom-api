@@ -10,6 +10,7 @@
   "dependencies": {
     "async": "^2.0.0-rc.6",
     "bcrypt": "^0.8.5",
+    "cheerio": "^0.22.0",
     "compression": "^1.0.3",
     "cors": "^2.5.2",
     "cron": "^1.1.0",
@@ -29,6 +30,7 @@
     "request": "^2.73.0",
     "serve-favicon": "^2.0.1",
     "socket.io": "^1.4.5",
+    "stats-lite": "^2.0.3",
     "winston": "^2.2.0"
   },
   "devDependencies": {

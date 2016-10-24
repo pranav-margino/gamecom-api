@@ -12,4 +12,22 @@ module.exports = function(PollAnswer) {
             next();
         }
     });
+    PollAnswer.cleanup = function() {
+        PollAnswer.find({}, function(err, docs) {
+            console.log(docs.length);
+            var userqusetionidhash = [];
+            var repeats = [];
+            for (var i = 0; i < docs.length; i++) {
+                var slug = docs[i].user.id + docs[i].question.id;
+                if (userqusetionidhash.indexOf(slug) == -1) {
+                    userqusetionidhash.push(slug);
+                } else {
+                    //console.log("repeat" + slug);
+                    repeats.push(slug);
+                }
+
+            }
+            console.log(repeats.length);
+        })
+    }
 }
