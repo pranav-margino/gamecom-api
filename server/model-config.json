@@ -157,5 +157,9 @@
     "PollAnswer":{
         "dataSource": "mongoDs",
         "public": true
+    },
+    "Story":{
+        "dataSource": "mongoDs",
+        "public": true
     }
 }

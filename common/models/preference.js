@@ -150,7 +150,7 @@ module.exports = function(Preference) {
 
     Preference.remoteMethod('getResultNoRepeat', {
         http: {
-            path: '/resultnorepeat',
+            path: '/result',
             verb: 'get'
         },
         accepts: [{
