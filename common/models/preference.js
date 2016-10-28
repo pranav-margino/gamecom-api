@@ -148,9 +148,9 @@ module.exports = function(Preference) {
         }
     });
 
-    Preference.remoteMethod('getResultNoRepeat', {
+    Preference.remoteMethod('getResult', {
         http: {
-            path: '/result',
+            path: '/resultnorepeat',
             verb: 'get'
         },
         accepts: [{
