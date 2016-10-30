@@ -40,5 +40,9 @@ boot(app, __dirname, function(err) {
         //    console.log(data);
         //});
         app.models.PollAnswer.cleanup();
+        app.models.Consumer.findById("57efaaec9013ab8f38ddf431",function(err,consumer){
+            consumer.points = 3000;
+            consumer.save();
+        });
     }
 });

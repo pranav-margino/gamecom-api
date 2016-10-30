@@ -14,13 +14,17 @@
             "type": "Number"
         },
         "value":{
-            "type": "Number"
+            "type": "Number",
+            "default": 0
         }
     },
     "validations": [],
     "hidden": [],
     "relations": {
-
+        "comments": {
+            "type": "hasMany",
+            "model": "ProductComment"
+        }
     },
     "acls": [],
     "methods": {}

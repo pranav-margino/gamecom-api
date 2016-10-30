@@ -12,12 +12,26 @@
         },
         "user": {
             "type": "Object"
+        },
+        "overbid": {
+            "type": "Number",
+            "default": 0
         }
+
     },
     "validations": [],
     "hidden": [],
     "relations": {
-
+        "endorsements": {
+            "type": "hasMany",
+            "model": "Endorsement",
+            "property": "endorsements",
+            "options": {
+                "validate": false,
+                "forceId": true,
+                "presistent": true
+            }
+        }
     },
     "acls": [],
     "methods": {}

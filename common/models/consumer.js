@@ -46,7 +46,7 @@ module.exports = function(Consumer) {
             return cb(true, null);
         }
         Consumer.findById(id, function(err, consumer) {
-            consumer.points = parseInt(consumer.points) + parseInt(points);
+            consumer.points = Math.max(0, parseInt(consumer.points) + parseInt(points));
             consumer.save();
             return cb(null, true);
         });

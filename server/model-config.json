@@ -161,5 +161,17 @@
     "Story":{
         "dataSource": "mongoDs",
         "public": true
+    },
+    "Endorsement":{
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Comment":{
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "ProductComment":{
+        "dataSource": "mongoDs",
+        "public": true
     }
 }

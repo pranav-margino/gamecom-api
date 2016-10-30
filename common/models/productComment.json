@@ -1,0 +1,19 @@
+{
+    "name": "ProductComment",
+    "plural": "productComments",
+    "base": "Comment",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {
+
+    },
+    "acls": [],
+    "methods": {}
+}
