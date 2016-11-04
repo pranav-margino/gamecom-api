@@ -25,7 +25,7 @@
         }
     },
     "validations": [],
-    "hidden": [],
+    "hidden": ["facebook"],
     "relations": {},
     "acls": [{
         "principalType": "ROLE",

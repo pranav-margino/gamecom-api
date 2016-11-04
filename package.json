@@ -23,6 +23,7 @@
     "loopback-component-storage": "^1.9.1",
     "loopback-connector-mongodb": "^1.13.3",
     "loopback-datasource-juggler": "^2.39.0",
+    "loopback-ds-timestamp-mixin": "^3.4.0",
     "moment": "^2.15.0",
     "node-uuid": "^1.4.7",
     "nodemailer": "^2.3.0",

@@ -6,6 +6,7 @@ var logger = require('../modules/logger');
 var io = require('../modules/io');
 var cron = require('../modules/cron');
 var fs = require('fs');
+var _ = require('lodash');
 
 //var consumerAcls = require('./acls/consumer.json');
 
@@ -40,9 +41,24 @@ boot(app, __dirname, function(err) {
         //    console.log(data);
         //});
         app.models.PollAnswer.cleanup();
-        app.models.Consumer.findById("57efaaec9013ab8f38ddf431",function(err,consumer){
-            consumer.points = 3000;
-            consumer.save();
+        app.models.Consumer.findById("57efaaec9013ab8f38ddf431", function(err, consumer) {
+            console.log(err);
+            if (!err) {
+                //consumer.points = 3000;
+                //consumer.save();
+            }
+
+        });
+        app.models.Consumer.find({}, function(err, consumers) {
+            console.log(err);
+            if (!err) {
+                _.forEach(consumers, function(consumer) {
+                    consumer.points = 2000;
+                    consumer.save();
+                });
+
+            }
+
         });
     }
 });

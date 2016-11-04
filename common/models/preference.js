@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var app = require('../../server/server');
+var async = require('async');
 
 /*
 var cron = require('../../modules/cron');
@@ -132,6 +133,43 @@ module.exports = function(Preference) {
             }
         })
     };
+
+    Preference.getProductsComments = function(id, cb) {
+        Preference.findById(id, function(err, preference) {
+            if (!err) {
+                //var products = [];
+                preference.products({}, function(err, products) {
+
+                    async.map(products, function(product, cb) {
+                        product.comments({}, function(err, comments) {
+                            cb(null, comments);
+                        })
+                    }, function(err, results) {
+                        return cb(null, _.flattenDeep(results));
+                    });
+                });
+            } else {
+                return cb(err, null);
+            }
+        });
+
+    };
+
+
+    Preference.remoteMethod('getProductsComments', {
+        http: {
+            path: '/:id/getProductsComments',
+            verb: 'get'
+        },
+        accepts: [{
+            arg: 'id',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'comments',
+            type: 'Array'
+        }
+    });
 
     Preference.remoteMethod('getResult', {
         http: {

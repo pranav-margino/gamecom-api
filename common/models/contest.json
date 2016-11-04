@@ -1,6 +1,6 @@
 {
-    "name": "Endorsement",
-    "plural": "endorsements",
+    "name": "Contest",
+    "plural": "contests",
     "base": "PersistedModel",
     "idInjection": true,
     "mixins": {
@@ -16,11 +16,7 @@
         },
         "user": {
             "type": "Object"
-        },
-        "message": {
-            "type": "String"
         }
-
     },
     "validations": [],
     "hidden": [],

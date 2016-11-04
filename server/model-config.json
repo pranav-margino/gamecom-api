@@ -1,7 +1,7 @@
 {
     "_meta": {
         "sources": ["loopback/common/models", "loopback/server/models", "../common/models", "./models"],
-        "mixins": ["loopback/common/mixins", "loopback/server/mixins", "../common/mixins", "./mixins"]
+        "mixins": ["loopback/common/mixins", "loopback/server/mixins", "../common/mixins", "./mixins","../node_modules/loopback-ds-timestamp-mixin"]
     },
     "User": {
         "dataSource": "db"
@@ -171,6 +171,10 @@
         "public": true
     },
     "ProductComment":{
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Contest":{
         "dataSource": "mongoDs",
         "public": true
     }

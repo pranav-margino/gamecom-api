@@ -6,6 +6,9 @@
     "options": {
         "validateUpsert": true
     },
+    "mixins": {
+      "TimeStamp" : true
+    },
     "properties": {
         "product": {
             "type": "Object"
@@ -16,8 +19,10 @@
         "overbid": {
             "type": "Number",
             "default": 0
+        },
+        "overbidAt":{
+            "type": "Date"
         }
-
     },
     "validations": [],
     "hidden": [],
@@ -26,6 +31,16 @@
             "type": "hasMany",
             "model": "Endorsement",
             "property": "endorsements",
+            "options": {
+                "validate": false,
+                "forceId": true,
+                "presistent": true
+            }
+        },
+        "contests": {
+            "type": "hasMany",
+            "model": "Contest",
+            "property": "contests",
             "options": {
                 "validate": false,
                 "forceId": true,
