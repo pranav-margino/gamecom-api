@@ -1,5 +1,7 @@
 var app = require('../../server/server');
 var io = require('../../modules/io');
+var _ = require('lodash');
+var async = require('async');
 
 module.exports = function(Favourite) {
     var self = this;
@@ -30,6 +32,75 @@ module.exports = function(Favourite) {
             }
         })
     };
+
+    Favourite.peopleEndorsements = function(preferenceId, userId, cb) {
+        Favourite.find({ where: { preferenceId: preferenceId } }, function(err, favourites) {
+            //cb(err, favourites);
+            var userFavourites = [];
+
+            if (!err) {
+                userFavourites = _.partition(favourites, function(favourite) {
+                    if (favourite.user.id == userId) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                })[0];
+
+                async.map(userFavourites, function(userFavourite, cb) {
+                    userFavourite.endorsements({}, function(err, endorsements) {
+                        var productEndorsements = [];
+                        _.forEach(endorsements, function(endorsement) {
+                            var product = userFavourite.product;
+                            if (product.description) {
+                                delete product.description;
+                            }
+                            endorsement.product = product;
+                            productEndorsements.push(endorsement);
+                        });
+
+                        cb(err, productEndorsements);
+                    })
+                }, function(err, result) {
+                    return cb(err, _.flatten(result));
+                });
+
+
+            } else {
+                return cb(err, null);
+            }
+        });
+    }
+
+    Favourite.userEndorsements = function(preferenceId, userId, cb) {
+        Favourite.find({ where: { preferenceId: preferenceId } }, function(err, favourites) {
+            async.map(favourites,function(favourite,cb){
+
+            },function(err,result){
+                
+            });
+        });
+    }
+
+
+
+    Favourite.remoteMethod('peopleEndorsements', {
+        http: {
+            path: '/peopleEndorsements',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'preferenceId',
+            type: 'string'
+        }, {
+            arg: 'userId',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Array'
+        }
+    });
 
 
     Favourite.remoteMethod('overbid', {

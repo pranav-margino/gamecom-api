@@ -19,6 +19,9 @@
         },
         "message": {
             "type": "String"
+        },
+        "reply":{
+            "type":"String"
         }
 
     },
