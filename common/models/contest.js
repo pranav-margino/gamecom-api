@@ -9,7 +9,7 @@ module.exports = function(Contest) {
                 if (!err) {
                     app.models.Consumer.getPoints(ctx.instance.user.id, function(err, points) {
                         if (points >= ctx.instance.value) {
-                            favourite.overbid = Math.max(0, parseInt(favourite.overbid) - parseInt(ctx.instance.value));
+                            favourite.bid = Math.max(0, parseInt(favourite.bid) - parseInt(ctx.instance.value));
                             favourite.save();
                             app.models.Consumer.updatePoints(ctx.instance.user.id, -ctx.instance.value, function(err, data) {
                                 broadcastContest({

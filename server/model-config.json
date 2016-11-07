@@ -177,5 +177,9 @@
     "Contest":{
         "dataSource": "mongoDs",
         "public": true
+    },
+    "Overbid":{
+        "dataSource": "mongoDs",
+        "public": true
     }
 }

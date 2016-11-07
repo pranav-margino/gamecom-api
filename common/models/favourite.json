@@ -7,7 +7,7 @@
         "validateUpsert": true
     },
     "mixins": {
-      "TimeStamp" : true
+        "TimeStamp": true
     },
     "properties": {
         "product": {
@@ -20,7 +20,15 @@
             "type": "Number",
             "default": 0
         },
-        "overbidAt":{
+        "bid": {
+            "type": "Number",
+            "default": 0
+        },
+        "rank": {
+            "type": "Number",
+            "default": 1
+        },
+        "overbidAt": {
             "type": "Date"
         }
     },
@@ -41,6 +49,16 @@
             "type": "hasMany",
             "model": "Contest",
             "property": "contests",
+            "options": {
+                "validate": false,
+                "forceId": true,
+                "presistent": true
+            }
+        },
+        "overbids": {
+            "type": "hasMany",
+            "model": "Overbid",
+            "property": "overbid",
             "options": {
                 "validate": false,
                 "forceId": true,

@@ -19,7 +19,7 @@
         }
     },
     "validations": [],
-    "hidden": [],
+    "hidden": ["comments"],
     "relations": {
         "comments": {
             "type": "hasMany",

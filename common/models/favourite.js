@@ -7,39 +7,15 @@ module.exports = function(Favourite) {
     var self = this;
 
 
-    Favourite.overbid = function(id, value, cb) {
-        Favourite.findById(id, function(err, favourite) {
-            if (!err) {
-                favourite.overbid = favourite.overbid + Math.abs(value);
-                favourite.overbidAt = new Date();
-                favourite.save();
-                app.models.Consumer.updatePoints(favourite.user.id, -value, function(err, points) {
-                    if (!err) {
-                        broadcastOverbid({
-                            user: favourite.user,
-                            product: favourite.product,
-                            value: value
-                        });
-                        cb(null, favourite);
 
-                    } else {
-                        cb(err, null);
-                    }
 
-                });
-            } else {
-                return cb(err, null);
-            }
-        })
-    };
+
 
     Favourite.peopleEndorsements = function(preferenceId, userId, cb) {
         Favourite.find({ where: { preferenceId: preferenceId } }, function(err, favourites) {
-            //cb(err, favourites);
-            var userFavourites = [];
 
             if (!err) {
-                userFavourites = _.partition(favourites, function(favourite) {
+                var userFavourites = _.partition(favourites, function(favourite) {
                     if (favourite.user.id == userId) {
                         return true;
                     } else {
@@ -49,14 +25,14 @@ module.exports = function(Favourite) {
 
                 async.map(userFavourites, function(userFavourite, cb) {
                     userFavourite.endorsements({}, function(err, endorsements) {
-                        var productEndorsements = [];
-                        _.forEach(endorsements, function(endorsement) {
+                        //var productEndorsements = [];
+                        var productEndorsements = _.map(endorsements, function(endorsement) {
                             var product = userFavourite.product;
                             if (product.description) {
                                 delete product.description;
                             }
                             endorsement.product = product;
-                            productEndorsements.push(endorsement);
+                            return endorsement;
                         });
 
                         cb(err, productEndorsements);
@@ -72,15 +48,242 @@ module.exports = function(Favourite) {
         });
     }
 
+    Favourite.peopleContests = function(preferenceId, userId, cb) {
+        Favourite.find({ where: { preferenceId: preferenceId } }, function(err, favourites) {
+
+            if (!err) {
+                var userFavourites = _.partition(favourites, function(favourite) {
+                    if (favourite.user.id == userId) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                })[0];
+
+                async.map(userFavourites, function(userFavourite, cb) {
+                    userFavourite.contests({}, function(err, contests) {
+                        //var productEndorsements = [];
+                        var productContests = _.map(contests, function(contest) {
+                            var product = userFavourite.product;
+                            if (product.description) {
+                                delete product.description;
+                            }
+                            contest.product = product;
+                            return contest;
+                        });
+
+                        cb(err, productContests);
+                    })
+                }, function(err, result) {
+                    return cb(err, _.flatten(result));
+                });
+
+
+            } else {
+                return cb(err, null);
+            }
+        });
+    }
+
+    Favourite.remoteMethod('peopleContests', {
+        http: {
+            path: '/peopleContests',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'preferenceId',
+            type: 'string'
+        }, {
+            arg: 'userId',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Array'
+        }
+    });
+
     Favourite.userEndorsements = function(preferenceId, userId, cb) {
         Favourite.find({ where: { preferenceId: preferenceId } }, function(err, favourites) {
-            async.map(favourites,function(favourite,cb){
+            async.map(favourites, function(favourite, cb) {
+                favourite.endorsements({}, function(err, endorsements) {
 
-            },function(err,result){
-                
+                    var endorsementsObj = [];
+                    var endorsedByUser = _.filter(endorsements, function(endorsement) {
+                        return endorsement.user.id == userId;
+
+                    });
+
+                    _.forEach(endorsedByUser, function(e) {
+                        delete e.user;
+                        e.user = favourite.user;
+                        e.product = favourite.product;
+                        endorsementsObj.push(e);
+                    });
+
+
+                    cb(err, endorsementsObj);
+
+
+
+                })
+            }, function(err, result) {
+                return cb(err, _.flatten(result));
             });
         });
     }
+
+    Favourite.userContests = function(preferenceId, userId, cb) {
+        Favourite.find({ where: { preferenceId: preferenceId } }, function(err, favourites) {
+            async.map(favourites, function(favourite, cb) {
+                favourite.contests({}, function(err, contests) {
+                    var contestsArray = [];
+                    var contestedByUser = _.filter(contests, function(contest) {
+                        return contest.user.id == userId;
+                    });
+                    _.forEach(contestedByUser, function(e) {
+                        delete e.user;
+                        e.user = favourite.user;
+                        e.product = favourite.product;
+                        contestsArray.push(e);
+                    });
+                    cb(err, contestsArray);
+                })
+            }, function(err, result) {
+                return cb(err, _.flatten(result));
+            });
+        });
+    }
+
+    Favourite.userOverbids = function(preferenceId, userId, cb) {
+        Favourite.find({ where: { preferenceId: preferenceId } }, function(err, favourites) {
+            if (!err) {
+                async.map(favourites, function(favourite, cb) {
+                    favourite.overbids({}, function(err, overbids) {
+                        cb(err, _.filter(overbids, function(overbid) {
+                            return overbid.user.id == userId;
+                        }));
+                    });
+                }, function(err, result) {
+                    return cb(err, _.flatten(result));
+                });
+            }
+
+        })
+    };
+
+
+    Favourite.rank = function(preferenceId, cb) {
+        Favourite.find({ where: { preferenceId: preferenceId } }, function(err, favourites) {
+            //console.log(favourites);
+            var favouriteGroups = _.groupBy(favourites, function(favourite) {
+                return favourite.product.id;
+            });
+            var arr = [];
+            for (var key in favouriteGroups) {
+                var group = favouriteGroups[key];
+                group.sort(function(a, b) {
+                    if (a.bid > b.bid) {
+                        return 1;
+                    } else if (a.bid < b.bid) {
+                        return -1;
+                    } else {
+                        //both bid are equal
+                        if (new Date(a.createdAt).getTime() < new Date(b.createdAt).getTime()) {
+                            return 1;
+                        } else if (new Date(a.createdAt).getTime() > new Date(b.createdAt).getTime()) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+
+                    }
+                });
+
+                var length = group.length;
+                for (var i = 0; i < length; i++) {
+                    group[i].rank = length - i;
+                    group[i].save();
+                }
+
+                arr.push(group);
+            }
+
+            return cb(null, _.flatten(arr));
+
+        });
+    }
+
+    Favourite.remoteMethod('rank', {
+        http: {
+            path: '/rank',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'preferenceId',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Array'
+        }
+    });
+
+    Favourite.remoteMethod('userOverbids', {
+        http: {
+            path: '/userOverbids',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'preferenceId',
+            type: 'string'
+        }, {
+            arg: 'userId',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Array'
+        }
+    });
+
+
+    Favourite.remoteMethod('userContests', {
+        http: {
+            path: '/userContests',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'preferenceId',
+            type: 'string'
+        }, {
+            arg: 'userId',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Array'
+        }
+    });
+
+
+    Favourite.remoteMethod('userEndorsements', {
+        http: {
+            path: '/userEndorsements',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'preferenceId',
+            type: 'string'
+        }, {
+            arg: 'userId',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Array'
+        }
+    });
 
 
 
@@ -132,6 +335,7 @@ module.exports = function(Favourite) {
             app.models.Consumer.updatePoints(instance.user.id, -value, function(err, cb) {
                 if (!err) {
                     broadcastFavourite(instance);
+                    //calculateRank(instance);
                 }
             });
             next();
@@ -139,6 +343,8 @@ module.exports = function(Favourite) {
             next();
         }
     });
+
+
 
     Favourite.observe('before delete', function(ctx, next) {
         var instance = ctx.instance;

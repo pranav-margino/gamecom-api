@@ -1,0 +1,30 @@
+{
+    "name": "Overbid",
+    "plural": "overbids",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "mixins": {
+      "TimeStamp" : true
+    },
+    "properties": {
+        "product": {
+            "type": "Object"
+        },
+        "user": {
+            "type": "Object"
+        },
+        "value": {
+            "type": "Number",
+            "default": 0
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {
+    },
+    "acls": [],
+    "methods": {}
+}
