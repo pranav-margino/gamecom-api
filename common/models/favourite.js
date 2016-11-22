@@ -173,13 +173,13 @@ module.exports = function(Favourite) {
     };
 
 
-    Favourite.rank = function(preferenceId, cb) {
+    Favourite.rank = function(preferenceId) {
         Favourite.find({ where: { preferenceId: preferenceId } }, function(err, favourites) {
             //console.log(favourites);
             var favouriteGroups = _.groupBy(favourites, function(favourite) {
                 return favourite.product.id;
             });
-            var arr = [];
+
             for (var key in favouriteGroups) {
                 var group = favouriteGroups[key];
                 group.sort(function(a, b) {
@@ -200,34 +200,23 @@ module.exports = function(Favourite) {
                     }
                 });
 
-                var length = group.length;
-                for (var i = 0; i < length; i++) {
-                    group[i].rank = length - i;
+                
+                for (var i = 0; i < group.length; i++) {
+                    group[i].rank = group.length - i;
                     group[i].save();
                 }
 
-                arr.push(group);
+                console.log("ranked favourites");
+
+
             }
 
-            return cb(null, _.flatten(arr));
+
 
         });
     }
 
-    Favourite.remoteMethod('rank', {
-        http: {
-            path: '/rank',
-            verb: 'GET'
-        },
-        accepts: [{
-            arg: 'preferenceId',
-            type: 'string'
-        }],
-        returns: {
-            arg: 'result',
-            type: 'Array'
-        }
-    });
+
 
     Favourite.remoteMethod('userOverbids', {
         http: {
@@ -334,6 +323,7 @@ module.exports = function(Favourite) {
             }
             app.models.Consumer.updatePoints(instance.user.id, -value, function(err, cb) {
                 if (!err) {
+                    Favourite.rank(instance.preferenceId);
                     broadcastFavourite(instance);
                     //calculateRank(instance);
                 }
@@ -348,13 +338,20 @@ module.exports = function(Favourite) {
 
     Favourite.observe('before delete', function(ctx, next) {
         var instance = ctx.instance;
+        console.log(instance);
         var value = 0;
         if (instance.product && instance.product.value) {
             value = instance.product.value;
         }
+        
         app.models.Consumer.updatePoints(instance.user.id, value, function(err, cb) {
 
         });
+        next();
+    });
+
+    Favourite.observe('after delete', function(ctx, next){
+        Favourite.rank(ctx.instance.preferenceId);
         next();
     });
 

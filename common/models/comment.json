@@ -3,6 +3,9 @@
     "plural": "comments",
     "base": "PersistedModel",
     "idInjection": true,
+    "mixins": {
+        "TimeStamp": true
+    },
     "options": {
         "validateUpsert": true
     },
@@ -12,11 +15,8 @@
         },
         "user": {
             "type": "object"
-        },
-        "timestamp": {
-            "type": "Date"
-
         }
+
     },
     "validations": [],
     "hidden": [],

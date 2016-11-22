@@ -53,7 +53,7 @@ boot(app, __dirname, function(err) {
             console.log(err);
             if (!err) {
                 _.forEach(consumers, function(consumer) {
-                    consumer.points = 2000;
+                    consumer.points = 1000;
                     consumer.save();
                 });
 

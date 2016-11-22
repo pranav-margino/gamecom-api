@@ -11,6 +11,7 @@ module.exports = function(Contest) {
                         if (points >= ctx.instance.value) {
                             favourite.bid = Math.max(0, parseInt(favourite.bid) - parseInt(ctx.instance.value));
                             favourite.save();
+                            app.models.Favourite.rank(favourite.preferenceId);
                             app.models.Consumer.updatePoints(ctx.instance.user.id, -ctx.instance.value, function(err, data) {
                                 broadcastContest({
                                     contestant: ctx.instance.user,
