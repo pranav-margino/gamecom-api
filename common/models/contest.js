@@ -3,6 +3,7 @@ var io = require('../../modules/io');
 
 module.exports = function(Contest) {
     var self = this;
+    self.sockets = null;
     Contest.observe('after save', function(ctx, next) {
         if (ctx.isNewInstance) {
             app.models.Favourite.findById(ctx.instance.favouriteId, function(err, favourite) {
@@ -12,6 +13,7 @@ module.exports = function(Contest) {
                             favourite.bid = Math.max(0, parseInt(favourite.bid) - parseInt(ctx.instance.value));
                             favourite.save();
                             app.models.Favourite.rank(favourite.preferenceId);
+                            broadcastFavouriteUpdate(favourite);
                             app.models.Consumer.updatePoints(ctx.instance.user.id, -ctx.instance.value, function(err, data) {
                                 broadcastContest({
                                     contestant: ctx.instance.user,
@@ -35,6 +37,15 @@ module.exports = function(Contest) {
             next();
         }
     });
+
+    function broadcastFavouriteUpdate(favouriteObj){
+        if (!self.sockets) {
+            console.warn("No Favourite sockets.");
+            return;
+        }
+        //console.log('broadcastFavouriteUpdate');
+        self.sockets.emit("updateModel:Favourite", favouriteObj);
+    }
 
 
     function broadcastContest(contestObj) {

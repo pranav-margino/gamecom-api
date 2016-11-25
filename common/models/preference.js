@@ -143,9 +143,9 @@ module.exports = function(Preference) {
         }
         Preference.findById(id, function(err, preference) {
             if (!err) {
-                /*if (!preference.scheduledAt || new Date().getTime() < new Date(preference.scheduledAt).getTime()) {
+                if (!preference.scheduledAt || new Date().getTime() < new Date(preference.scheduledAt).getTime()) {
                     return cb(null, []);
-                }*/
+                }
                 //if no favourites return empty array
                 if (!preference.favourites) {
                     return cb(null, []);
@@ -181,6 +181,8 @@ module.exports = function(Preference) {
                                     winners.push(group[i] || {});
                                 }
                             }
+                            preference.winners = winners;
+                            preference.save();
                             return cb(err, winners);
                         } else {
                             return cb(err, null);

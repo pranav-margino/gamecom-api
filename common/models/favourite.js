@@ -273,24 +273,42 @@ module.exports = function(Favourite) {
 
                     }
                 });
-
-
                 for (var i = 0; i < group.length; i++) {
                     group[i].rank = group.length - i;
                     group[i].save();
                 }
-
                 console.log("ranked favourites");
-
-
             }
-
-
-
         });
     }
 
+    Favourite.getRankHash = function(preferenceId, cb) {
+        Favourite.find({ where: { preferenceId: preferenceId } }, function(err, favourites) {
+            var rankHash = [];
+            console.log(favourites.length);
+            for (var i = 0; i < favourites.length; i++) {
+                //rankHash[favourites[i].id] = favourites[i].rank;
+                rankHash.push({id:favourites[i].id,rank:favourites[i].rank});
+            }
+            console.log(rankHash);
+            return cb(err, rankHash);
+        });
+    }
 
+    Favourite.remoteMethod('getRankHash', {
+        http: {
+            path: '/getRankHash',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'preferenceId',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Array'
+        }
+    });
 
     Favourite.remoteMethod('userOverbids', {
         http: {
@@ -425,6 +443,7 @@ module.exports = function(Favourite) {
             });
 
         } else {
+            //broadcastFavouriteUpdate(ctx.instance);
             next();
         }
     });
@@ -433,20 +452,18 @@ module.exports = function(Favourite) {
 
     Favourite.observe('before delete', function(ctx, next) {
         var instance = ctx.instance;
-        console.log(instance);
         var value = 0;
         if (instance.product && instance.product.value) {
             value = instance.product.value;
         }
-
         app.models.Consumer.updatePoints(instance.user.id, value, function(err, cb) {
-
+            next();
         });
-        next();
     });
 
     Favourite.observe('after delete', function(ctx, next) {
         Favourite.rank(ctx.instance.preferenceId);
+        broadcastUnfavourite(ctx.instance);
         next();
     });
 
@@ -464,6 +481,23 @@ module.exports = function(Favourite) {
             return;
         }
         self.sockets.emit("readModel:Favourite", favouriteObj);
+    }
+
+    function broadcastFavouriteUpdate(favouriteObj) {
+        if (!self.sockets) {
+            console.warn("No Favourite sockets.");
+            return;
+        }
+        console.log('broadcastFavouriteUpdate');
+        self.sockets.emit("updateModel:Favourite", favouriteObj);
+    }
+
+    function broadcastUnfavourite(favouriteObj) {
+        if (!self.sockets) {
+            console.warn("No Favourite sockets.");
+            return;
+        }
+        self.sockets.emit("deleteModel:Favourite", favouriteObj);
     }
 
     io.on('ready', function(socket, sockets) {
