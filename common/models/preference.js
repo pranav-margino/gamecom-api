@@ -44,7 +44,7 @@ module.exports = function(Preference) {
 
 
 
-    Preference.getResult = function(id, cb) {
+    Preference.getResultRandom = function(id, cb) {
         if (id == null || id == undefined) {
             return cb(null, []);
         }
@@ -61,6 +61,7 @@ module.exports = function(Preference) {
                 if (preference.winners && preference.winners.length > 0) {
                     return cb(null, preference.winners);
                 }
+
                 //choose winners randomly
                 var winners = [];
                 preference.favourites({}, function(err, favourites) {
@@ -78,6 +79,8 @@ module.exports = function(Preference) {
                     preference.save();
                     return cb(err, preference.winners);
                 });
+
+
             } else {
                 logger.log('error', err);
                 return cb(err, []);
@@ -134,6 +137,78 @@ module.exports = function(Preference) {
         })
     };
 
+    Preference.getResult = function(id, cb) {
+        if (id == null || id == undefined) {
+            return cb(null, []);
+        }
+        Preference.findById(id, function(err, preference) {
+            if (!err) {
+                /*if (!preference.scheduledAt || new Date().getTime() < new Date(preference.scheduledAt).getTime()) {
+                    return cb(null, []);
+                }*/
+                //if no favourites return empty array
+                if (!preference.favourites) {
+                    return cb(null, []);
+                }
+                //if winners already exist
+                if (preference.winners && preference.winners.length > 0) {
+                    return cb(null, preference.winners);
+                }
+                //choose winners randomly
+                var winners = [];
+                app.models.Favourite.rank(id);
+                preference.products({}, function(err, products) {
+                    if (err) {
+                        return cb(err, null);
+                    }
+
+                    var productsWinnersCount = [];
+
+                    for (var i = 0; i < products.length; i++) {
+                        productsWinnersCount[products[i].id] = products[i].winnersCount;
+                    }
+                    preference.favourites({}, function(err, favourites) {
+                        if (!err) {
+                            var groups = _.groupBy(favourites, 'product.id');
+
+                            for (var productId in groups) {
+                                var winnersCount = productsWinnersCount[productId];
+                                var group = groups[productId];
+                                group = group.sort(function(a, b) {
+                                    return a.rank > b.rank;
+                                });
+                                for (var i = 0; i < winnersCount; i++) {
+                                    winners.push(group[i] || {});
+                                }
+                            }
+                            return cb(err, winners);
+                        } else {
+                            return cb(err, null);
+                        }
+                    });
+                });
+            } else {
+                logger.log('error', err);
+                return cb(err, []);
+            }
+        })
+    }
+
+    Preference.remoteMethod('getResult', {
+        http: {
+            path: '/result',
+            verb: 'get'
+        },
+        accepts: [{
+            arg: 'id',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Array'
+        }
+    });
+
     Preference.getProductsComments = function(id, cb) {
         Preference.findById(id, function(err, preference) {
             if (!err) {
@@ -171,9 +246,9 @@ module.exports = function(Preference) {
         }
     });
 
-    Preference.remoteMethod('getResult', {
+    Preference.remoteMethod('getResultRandom', {
         http: {
-            path: '/result',
+            path: '/resultrandom',
             verb: 'get'
         },
         accepts: [{
@@ -186,7 +261,7 @@ module.exports = function(Preference) {
         }
     });
 
-    Preference.remoteMethod('getResult', {
+    Preference.remoteMethod('getResultNoRepeat', {
         http: {
             path: '/resultnorepeat',
             verb: 'get'
@@ -200,6 +275,8 @@ module.exports = function(Preference) {
             type: 'object'
         }
     });
+
+
 
     Preference.remoteMethod('getPoints', {
         http: {

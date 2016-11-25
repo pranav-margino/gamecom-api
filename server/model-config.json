@@ -1,7 +1,7 @@
 {
     "_meta": {
         "sources": ["loopback/common/models", "loopback/server/models", "../common/models", "./models"],
-        "mixins": ["loopback/common/mixins", "loopback/server/mixins", "../common/mixins", "./mixins","../node_modules/loopback-ds-timestamp-mixin"]
+        "mixins": ["loopback/common/mixins", "loopback/server/mixins", "../common/mixins", "./mixins", "../node_modules/loopback-ds-timestamp-mixin"]
     },
     "User": {
         "dataSource": "db"
@@ -150,35 +150,39 @@
         "dataSource": "mongoDs",
         "public": true
     },
-    "PollQuestion":{
+    "PollQuestion": {
         "dataSource": "mongoDs",
         "public": true
     },
-    "PollAnswer":{
+    "PollAnswer": {
         "dataSource": "mongoDs",
         "public": true
     },
-    "Story":{
+    "Story": {
         "dataSource": "mongoDs",
         "public": true
     },
-    "Endorsement":{
+    "Endorsement": {
         "dataSource": "mongoDs",
         "public": true
     },
-    "Comment":{
+    "Comment": {
         "dataSource": "mongoDs",
         "public": true
     },
-    "ProductComment":{
+    "ProductComment": {
         "dataSource": "mongoDs",
         "public": true
     },
-    "Contest":{
+    "Contest": {
         "dataSource": "mongoDs",
         "public": true
     },
-    "Overbid":{
+    "Overbid": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Underbid": {
         "dataSource": "mongoDs",
         "public": true
     }

@@ -172,6 +172,80 @@ module.exports = function(Favourite) {
         })
     };
 
+    Favourite.userUnderbids = function(preferenceId, userId, cb) {
+        Favourite.find({ where: { preferenceId: preferenceId } }, function(err, favourites) {
+            if (!err) {
+                async.map(favourites, function(favourite, cb) {
+                    favourite.underbids({}, function(err, underbids) {
+                        cb(err, _.filter(underbids, function(underbid) {
+                            return underbid.user.id == userId;
+                        }));
+                    });
+                }, function(err, result) {
+                    return cb(err, _.flatten(result));
+                });
+            }
+
+        })
+    };
+
+    Favourite.userStats = function(preferenceId, userId, cb) {
+        var self = this;
+        async.parallel({
+            endorsedByCount: function(callback) {
+                self.peopleEndorsements(preferenceId, userId, function(err, data) {
+                    callback(err, data.length);
+                });
+            },
+            endorsedCount: function(callback) {
+                self.userEndorsements(preferenceId, userId, function(err, data) {
+                    callback(err, data.length);
+                });
+            },
+            contestedByCount: function(callback) {
+                self.peopleContests(preferenceId, userId, function(err, data) {
+                    callback(err, data.length);
+                });
+            },
+            contestsCount: function(callback) {
+                self.userContests(preferenceId, userId, function(err, data) {
+                    callback(err, data.length);
+                });
+            },
+            overbidsCount: function(callback) {
+                self.userOverbids(preferenceId, userId, function(err, data) {
+                    callback(err, data.length);
+                });
+            },
+            underbidsCount: function(callback) {
+                self.userUnderbids(preferenceId, userId, function(err, data) {
+                    callback(err, data.length);
+                });
+            }
+        }, function(err, results) {
+            return cb(err, results);
+        });
+    };
+
+
+    Favourite.remoteMethod('userStats', {
+        http: {
+            path: '/userStats',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'preferenceId',
+            type: 'string'
+        }, {
+            arg: 'userId',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Object'
+        }
+    });
+
 
     Favourite.rank = function(preferenceId) {
         Favourite.find({ where: { preferenceId: preferenceId } }, function(err, favourites) {
@@ -200,7 +274,7 @@ module.exports = function(Favourite) {
                     }
                 });
 
-                
+
                 for (var i = 0; i < group.length; i++) {
                     group[i].rank = group.length - i;
                     group[i].save();
@@ -221,6 +295,24 @@ module.exports = function(Favourite) {
     Favourite.remoteMethod('userOverbids', {
         http: {
             path: '/userOverbids',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'preferenceId',
+            type: 'string'
+        }, {
+            arg: 'userId',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Array'
+        }
+    });
+
+    Favourite.remoteMethod('userUnderbids', {
+        http: {
+            path: '/userUnderbids',
             verb: 'GET'
         },
         accepts: [{
@@ -321,14 +413,17 @@ module.exports = function(Favourite) {
             if (instance.product && instance.product.value) {
                 value = instance.product.value;
             }
+
             app.models.Consumer.updatePoints(instance.user.id, -value, function(err, cb) {
                 if (!err) {
                     Favourite.rank(instance.preferenceId);
                     broadcastFavourite(instance);
-                    //calculateRank(instance);
+                    next();
+                } else {
+                    next();
                 }
             });
-            next();
+
         } else {
             next();
         }
@@ -343,14 +438,14 @@ module.exports = function(Favourite) {
         if (instance.product && instance.product.value) {
             value = instance.product.value;
         }
-        
+
         app.models.Consumer.updatePoints(instance.user.id, value, function(err, cb) {
 
         });
         next();
     });
 
-    Favourite.observe('after delete', function(ctx, next){
+    Favourite.observe('after delete', function(ctx, next) {
         Favourite.rank(ctx.instance.preferenceId);
         next();
     });

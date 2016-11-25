@@ -13,6 +13,9 @@
         "minWinnersCount": {
             "type": "Number"
         },
+        "winnersCount":{
+            "type": "Number"
+        },
         "value":{
             "type": "Number",
             "default": 0

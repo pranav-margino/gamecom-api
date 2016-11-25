@@ -5,7 +5,7 @@ var io = require('../../modules/io');
 module.exports = function(Overbid) {
 
     var self = this;
-    
+
     Overbid.observe('after save', function(ctx, next) {
         if (ctx.isNewInstance) {
             app.models.Favourite.findById(ctx.instance.favouriteId, function(err, favourite) {
@@ -16,13 +16,19 @@ module.exports = function(Overbid) {
                             favourite.save();
                             app.models.Favourite.rank(favourite.preferenceId);
                             app.models.Consumer.updatePoints(ctx.instance.user.id, -ctx.instance.value, function(err, data) {
-
+                                next();
                             });
+                        }else{
+                            next();
                         }
                     });
+                } else {
+                    next();
                 }
-                next();
+
             });
+        }else{
+            next();
         }
     });
 

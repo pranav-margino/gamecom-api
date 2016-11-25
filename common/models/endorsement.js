@@ -8,6 +8,9 @@ module.exports = function(Endorsement) {
             app.models.Favourite.findById(ctx.instance.favouriteId, function(err, favourite) {
                 if (!err) {
                     app.models.Consumer.getPoints(ctx.instance.user.id, function(err, points) {
+                        if(err){
+                            next();
+                        }
                         if (points >= ctx.instance.value) {
                             favourite.bid = Math.max(0, parseInt(favourite.bid) + parseInt(ctx.instance.value));
                             favourite.save();
@@ -21,12 +24,19 @@ module.exports = function(Endorsement) {
                                     message: ctx.instance.message,
                                     createdAt: ctx.instance.createdAt || null
                                 });
+                                next();
                             });
+                        }else{
+                            next();
                         }
                     });
+                } else {
+                    next();
                 }
-                next();
+
             });
+        }else{
+            next();
         }
     });
 

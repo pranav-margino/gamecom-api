@@ -64,6 +64,16 @@
                 "forceId": true,
                 "presistent": true
             }
+        },
+        "underbids": {
+            "type": "hasMany",
+            "model": "Underbid",
+            "property": "underbid",
+            "options": {
+                "validate": false,
+                "forceId": true,
+                "presistent": true
+            }
         }
     },
     "acls": [],

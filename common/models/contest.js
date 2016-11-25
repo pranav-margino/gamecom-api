@@ -20,12 +20,19 @@ module.exports = function(Contest) {
                                     product: favourite.product,
                                     createdAt: ctx.instance.createdAt || null
                                 });
+                                next();
                             });
+                        }else{
+                            next();
                         }
                     });
+                }else{
+                    next();
                 }
-                next();
+                
             });
+        }else{
+            next();
         }
     });
 
