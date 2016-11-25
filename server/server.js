@@ -7,6 +7,7 @@ var io = require('../modules/io');
 var cron = require('../modules/cron');
 var fs = require('fs');
 var _ = require('lodash');
+var stats = require("stats-lite")
 
 //var consumerAcls = require('./acls/consumer.json');
 
@@ -41,21 +42,30 @@ boot(app, __dirname, function(err) {
         //    console.log(data);
         //});
         app.models.PollAnswer.cleanup();
-        app.models.Consumer.findById("57efaaec9013ab8f38ddf431", function(err, consumer) {
+        app.models.Consumer.find({}, function(err, consumers) {
             console.log(err);
             if (!err) {
-                //consumer.points = 3000;
-                //consumer.save();
+                _.forEach(consumers, function(consumer) {
+                    if (consumer.points < 5000) {
+                        consumer.points += 5000;
+                        consumer.save();
+                    }
+                });
+
             }
 
         });
         app.models.Consumer.find({}, function(err, consumers) {
             console.log(err);
             if (!err) {
+                var points = [];
                 _.forEach(consumers, function(consumer) {
-                    consumer.points = 1000;
-                    consumer.save();
+                    console.log(consumer.points);
+                    points.push(consumer.points);
+
                 });
+
+                console.log("mode" + stats.mode(points));
 
             }
 
