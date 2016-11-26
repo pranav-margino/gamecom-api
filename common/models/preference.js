@@ -177,7 +177,7 @@ module.exports = function(Preference) {
                                 console.log("***");
                                 console.log(group);
                                 group = group.sort(function(a, b) {
-                                    return a.rank < b.rank;
+                                    return parseInt(a.rank) - parseInt(b.rank);
                                 });
                                 //console.log("sorted group");
                                 //console.log(group);
