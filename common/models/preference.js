@@ -182,6 +182,7 @@ module.exports = function(Preference) {
                                 for (var i = 0; i < winnersCount; i++) {
                                     winners.push(group[i] || {});
                                 }
+                                console.log("winners");
                                 console.log(winners);
                             }
                             preference.winners = winners;
