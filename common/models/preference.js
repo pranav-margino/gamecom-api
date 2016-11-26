@@ -175,7 +175,7 @@ module.exports = function(Preference) {
                                 var winnersCount = productsWinnersCount[productId];
                                 var group = groups[productId];
                                 group = group.sort(function(a, b) {
-                                    return a.rank > b.rank;
+                                    return a.rank < b.rank;
                                 });
                                 for (var i = 0; i < winnersCount; i++) {
                                     winners.push(group[i] || {});
