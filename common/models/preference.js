@@ -174,11 +174,13 @@ module.exports = function(Preference) {
                             for (var productId in groups) {
                                 var winnersCount = productsWinnersCount[productId];
                                 var group = groups[productId];
+                                console.log("***");
+                                console.log(group);
                                 group = group.sort(function(a, b) {
                                     return a.rank < b.rank;
                                 });
-                                console.log("sorted group");
-                                console.log(group);
+                                //console.log("sorted group");
+                                //console.log(group);
                                 for (var i = 0; i < winnersCount; i++) {
                                     winners.push(group[i] || {});
                                 }
