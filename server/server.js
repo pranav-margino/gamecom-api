@@ -41,8 +41,8 @@ boot(app, __dirname, function(err) {
         //    console.log(err);
         //    console.log(data);
         //});
-        app.models.PollAnswer.cleanup();
-        app.models.Consumer.find({}, function(err, consumers) {
+        //app.models.PollAnswer.cleanup();
+        /*app.models.Consumer.find({}, function(err, consumers) {
             console.log(err);
             if (!err) {
                 _.forEach(consumers, function(consumer) {
@@ -55,12 +55,13 @@ boot(app, __dirname, function(err) {
             }
 
         });
+        */
         app.models.Consumer.find({}, function(err, consumers) {
             console.log(err);
             if (!err) {
                 var points = [];
                 _.forEach(consumers, function(consumer) {
-                    console.log(consumer.points);
+                    //console.log(consumer.points);
                     points.push(consumer.points);
 
                 });

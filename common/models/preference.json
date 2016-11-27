@@ -37,10 +37,74 @@
         },
         "poll": {
             "type": "object"
+        },
+        "maxEndorsementValue": {
+            "type": "number",
+            "default": 100
+        },
+        "minEndorsementValue": {
+            "type": "number",
+            "default": 50
+        },
+        "maxContestValue": {
+            "type": "number",
+            "default": 100
+        },
+        "minContestValue": {
+            "type": "number",
+            "default": 50
+        },
+        "maxOverbidValue": {
+            "type": "number",
+            "default": 100
+        },
+        "minOverbidValue": {
+            "type": "number",
+            "default": 50
+        },
+        "maxUnderbidValue": {
+            "type": "number",
+            "default": 100
+        },
+        "minUnderbidValue": {
+            "type": "number",
+            "default": 50
+        },
+        "endorsementInterval": {
+            "type": "number",
+            "default": 5
+        },
+        "contestInterval": {
+            "type": "number",
+            "default": 5
+        },
+        "overbidInterval": {
+            "type": "number",
+            "default": 5
+        },
+        "underbidInterval": {
+            "type": "number",
+            "default": 5
+        },
+        "stepsOfOverbid": {
+            "type": "number",
+            "default": 10
+        },
+        "stepsOfUnderbid": {
+            "type": "number",
+            "default": 10
+        },
+        "stepsOfContest": {
+            "type": "number",
+            "default": 10
+        },
+        "stepsOfEndorsement": {
+            "type": "number",
+            "default": 10
         }
     },
     "validations": [],
-    "hidden": [],
+    "hidden": ["maxEndorsementValue", "minEndorsementValue", "maxOverbidValue", "minOverbidValue", "maxContestValue", "minContestValue", "maxOverbidValue", "minOverbidValue", "overbidInterval", "underbidInterval", "endorsementInterval", "contestInterval"],
     "relations": {
         "products": {
             "type": "hasMany",

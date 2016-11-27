@@ -36,7 +36,7 @@ module.exports = function(Consumer) {
             if (!err) {
                 return cb(null, consumer.points);
             } else {
-                return cb(true, null);
+                return cb(err, null);
             }
         });
     }

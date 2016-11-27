@@ -85,6 +85,15 @@ module.exports = function(Favourite) {
         });
     }
 
+    Favourite.beforeRemote('**', function(ctx, instance, next) {
+        console.log(ctx.method.name);
+        console.log(instance);
+        if (ctx.method.name == "__create__overbids") {
+            console.log(instance);
+        }
+        next();
+    });
+
     Favourite.remoteMethod('peopleContests', {
         http: {
             path: '/peopleContests',
@@ -277,7 +286,7 @@ module.exports = function(Favourite) {
                     group[i].rank = group.length - i;
                     group[i].save();
                 }
-                console.log("ranked favourites");
+                //console.log("ranked favourites");
             }
         });
     }
@@ -285,12 +294,12 @@ module.exports = function(Favourite) {
     Favourite.getRankHash = function(preferenceId, cb) {
         Favourite.find({ where: { preferenceId: preferenceId } }, function(err, favourites) {
             var rankHash = [];
-            console.log(favourites.length);
+            //console.log(favourites.length);
             for (var i = 0; i < favourites.length; i++) {
                 //rankHash[favourites[i].id] = favourites[i].rank;
-                rankHash.push({id:favourites[i].id,rank:favourites[i].rank});
+                rankHash.push({ id: favourites[i].id, rank: favourites[i].rank });
             }
-            console.log(rankHash);
+            //console.log(rankHash);
             return cb(err, rankHash);
         });
     }

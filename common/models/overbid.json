@@ -19,6 +19,9 @@
         "value": {
             "type": "Number",
             "default": 0
+        },
+        "manifestId":{
+            "type": "String"
         }
     },
     "validations": [],

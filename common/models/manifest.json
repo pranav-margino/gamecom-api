@@ -1,0 +1,40 @@
+{
+    "name": "Manifest",
+    "plural": "manifests",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "mixins": {
+        "TimeStamp": true
+    },
+    "properties": {
+        "context": {
+            "type": "String"
+        },
+        "userId": {
+            "type": "String"
+        },
+        "favouriteId": {
+            "type": "String"
+        },
+        "values":{
+            "type": ["number"]
+            
+        },
+        "hasRecent":{
+            "type":"Boolean",
+            "default": false
+        },
+        "nextPossible":{
+            "type": "Date"
+
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}

@@ -185,5 +185,9 @@
     "Underbid": {
         "dataSource": "mongoDs",
         "public": true
+    },
+    "Manifest":{
+        "dataSource": "mongoDs",
+        "public": true
     }
 }

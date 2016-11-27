@@ -9,7 +9,7 @@ module.exports = function(Endorsement) {
             app.models.Favourite.findById(ctx.instance.favouriteId, function(err, favourite) {
                 if (!err) {
                     app.models.Consumer.getPoints(ctx.instance.user.id, function(err, points) {
-                        if(err){
+                        if (err) {
                             next();
                         }
                         if (points >= ctx.instance.value) {
@@ -28,7 +28,7 @@ module.exports = function(Endorsement) {
                                 });
                                 next();
                             });
-                        }else{
+                        } else {
                             next();
                         }
                     });
@@ -37,10 +37,14 @@ module.exports = function(Endorsement) {
                 }
 
             });
-        }else{
+        } else {
             next();
         }
     });
+
+    Endorsement.getManifest = function(favouriteId, userId, cb) {
+
+    }
 
     Endorsement.addReply = function(id, reply, cb) {
         Endorsement.findById(id, function(err, endorsement) {
@@ -75,12 +79,12 @@ module.exports = function(Endorsement) {
         }
     });
 
-    function broadcastFavouriteUpdate(favouriteObj){
+    function broadcastFavouriteUpdate(favouriteObj) {
         if (!self.sockets) {
             console.warn("No Favourite sockets.");
             return;
         }
-        
+
         //console.log('broadcastFavouriteUpdate');
         self.sockets.emit("updateModel:Favourite", favouriteObj);
     }
