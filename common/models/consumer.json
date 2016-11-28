@@ -21,7 +21,7 @@
         },
         "points":{
             "type": "Number",
-            "default": 200
+            "default": 5000
         }
     },
     "validations": [],
