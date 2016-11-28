@@ -458,6 +458,16 @@ module.exports = function(Favourite) {
     });
 
 
+    Favourite.observe('before save', function(ctx, next) {
+        var instance = ctx.instance;
+        if (ctx.isNewInstance) {
+            instance.bid = 0;
+            next();
+        }
+        next();
+    });
+
+
 
     Favourite.observe('before delete', function(ctx, next) {
         var instance = ctx.instance;

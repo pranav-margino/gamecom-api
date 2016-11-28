@@ -70,6 +70,14 @@
             "type": "number",
             "default": 50
         },
+        "minEndorsementValue": {
+            "type": "number",
+            "default": 50
+        },
+        "maxContestValue": {
+            "type": "number",
+            "default": 100
+        },
         "endorsementInterval": {
             "type": "number",
             "default": 5
@@ -101,10 +109,14 @@
         "stepsOfEndorsement": {
             "type": "number",
             "default": 10
+        },
+        "expiresManifestIn":{
+            "type": "number",
+            "default": 10
         }
     },
     "validations": [],
-    "hidden": ["maxEndorsementValue", "minEndorsementValue", "maxOverbidValue", "minOverbidValue", "maxContestValue", "minContestValue", "maxOverbidValue", "minOverbidValue", "overbidInterval", "underbidInterval", "endorsementInterval", "contestInterval"],
+    "hidden": [],
     "relations": {
         "products": {
             "type": "hasMany",

@@ -10,12 +10,16 @@
         "validateUpsert": true
     },
     "properties": {
+        
         "value": {
             "type": "Number",
             "default": 0
         },
         "user": {
             "type": "Object"
+        },
+        "manifestId":{
+            "type": "String"
         }
     },
     "validations": [],

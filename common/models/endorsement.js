@@ -1,9 +1,103 @@
 var app = require('../../server/server');
 var io = require('../../modules/io');
-
+var util = require('../../modules/util');
 module.exports = function(Endorsement) {
     var self = this;
     self.sockets = null;
+
+
+
+    Endorsement.validate('hasManifestId', function(err) {
+        if (!this.manifestId) {
+            err();
+        }
+    }, { message: 'manifestId is missing' });
+
+    Endorsement.validateAsync('validManifest', function(err, done) {
+        var self = this;
+        app.models.Manifest.findById(this.manifestId, function(error, manifest) {
+            if (error || !manifest) {
+                err();
+                done();
+            } else {
+                //has recent
+                if (manifest.hasRecent) {
+                    err();
+                }
+                //check if user id is matched
+                if (manifest.userId !== self.user.id) {
+                    err();
+                }
+                //check if productId is matched
+                if (manifest.productId !== self.product.id) {
+                    err();
+                }
+                //check if favouriteId is matched
+                if (manifest.favouriteId != self.favouriteId) {
+                    err();
+                }
+                // check if values are in range
+                if (manifest.values.indexOf(self.value) == -1) {
+                    err();
+                }
+
+                if (new Date(manifest.createdAt).getTime() < (new Date().getTime() - (manifest.expiresIn * 1000))) {
+                    err();
+                }
+                done();
+            }
+        });
+    }, { message: 'invalid manifest values' });
+
+
+    Endorsement.getManifest = function(favouriteId, userId, cb) {
+        util.getManifest(favouriteId, userId, "Endorsement", function(err, data) {
+            return cb(err, data);
+        });
+
+    }
+
+    Endorsement.remoteMethod('getManifest', {
+        http: {
+            path: '/getManifest',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'favouriteId',
+            type: 'string'
+        }, {
+            arg: 'userId',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Object'
+        }
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     Endorsement.observe('after save', function(ctx, next) {
         if (ctx.isNewInstance) {
             app.models.Favourite.findById(ctx.instance.favouriteId, function(err, favourite) {
@@ -42,9 +136,7 @@ module.exports = function(Endorsement) {
         }
     });
 
-    Endorsement.getManifest = function(favouriteId, userId, cb) {
 
-    }
 
     Endorsement.addReply = function(id, reply, cb) {
         Endorsement.findById(id, function(err, endorsement) {

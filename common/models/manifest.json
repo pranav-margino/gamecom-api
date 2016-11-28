@@ -30,6 +30,10 @@
         "nextPossible":{
             "type": "Date"
 
+        },
+        "expiresIn":{
+            "type": "number",
+            "default": 10
         }
     },
     "validations": [],

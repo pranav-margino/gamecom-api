@@ -10,9 +10,7 @@
       "TimeStamp" : true
     },
     "properties": {
-        "product": {
-            "type": "Object"
-        },
+        
         "user": {
             "type": "Object"
         },

@@ -46,16 +46,15 @@ boot(app, __dirname, function(err) {
             console.log(err);
             if (!err) {
                 _.forEach(consumers, function(consumer) {
-                    if (consumer.points < 5000) {
-                        consumer.points += 5000;
-                        consumer.save();
-                    }
+                    consumer.points = 70;
+                    consumer.save();
                 });
 
             }
 
         });
         */
+        
         app.models.Consumer.find({}, function(err, consumers) {
             console.log(err);
             if (!err) {

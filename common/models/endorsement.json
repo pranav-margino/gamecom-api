@@ -4,7 +4,7 @@
     "base": "PersistedModel",
     "idInjection": true,
     "mixins": {
-      "TimeStamp" : true
+        "TimeStamp": true
     },
     "options": {
         "validateUpsert": true
@@ -20,8 +20,11 @@
         "message": {
             "type": "String"
         },
-        "reply":{
-            "type":"String"
+        "reply": {
+            "type": "String"
+        },
+        "manifestId": {
+            "type": "String"
         }
 
     },
