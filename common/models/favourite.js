@@ -463,8 +463,10 @@ module.exports = function(Favourite) {
         if (ctx.isNewInstance) {
             instance.bid = 0;
             next();
+        }else{
+            next();
         }
-        next();
+        
     });
 
 
