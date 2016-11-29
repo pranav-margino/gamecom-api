@@ -80,19 +80,19 @@
         },
         "endorsementInterval": {
             "type": "number",
-            "default": 5
+            "default": 180
         },
         "contestInterval": {
             "type": "number",
-            "default": 5
+            "default": 180
         },
         "overbidInterval": {
             "type": "number",
-            "default": 5
+            "default": 180
         },
         "underbidInterval": {
             "type": "number",
-            "default": 5
+            "default": 180
         },
         "stepsOfOverbid": {
             "type": "number",
@@ -110,9 +110,25 @@
             "type": "number",
             "default": 10
         },
-        "expiresManifestIn":{
+        "expiresManifestIn": {
             "type": "number",
             "default": 10
+        },
+        "maxEndorsementCount": {
+            "type": "number",
+            "default": 10
+        },
+        "maxContestCount": {
+            "type": "number",
+            "default": 10
+        },
+        "maxOverbidCount": {
+            "type": "number",
+            "default": -1
+        },
+        "maxUnderbidCount": {
+            "type": "number",
+            "default": -1
         }
     },
     "validations": [],

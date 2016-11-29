@@ -27,6 +27,10 @@
             "type":"Boolean",
             "default": false
         },
+        "hasVacant":{
+            "type": "Boolean",
+            "default": true
+        },
         "nextPossible":{
             "type": "Date"
 

@@ -42,18 +42,18 @@ boot(app, __dirname, function(err) {
         //    console.log(data);
         //});
         //app.models.PollAnswer.cleanup();
-        /*app.models.Consumer.find({}, function(err, consumers) {
+        app.models.Consumer.find({}, function(err, consumers) {
             console.log(err);
             if (!err) {
                 _.forEach(consumers, function(consumer) {
-                    consumer.points = 70;
-                    consumer.save();
+                    //consumer.points += 3000;
+                    //consumer.save();
                 });
 
             }
 
         });
-        */
+        
         
         app.models.Consumer.find({}, function(err, consumers) {
             console.log(err);
