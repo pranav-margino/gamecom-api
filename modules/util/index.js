@@ -91,7 +91,7 @@ util.prototype.getManifest = function(favouriteId, userId, model, cb) {
                         var values = self.getValues((model == "Underbid") ? favourite.bid : points, preference["max" + model + "Value"], preference["min" + model + "Value"], preference["stepsOf" + model]);
 
                         var userDocs = _.partition(docs, function(doc) {
-                            return doc.user.id = userId;
+                            return doc.user.id == userId;
                         })[0];
 
                         if (userDocs.length == 0) {
