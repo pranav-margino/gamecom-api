@@ -32,6 +32,16 @@
         "scheduledAt": {
             "type": "Date"
         },
+        "scheduledStart":{
+            "type": "Date"
+        },
+        "scheduledEnd":{
+            "type": "Date"
+        },
+        "isActive":{
+            "type": "Boolean",
+            "default": false
+        },
         "winners": {
             "type": ["Object"]
         },

@@ -137,6 +137,45 @@ module.exports = function(Preference) {
         })
     };
 
+    Preference.getStats = function(cb) {
+        async.parallel({
+            endorsementsCount: function(cb) {
+                app.models.Endorsement.count({}, function(err, count) {
+                    cb(err, count);
+                });
+            },
+            contestsCount: function(cb) {
+                app.models.Contest.count({}, function(err, count) {
+                    cb(err, count);
+                });
+            },
+            overbidsCount: function(cb) {
+                app.models.Overbid.count({}, function(err, count) {
+                    cb(err, count);
+                });
+            },
+            underbidsCount: function(cb) {
+                app.models.Underbid.count({}, function(err, count) {
+                    cb(err, count);
+                });
+            }
+        }, function(err, results) {
+            return cb(err, results);
+        });
+    }
+
+    Preference.remoteMethod('getStats', {
+        http: {
+            path: '/stats',
+            verb: 'get'
+        },
+        accepts: [],
+        returns: {
+            arg: 'result',
+            type: 'Array'
+        }
+    });
+
     Preference.getResult = function(id, cb) {
         if (id == null || id == undefined) {
             return cb(null, []);
