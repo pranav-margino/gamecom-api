@@ -120,7 +120,10 @@ module.exports = function(Endorsement) {
                                     message: ctx.instance.message,
                                     createdAt: ctx.instance.createdAt || null
                                 });
-                                next();
+                                app.models.Favourite.broadcastRank(favourite.preferenceId, function(err, data) {
+                                    next();
+                                });
+
                             });
                         } else {
                             next();

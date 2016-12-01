@@ -7,6 +7,7 @@ module.exports = function(Favourite) {
     var self = this;
 
 
+    self.sockets = null;
 
 
 
@@ -266,21 +267,44 @@ module.exports = function(Favourite) {
             for (var key in favouriteGroups) {
                 var group = favouriteGroups[key];
                 group.sort(function(a, b) {
+
+                    if (parseInt(a.bid) != parseInt(b.bid)) {
+                        return parseInt(a.bid) - parseInt(b.bid);
+                    } else {
+                        console.log(a.user.name + " " + new Date(a.createdAt).getTime());
+                        console.log(b.user.name + " " + new Date(b.createdAt).getTime());
+                        if (parseInt(new Date(a.createdAt).getTime()) != parseInt(new Date(b.createdAt).getTime())) {
+                            var val =   parseInt(new Date(b.createdAt).getTime()) - parseInt(new Date(a.createdAt).getTime());
+                            console.log(val);
+                            return val;
+                        } else {
+                            console.log("1");
+                            return 1;
+                        }
+                        console.log("*****");
+                    }
+
+                    /*
                     if (a.bid > b.bid) {
                         return 1;
                     } else if (a.bid < b.bid) {
                         return -1;
                     } else {
                         //both bid are equal
-                        if (new Date(a.createdAt).getTime() < new Date(b.createdAt).getTime()) {
+                        if (new Date(a.createdAt).getTime() > new Date(b.createdAt).getTime()) {
                             return 1;
-                        } else if (new Date(a.createdAt).getTime() > new Date(b.createdAt).getTime()) {
+                        } else if (new Date(a.createdAt).getTime() < new Date(b.createdAt).getTime()) {
                             return -1;
                         } else {
                             return 0;
                         }
 
                     }
+                    */
+
+
+
+
                 });
                 for (var i = 0; i < group.length; i++) {
                     group[i].rank = group.length - i;
@@ -301,6 +325,24 @@ module.exports = function(Favourite) {
             }
             //console.log(rankHash);
             return cb(err, rankHash);
+        });
+    }
+
+
+
+    Favourite.broadcastRank = function(preferenceId, cb) {
+        if (!self.sockets) {
+            console.warn("No Favourite sockets.");
+            return cb("No sockets available", null);
+        }
+        //self.sockets.emit("deleteModel:Favourite", favouriteObj);
+        Favourite.getRankHash(preferenceId, function(err, rankHash) {
+            if (!err) {
+                self.sockets.emit("updateModelAttr:Favourite:Rank", rankHash);
+                return cb(null, true);
+            } else {
+                return cb(err, null);
+            }
         });
     }
 
@@ -445,7 +487,11 @@ module.exports = function(Favourite) {
                 if (!err) {
                     Favourite.rank(instance.preferenceId);
                     broadcastFavourite(instance);
-                    next();
+                    //broadcastRank
+                    Favourite.broadcastRank(instance.preferenceId, function(err, data) {
+                        next();
+                    });
+
                 } else {
                     next();
                 }
@@ -463,10 +509,10 @@ module.exports = function(Favourite) {
         if (ctx.isNewInstance) {
             instance.bid = 0;
             next();
-        }else{
+        } else {
             next();
         }
-        
+
     });
 
 
@@ -478,6 +524,7 @@ module.exports = function(Favourite) {
             value = instance.product.value;
         }
         app.models.Consumer.updatePoints(instance.user.id, value, function(err, cb) {
+
             next();
         });
     });
@@ -485,7 +532,10 @@ module.exports = function(Favourite) {
     Favourite.observe('after delete', function(ctx, next) {
         Favourite.rank(ctx.instance.preferenceId);
         broadcastUnfavourite(ctx.instance);
-        next();
+        Favourite.broadcastRank(ctx.instance.preferenceId, function(err, data) {
+            next();
+        });
+        //next();
     });
 
     function broadcastOverbid(overbidObj) {

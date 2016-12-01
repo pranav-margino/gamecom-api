@@ -115,7 +115,10 @@ module.exports = function(Contest) {
                                     product: favourite.product,
                                     createdAt: ctx.instance.createdAt || null
                                 });
-                                next();
+                                app.models.Favourite.broadcastRank(favourite.preferenceId, function(err, data) {
+                                    next();
+                                });
+                                //next();
                             });
                         } else {
                             next();

@@ -98,7 +98,9 @@ module.exports = function(Overbid) {
                             app.models.Favourite.rank(favourite.preferenceId);
                             broadcastFavouriteUpdate(favourite);
                             app.models.Consumer.updatePoints(ctx.instance.user.id, -ctx.instance.value, function(err, data) {
-                                next();
+                                app.models.Favourite.broadcastRank(favourite.preferenceId, function(err, data) {
+                                    next();
+                                });
                             });
                         } else {
                             next();
