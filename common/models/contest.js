@@ -15,7 +15,7 @@ module.exports = function(Contest) {
 
     Contest.validateAsync('validManifest', function(err, done) {
         var self = this;
-        console.log(this);
+        //console.log(this);
         app.models.Manifest.findById(this.manifestId, function(error, manifest) {
             if (error || !manifest) {
                 err();
