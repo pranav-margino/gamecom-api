@@ -33,7 +33,7 @@ module.exports = function(Consumer) {
 
     Consumer.getPoints = function(id, cb) {
         Consumer.findById(id, function(err, consumer) {
-            if (!err) {
+            if (!err && consumer) {
                 return cb(null, consumer.points);
             } else {
                 return cb(err, null);

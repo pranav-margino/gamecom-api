@@ -87,22 +87,62 @@
          if (ctx.isNewInstance) {
              app.models.Favourite.findById(ctx.instance.favouriteId, function(err, favourite) {
                  if (!err) {
-                     app.models.Consumer.getPoints(ctx.instance.user.id, function(err, points) {
-                         favourite.bid = Math.max(0, parseInt(favourite.bid) - parseInt(ctx.instance.value));
-                         favourite.save();
-                         app.models.Favourite.rank(favourite.preferenceId);
-                         broadcastFavouriteUpdate(favourite);
-                         //console.log(ctx.instance);
-                         app.models.Consumer.updatePoints(ctx.instance.user.id, ctx.instance.value, function(err, data) {
-                             console.log(err);
-                             console.log(data);
-                             app.models.Favourite.broadcastRank(favourite.preferenceId, function(err, data) {
-                                 next();
-                             });
-                             
-                         });
+                     
 
-                     });
+
+                    app.models.Consumer.updatePoints(ctx.instance.user.id, ctx.instance.value, function(err, data) {
+                                if (err) {
+                                    next();
+                                } else {
+                                    favourite.bid = Math.max(0, parseInt(favourite.bid) - parseInt(ctx.instance.value));
+                                    favourite.save(function(err, instance) {
+                                        if (err) {
+                                            next();
+                                        } else {
+
+                                            app.models.Favourite.rank(favourite.preferenceId, function(err, data) {
+                                                if (err) {
+                                                    next();
+                                                } else {
+                                                    app.models.Favourite.broadcastRank(favourite.preferenceId, function(err, data) {
+                                                        if (err) {
+                                                            next();
+                                                        }
+                                                        app.models.Favourite.findById(favourite.id, function(err, favourite) {
+                                                            if (!err) {
+                                                                app.models.Favourite.broadcastFavouriteUpdate(favourite);
+                                                            }
+                                                            next();
+                                                        })
+
+                                                    });
+                                                }
+                                            });
+
+
+                                        }
+
+                                    });
+                                }
+                            });
+
+
+
+
+
+
+
+
+
+
+
+
+                     
+
+
+
+
+
                  } else {
                      next();
                  }

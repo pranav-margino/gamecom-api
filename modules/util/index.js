@@ -43,18 +43,25 @@ util.prototype.validateManifest = function(err) {
 util.prototype.getManifest = function(favouriteId, userId, model, cb) {
 
     var self = this;
-    app.models.Favourite.findById(favouriteId, function(err, favourite) {
+    app.models.Favourite.findById(favouriteId, {
+        fields: {
+            preferenceId: true,
+            productId: true,
+            userId: true,
+            
+            bid: true
+        }
+    }, function(err, favourite) {
         if (err) {
             return cb(err, null);
         }
-        if (model == "Overbid" && favourite.user.id !== userId) {
+        if (model == "Overbid" && favourite.userId !== userId) {
             return cb("mismatched favourite and user", null);
         }
         app.models.Preference.findById(favourite.preferenceId, function(err, preference) {
             if (err) {
                 return cb(err, null);
             }
-            //* { where: { 'user.id': userId }
             favourite[model.toLowerCase() + "s"]({}, function(err, docs) {
                 if (err) {
                     return cb(err, null);
@@ -66,7 +73,7 @@ util.prototype.getManifest = function(favouriteId, userId, model, cb) {
                 var manifest = {
                     context: model.toLowerCase(),
                     userId: userId,
-                    productId: favourite.product.id,
+                    productId: favourite.productId,
                     favouriteId: favouriteId,
                     expiresIn: expiresIn
                 };

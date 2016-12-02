@@ -10,6 +10,12 @@
         "TimeStamp": true
     },
     "properties": {
+        "productId":{
+            "type": "String"
+        },
+        "userId":{
+            "type": "String"
+        },
         "product": {
             "type": "Object"
         },
