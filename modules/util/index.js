@@ -43,15 +43,7 @@ util.prototype.validateManifest = function(err) {
 util.prototype.getManifest = function(favouriteId, userId, model, cb) {
 
     var self = this;
-    app.models.Favourite.findById(favouriteId, {
-        fields: {
-            preferenceId: true,
-            productId: true,
-            userId: true,
-            
-            bid: true
-        }
-    }, function(err, favourite) {
+    app.models.Favourite.findById(favouriteId, function(err, favourite) {
         if (err) {
             return cb(err, null);
         }
