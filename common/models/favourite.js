@@ -2,6 +2,9 @@ var app = require('../../server/server');
 var io = require('../../modules/io');
 var _ = require('lodash');
 var async = require('async');
+var debug = require('debug')('favourite');
+var colors = require('colors');
+
 
 module.exports = function(Favourite) {
     var self = this;
@@ -392,12 +395,13 @@ module.exports = function(Favourite) {
     });
 
     Favourite.observe('after delete', function(ctx, next) {
-        Favourite.broadcastUnfavourite(ctx.instance);
+
         Favourite.rank(ctx.instance.preferenceId, function(err, data) {
             if (err) {
                 next();
             } else {
                 Favourite.broadcastRank(ctx.instance.preferenceId, function(err, data) {
+                    Favourite.broadcastUnfavourite(ctx.instance);
                     next();
                 });
             }
@@ -410,7 +414,8 @@ module.exports = function(Favourite) {
 
     io.on('ready', function(socket, sockets) {
         self.sockets = sockets;
-        console.log("Favourite sockets working.");
+        //console.log(sockets);
+        //debug("Favourite sockets connected.".green);
 
     });
 

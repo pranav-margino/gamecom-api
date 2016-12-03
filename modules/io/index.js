@@ -1,25 +1,41 @@
 var logger = require('../logger');
 var events = require('events');
+var colors = require('colors');
+
+var redis = require("redis");
+var debug = require('debug')('io');
+
 
 var io = io || function(app, config) {
     var self = this;
     self.socket = null;
     self._io = null;
-    //events.EventEmitter.call(this);
 
 }
 
+function sockets(client) {
+    var self = this;
+    self.client = client;
+
+}
+
+sockets.prototype.emit = function(event, data) {
+    debug('event %s : data %s'.white.bgBlue, event, JSON.stringify(data));
+    debug(this.client.ping());
+    this.client.publish('testfav', JSON.stringify({data:data,event:event}));
+}
+
+
+
 io.prototype.init = function(app, config) {
     var self = this;
-    self._io = require('socket.io')(app.start(), config || { path: '/socket.io-client' });
-    self._io.on('connection', function(socket) {
-        logger.log('Socket connected to ' + socket.request.connection.remoteAddress);
-	    self.socket = socket;
-	    self.emit('ready',self.socket,self._io.sockets);
-        self.socket.on('disconnect', function() {
-            logger.log('Socket disconnected from ' + socket.request.connection.remoteAddress);
-        });
+    self.client = redis.createClient();
+    self.client.on('ready', function() {
+        debug("Redis connected".green);
+        self.emit('ready', null, new sockets(self.client));
     });
+
+
 }
 
 io.prototype.__proto__ = events.EventEmitter.prototype;

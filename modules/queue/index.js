@@ -14,7 +14,7 @@ var queue = function() {
     self.url = process.env.KAFKA_BASE || "127.0.0.1:2181";
     self.isReady = false;
     self.producer = getProducer({ url: self.url });
-    logger.log("Initialising Queue : Url " + self.url);
+    //logger.log("Initialising Queue : Url " + self.url);
     self.producer.on('ready', function() {
         logger.log("Queue ready");
         self.isReady = true;
@@ -32,7 +32,7 @@ queue.prototype.push = function(topic, msg) {
         return;
     }
     if (self.isReady) {
-        logger.log("Queue ready : trying to push message to " + topic);
+        //logger.log("Queue ready : trying to push message to " + topic);
         self.producer.send([{ topic: topic, messages: [msg] }], function(err, data) {
             if (!err) {
                 logger.log(data);
@@ -42,7 +42,7 @@ queue.prototype.push = function(topic, msg) {
             }
         });
     } else {
-        logger.log("error", "Queue not ready : failed to push to " + topic);
+        //logger.log("error", "Queue not ready : failed to push to " + topic);
     }
 }
 

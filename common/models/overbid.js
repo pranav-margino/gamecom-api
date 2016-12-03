@@ -93,8 +93,6 @@ module.exports = function(Overbid) {
                 if (!err) {
                     app.models.Consumer.getPoints(ctx.instance.user.id, function(err, points) {
                         if (points >= ctx.instance.value) {
-
-
                             app.models.Consumer.updatePoints(ctx.instance.user.id, -ctx.instance.value, function(err, data) {
                                 if (err) {
                                     next();
@@ -130,16 +128,6 @@ module.exports = function(Overbid) {
                                     });
                                 }
                             });
-
-
-                            
-
-
-
-
-
-
-
                         } else {
                             next();
                         }
@@ -147,7 +135,6 @@ module.exports = function(Overbid) {
                 } else {
                     next();
                 }
-
             });
         } else {
             next();
@@ -160,7 +147,7 @@ module.exports = function(Overbid) {
 
     function broadcastFavouriteUpdate(favouriteObj) {
         if (!self.sockets) {
-            console.warn("No Favourite sockets.");
+            //console.warn("No Favourite sockets.");
             return;
         }
         //console.log('broadcastFavouriteUpdate');
@@ -169,7 +156,7 @@ module.exports = function(Overbid) {
 
     io.on('ready', function(socket, sockets) {
         self.sockets = sockets;
-        console.log("Overbid sockets working.");
+        //console.log("Overbid sockets working.");
 
     });
 

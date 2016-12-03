@@ -26,7 +26,7 @@ module.exports = function(ProductComment){
 
     io.on('ready', function(socket, sockets) {
         self.sockets = sockets;
-        console.log("ProductComment sockets working.");
+        //console.log("ProductComment sockets working.");
 
     });
 	

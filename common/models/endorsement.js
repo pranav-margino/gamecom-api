@@ -132,7 +132,7 @@ module.exports = function(Endorsement) {
 
     io.on('ready', function(socket, sockets) {
         self.sockets = sockets;
-        console.log("Endorsement sockets working.");
+        //console.log("Endorsement sockets working.");
     });
 
 

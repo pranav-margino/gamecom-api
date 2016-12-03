@@ -28,7 +28,8 @@ app.start = function() {
 boot(app, __dirname, function(err) {
     if (err) throw err;
     // start the server if `$ node server.js`
-    if (require.main === module) { //app.start();
+    if (require.main === module) { 
+        app.start();
         io.init(app);
         //cron.addEvent('startPoll', '15 10 * * *', {});
         //app.models.Game.resetSchedule();
@@ -43,7 +44,7 @@ boot(app, __dirname, function(err) {
         //});
         //app.models.PollAnswer.cleanup();
         app.models.Consumer.find({}, function(err, consumers) {
-            console.log(err);
+            //console.log(err);
             if (!err) {
                 _.forEach(consumers, function(consumer) {
                     //consumer.points += 3000;
@@ -56,7 +57,7 @@ boot(app, __dirname, function(err) {
         
         
         app.models.Consumer.find({}, function(err, consumers) {
-            console.log(err);
+            //console.log(err);
             if (!err) {
                 var points = [];
                 _.forEach(consumers, function(consumer) {
@@ -65,7 +66,7 @@ boot(app, __dirname, function(err) {
 
                 });
 
-                console.log("mode" + stats.mode(points));
+                //console.log("mode" + stats.mode(points));
 
             }
 

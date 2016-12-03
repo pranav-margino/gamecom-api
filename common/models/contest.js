@@ -171,7 +171,7 @@ module.exports = function(Contest) {
 
     function broadcastFavouriteUpdate(favouriteObj) {
         if (!self.sockets) {
-            console.warn("No Favourite sockets.");
+            //console.warn("No Favourite sockets.");
             return;
         }
         //console.log('broadcastFavouriteUpdate');
@@ -181,7 +181,7 @@ module.exports = function(Contest) {
 
     function broadcastContest(contestObj) {
         if (!self.sockets) {
-            console.warn("No Contest sockets.");
+            //console.warn("No Contest sockets.");
             return;
         }
         self.sockets.emit("readModel:Contest", contestObj);
@@ -189,7 +189,7 @@ module.exports = function(Contest) {
 
     io.on('ready', function(socket, sockets) {
         self.sockets = sockets;
-        console.log("Contest sockets working.");
+        //console.log("Contest sockets working.");
     });
 
 }

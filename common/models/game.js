@@ -67,10 +67,13 @@ module.exports = function(Game) {
     io.on('ready', function(socket, sockets) {
         self.socket = socket;
         self.sockets = sockets;
-        socket.on('updateModelAttr:Game:Contestants', function(data) {
-            console.log(data);
-            self.sockets.emit('updateModelAttr:Game:Contestants', data);
-        });
+        if (socket) {
+            socket.on('updateModelAttr:Game:Contestants', function(data) {
+                console.log(data);
+                self.sockets.emit('updateModelAttr:Game:Contestants', data);
+            });
+        }
+
     });
     Game.resetSchedule = function() {
         var self = this;
