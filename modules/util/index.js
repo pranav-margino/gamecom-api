@@ -45,7 +45,7 @@ util.prototype.getManifest = function(favouriteId, userId, model, cb) {
     var self = this;
     var _model = model.toLowerCase() + "s";
     //console.log(_model);
-    app.models.Favourite.findById(favouriteId, {fields:{userId: 1, productId: 1, bid: 1, preferenceId: 1}}, function(err, favourite) {
+    app.models.Favourite.findById(favouriteId, function(err, favourite) {
         if (err) {
             return cb(err, null);
         }
