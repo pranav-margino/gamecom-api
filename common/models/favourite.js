@@ -294,7 +294,7 @@ module.exports = function(Favourite) {
 
             return;
         }
-        console.log('broadcastFavouriteUpdate');
+        //console.log('broadcastFavouriteUpdate');
         self.sockets.emit("updateModel:Favourite", favouriteObj);
     }
 

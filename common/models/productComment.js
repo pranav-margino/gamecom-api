@@ -18,7 +18,7 @@ module.exports = function(ProductComment){
 
     function broadcastProductComment(commentObj) {
         if (!self.sockets) {
-            console.warn("No ProductComment sockets.");
+            
             return;
         }
         self.sockets.emit("readModel:ProductComment", commentObj);

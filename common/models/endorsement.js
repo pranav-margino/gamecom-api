@@ -79,7 +79,6 @@ module.exports = function(Endorsement) {
                             next();
                         }
                         if (points >= ctx.instance.value) {
-
                             app.models.Consumer.updatePoints(ctx.instance.user.id, -ctx.instance.value, function(err, data) {
                                 if (err) {
                                     next();
@@ -89,13 +88,12 @@ module.exports = function(Endorsement) {
                                         if (err) {
                                             next();
                                         } else {
-
                                             app.models.Favourite.rank(favourite.preferenceId, function(err, data) {
                                                 if (err) {
                                                     next();
                                                 } else {
                                                     app.models.Favourite.broadcastRank(favourite.preferenceId, function(err, data) {
-                                                        if(err){
+                                                        if (err) {
                                                             next();
                                                         }
                                                         app.models.Favourite.findById(favourite.id, function(err, favourite) {

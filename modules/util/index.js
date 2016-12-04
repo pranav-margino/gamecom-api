@@ -43,7 +43,9 @@ util.prototype.validateManifest = function(err) {
 util.prototype.getManifest = function(favouriteId, userId, model, cb) {
 
     var self = this;
-    app.models.Favourite.findById(favouriteId, function(err, favourite) {
+    var _model = model.toLowerCase() + "s";
+    //console.log(_model);
+    app.models.Favourite.findById(favouriteId, {fields:{userId: 1, productId: 1, bid: 1, preferenceId: 1}}, function(err, favourite) {
         if (err) {
             return cb(err, null);
         }
@@ -73,7 +75,7 @@ util.prototype.getManifest = function(favouriteId, userId, model, cb) {
                 //already enough overbids, endorsements etc
                 var maxCount = preference["max" + model + "Count"];
 
-                console.log(maxCount);
+                //console.log(maxCount);
 
                 if (docs && docs.length >= ((maxCount == -1) ? Number.POSITIVE_INFINITY : maxCount)) {
                     manifest.hasVacant = false;
