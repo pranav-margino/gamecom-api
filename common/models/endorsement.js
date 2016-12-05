@@ -81,43 +81,49 @@ module.exports = function(Endorsement) {
                             app.models.Consumer.updatePoints(ctx.instance.user.id, -ctx.instance.value, function(err, data) {
                                 if (err) {
                                     next();
-                                }
-                                favourite.bid = Math.max(0, parseInt(favourite.bid) + parseInt(ctx.instance.value));
-                                favourite.save(function(err, instance) {
-                                    if (err) {
-                                        next();
-                                    }
-                                    app.models.Favourite.rank(favourite.preferenceId, function(err, data) {
+                                } else {
+                                    favourite.bid = Math.max(0, parseInt(favourite.bid) + parseInt(ctx.instance.value));
+                                    favourite.save(function(err, instance) {
                                         if (err) {
                                             next();
-                                        }
-                                        app.models.Favourite.broadcastRank(favourite.preferenceId, function(err, data) {
-                                            if (err) {
-                                                next();
-                                            }
-                                            app.models.Favourite.findById(favourite.id, function(err, favourite) {
-                                                if (!err) {
-                                                    app.models.Favourite.broadcastFavouriteUpdate(favourite);
-                                                }
-                                                next();
-                                            })
+                                        } else {
 
-                                        });
+                                            app.models.Favourite.rank(favourite.preferenceId, function(err, data) {
+                                                if (err) {
+                                                    next();
+                                                } else {
+                                                    app.models.Favourite.broadcastRank(favourite.preferenceId, function(err, data) {
+                                                        if (err) {
+                                                            next();
+                                                        }
+                                                        app.models.Favourite.findById(favourite.id, function(err, favourite) {
+                                                            if (!err) {
+                                                                app.models.Favourite.broadcastFavouriteUpdate(favourite);
+                                                            }
+                                                            next();
+                                                        })
+
+                                                    });
+                                                }
+                                            });
+
+
+                                        }
 
                                     });
-
-                                });
-
+                                }
                             });
-
+                        } else {
+                            next();
                         }
-                        next();
                     });
+                } else {
+                    next();
                 }
-                next();
             });
+        } else {
+            next();
         }
-        next();
     });
 
     io.on('ready', function(socket, sockets) {
