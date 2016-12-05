@@ -4,10 +4,14 @@ var app = module.exports = loopback();
 var queue = require('../modules/queue');
 var logger = require('../modules/logger');
 var io = require('../modules/io');
+var cache = require('../modules/cache');
 var cron = require('../modules/cron');
 var fs = require('fs');
 var _ = require('lodash');
-var stats = require("stats-lite")
+var stats = require("stats-lite");
+var debug = require('debug')('server');
+var colors = require('colors');
+
 
 //var consumerAcls = require('./acls/consumer.json');
 
@@ -28,48 +32,29 @@ app.start = function() {
 boot(app, __dirname, function(err) {
     if (err) throw err;
     // start the server if `$ node server.js`
-    if (require.main === module) { 
+    if (require.main === module) {
         app.start();
         io.init(app);
-        //cron.addEvent('startPoll', '15 10 * * *', {});
-        //app.models.Game.resetSchedule();
-        //app.models.Preference.listConsumers();
-        //app.models.Consumer.assignPoints();
-        //app.models.Poll.getQuestion();
-        //app.models.Preference.cleanup();
-        //app.models.Consumer.cleanupPoints();
-        //app.models.Consumer.statsPoints(function(err,data){
-        //    console.log(err);
-        //    console.log(data);
-        //});
-        //app.models.PollAnswer.cleanup();
+        cache.init();
+
         app.models.Consumer.find({}, function(err, consumers) {
-            //console.log(err);
             if (!err) {
-                _.forEach(consumers, function(consumer) {
-                    //consumer.points += 3000;
-                    //consumer.save();
-                });
+                _.forEach(consumers, function(consumer) {});
 
             }
 
         });
-        
-        
         app.models.Consumer.find({}, function(err, consumers) {
-            //console.log(err);
             if (!err) {
                 var points = [];
                 _.forEach(consumers, function(consumer) {
-                    //console.log(consumer.points);
                     points.push(consumer.points);
 
                 });
-
-                //console.log("mode" + stats.mode(points));
-
+                debug("mode " + stats.mode(points));
+                debug("mean " + stats.mean(points));
+                debug("median " + stats.median(points));
             }
-
         });
     }
 });

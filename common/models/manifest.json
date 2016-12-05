@@ -19,23 +19,23 @@
         "favouriteId": {
             "type": "String"
         },
-        "values":{
+        "values": {
             "type": ["number"]
-            
+
         },
-        "hasRecent":{
-            "type":"Boolean",
+        "hasRecent": {
+            "type": "Boolean",
             "default": false
         },
-        "hasVacant":{
+        "hasVacant": {
             "type": "Boolean",
             "default": true
         },
-        "nextPossible":{
+        "nextPossible": {
             "type": "Date"
 
         },
-        "expiresIn":{
+        "expiresIn": {
             "type": "number",
             "default": 10
         }
@@ -44,5 +44,10 @@
     "hidden": [],
     "relations": {},
     "acls": [],
-    "methods": {}
+    "methods": {},
+    "indexes": {
+        "id_index": {
+            "id": 1
+        }
+    }
 }

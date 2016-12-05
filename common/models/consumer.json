@@ -87,5 +87,10 @@
         "permission": "ALLOW",
         "property": "updateAll"
     }],
-    "methods": {}
+    "methods": {},
+    "indexes": {
+        "id_index": {
+            "id": 1
+        }
+    }
 }

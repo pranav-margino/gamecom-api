@@ -1,5 +1,6 @@
 var app = require('../../server/server');
 var io = require('../../modules/io');
+var cache = require('../../modules/cache');
 var _ = require('lodash');
 var async = require('async');
 var debug = require('debug')('favourite');
@@ -11,12 +12,51 @@ module.exports = function(Favourite) {
 
 
     self.sockets = null;
+    self.cClient = null;
+
+    cache.on('ready', function(client) {
+        self.cClient = client;
+    });
+
+    io.on('ready', function(socket, sockets) {
+        self.sockets = sockets;
+        debug("Favourite sockets connected.".green);
+    });
+
+
+
+    Favourite.findByIdCache = function(id, cb) {
+        if (!self.cClient) {
+            debug("no cache client".red);
+            Favourite.findById.apply(null, arguments);
+        } else {
+            self.cClient.hget("favourite", id, function(err, favourite) {
+                if (!err && favourite != null) {
+                    debug('findByIdCache'.blue);
+                    cb(null, favourite);
+                } else {
+                    Favourite.findById(id, function(err, favourite) {
+                        if (!err) {
+                            self.cClient.hset("favourite", id, JSON.stringify(favourite));
+                            cb(null, favourite);
+                        } else {
+                            cb(err, null);
+                        }
+
+                    });
+                }
+            });
+        }
+    }
 
 
 
 
     Favourite.peopleEndorsements = function(preferenceId, userId, cb) {
-        Favourite.find({ where: { preferenceId: preferenceId }, fields: { 'product.comments': 0, 'product.description': 0 } }, function(err, favourites) {
+        Favourite.find({
+            where: { preferenceId: preferenceId },
+            fields: { 'product.comments': 0, 'product.description': 0 }
+        }, function(err, favourites) {
 
             if (!err) {
                 var userFavourites = _.partition(favourites, function(favourite) {
@@ -29,7 +69,6 @@ module.exports = function(Favourite) {
 
                 async.map(userFavourites, function(userFavourite, cb) {
                     userFavourite.endorsements({}, function(err, endorsements) {
-                        //var productEndorsements = [];
                         var productEndorsements = _.map(endorsements, function(endorsement) {
                             var product = userFavourite.product;
                             if (product.description) {
@@ -53,7 +92,10 @@ module.exports = function(Favourite) {
     }
 
     Favourite.peopleContests = function(preferenceId, userId, cb) {
-        Favourite.find({ where: { preferenceId: preferenceId }, fields: { 'product.comments': 0, 'product.description': 0 } }, function(err, favourites) {
+        Favourite.find({
+            where: { preferenceId: preferenceId },
+            fields: { 'product.comments': 0, 'product.description': 0 }
+        }, function(err, favourites) {
 
             if (!err) {
                 var userFavourites = _.partition(favourites, function(favourite) {
@@ -66,7 +108,6 @@ module.exports = function(Favourite) {
 
                 async.map(userFavourites, function(userFavourite, cb) {
                     userFavourite.contests({}, function(err, contests) {
-                        //var productEndorsements = [];
                         var productContests = _.map(contests, function(contest) {
                             var product = userFavourite.product;
                             if (product.description) {
@@ -94,7 +135,10 @@ module.exports = function(Favourite) {
 
 
     Favourite.userEndorsements = function(preferenceId, userId, cb) {
-        Favourite.find({ where: { preferenceId: preferenceId }, fields: { 'product.comments': 0, 'product.description': 0 } }, function(err, favourites) {
+        Favourite.find({
+            where: { preferenceId: preferenceId },
+            fields: { 'product.comments': 0, 'product.description': 0 }
+        }, function(err, favourites) {
             async.map(favourites, function(favourite, cb) {
                 favourite.endorsements({}, function(err, endorsements) {
 
@@ -124,7 +168,10 @@ module.exports = function(Favourite) {
     }
 
     Favourite.userContests = function(preferenceId, userId, cb) {
-        Favourite.find({ where: { preferenceId: preferenceId }, fields: { 'product.comments': 0, 'product.description': 0 } }, function(err, favourites) {
+        Favourite.find({
+            where: { preferenceId: preferenceId },
+            fields: { 'product.comments': 0, 'product.description': 0 }
+        }, function(err, favourites) {
             async.map(favourites, function(favourite, cb) {
                 favourite.contests({}, function(err, contests) {
                     var contestsArray = [];
@@ -146,7 +193,10 @@ module.exports = function(Favourite) {
     }
 
     Favourite.userOverbids = function(preferenceId, userId, cb) {
-        Favourite.find({ where: { preferenceId: preferenceId }, fields: { 'product.comments': 0, 'product.description': 0, 'user.facebookId': 0 } }, function(err, favourites) {
+        Favourite.find({
+            where: { preferenceId: preferenceId },
+            fields: { 'product.comments': 0, 'product.description': 0, 'user.facebookId': 0 }
+        }, function(err, favourites) {
             if (!err) {
                 async.map(favourites, function(favourite, cb) {
                     favourite.overbids({}, function(err, overbids) {
@@ -163,7 +213,10 @@ module.exports = function(Favourite) {
     };
 
     Favourite.userUnderbids = function(preferenceId, userId, cb) {
-        Favourite.find({ where: { preferenceId: preferenceId }, fields: { 'product.comments': 0, 'product.description': 0 } }, function(err, favourites) {
+        Favourite.find({
+            where: { preferenceId: preferenceId },
+            fields: { 'product.comments': 0, 'product.description': 0 }
+        }, function(err, favourites) {
             if (!err) {
                 async.map(favourites, function(favourite, cb) {
                     favourite.underbids({}, function(err, underbids) {
@@ -294,7 +347,6 @@ module.exports = function(Favourite) {
 
             return;
         }
-        //console.log('broadcastFavouriteUpdate');
         self.sockets.emit("updateModel:Favourite", favouriteObj);
     }
 
@@ -320,16 +372,6 @@ module.exports = function(Favourite) {
             }
         });
     }
-
-
-
-
-
-
-
-
-
-
 
 
     Favourite.observe('before save', function(ctx, next) {
@@ -412,12 +454,6 @@ module.exports = function(Favourite) {
 
 
 
-    io.on('ready', function(socket, sockets) {
-        self.sockets = sockets;
-        //console.log(sockets);
-        //debug("Favourite sockets connected.".green);
-
-    });
 
 
 

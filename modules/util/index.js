@@ -44,8 +44,8 @@ util.prototype.getManifest = function(favouriteId, userId, model, cb) {
 
     var self = this;
     var _model = model.toLowerCase() + "s";
-    //console.log(_model);
     app.models.Favourite.findById(favouriteId, function(err, favourite) {
+        console.log(favourite);
         if (err) {
             return cb(err, null);
         }
@@ -72,11 +72,9 @@ util.prototype.getManifest = function(favouriteId, userId, model, cb) {
                     expiresIn: expiresIn
                 };
 
-                //already enough overbids, endorsements etc
                 var maxCount = preference["max" + model + "Count"];
 
-                //console.log(maxCount);
-
+   
                 if (docs && docs.length >= ((maxCount == -1) ? Number.POSITIVE_INFINITY : maxCount)) {
                     manifest.hasVacant = false;
                     app.models.Manifest.create(manifest, function(err, manifest) {

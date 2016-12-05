@@ -10,10 +10,10 @@
         "TimeStamp": true
     },
     "properties": {
-        "productId":{
+        "productId": {
             "type": "String"
         },
-        "userId":{
+        "userId": {
             "type": "String"
         },
         "product": {
@@ -83,5 +83,13 @@
         }
     },
     "acls": [],
-    "methods": {}
+    "methods": {},
+    "indexes": {
+        "id_index":{
+            "id": 1
+        },
+        "preference_id_index": {
+            "preferenceId": 1
+        }
+    }
 }

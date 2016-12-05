@@ -32,13 +32,13 @@
         "scheduledAt": {
             "type": "Date"
         },
-        "scheduledStart":{
+        "scheduledStart": {
             "type": "Date"
         },
-        "scheduledEnd":{
+        "scheduledEnd": {
             "type": "Date"
         },
-        "isActive":{
+        "isActive": {
             "type": "Boolean",
             "default": false
         },
@@ -156,5 +156,10 @@
         }
     },
     "acls": [],
-    "methods": {}
+    "methods": {},
+    "indexes": {
+        "id_index": {
+            "id": 1
+        }
+    }
 }
