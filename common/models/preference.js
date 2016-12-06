@@ -195,45 +195,48 @@ module.exports = function(Preference) {
                 }
                 //choose winners randomly
                 var winners = [];
-                app.models.Favourite.rank(id);
-                preference.products({}, function(err, products) {
-                    if (err) {
-                        return cb(err, null);
-                    }
-
-                    var productsWinnersCount = [];
-
-                    for (var i = 0; i < products.length; i++) {
-                        productsWinnersCount[products[i].id] = products[i].winnersCount;
-                    }
-                    preference.favourites({}, function(err, favourites) {
-                        if (!err) {
-                            var groups = _.groupBy(favourites, 'product.id');
-
-                            for (var productId in groups) {
-                                var winnersCount = productsWinnersCount[productId];
-                                var group = groups[productId];
-                                console.log("***");
-                                console.log(group);
-                                group = group.sort(function(a, b) {
-                                    return parseInt(a.rank) - parseInt(b.rank);
-                                });
-                                //console.log("sorted group");
-                                //console.log(group);
-                                for (var i = 0; i < winnersCount; i++) {
-                                    winners.push(group[i] || {});
-                                }
-                                console.log("winners");
-                                console.log(winners);
-                            }
-                            preference.winners = winners;
-                            preference.save();
-                            return cb(err, winners);
-                        } else {
+                app.models.Favourite.rank(id, function(err, data) {
+                    preference.products({}, function(err, products) {
+                        if (err) {
                             return cb(err, null);
                         }
+
+                        var productsWinnersCount = [];
+
+                        for (var i = 0; i < products.length; i++) {
+                            productsWinnersCount[products[i].id] = products[i].winnersCount;
+                        }
+                        preference.favourites({}, function(err, favourites) {
+                            if (!err) {
+                                var groups = _.groupBy(favourites, 'product.id');
+
+                                for (var productId in groups) {
+                                    var winnersCount = productsWinnersCount[productId];
+                                    var group = groups[productId];
+                                    console.log("***");
+                                    console.log(group);
+                                    group = group.sort(function(a, b) {
+                                        return parseInt(a.rank) - parseInt(b.rank);
+                                    });
+                                    //console.log("sorted group");
+                                    //console.log(group);
+                                    for (var i = 0; i < winnersCount; i++) {
+                                        winners.push(group[i] || {});
+                                    }
+                                    console.log("winners");
+                                    console.log(winners);
+                                }
+                                preference.winners = winners;
+                                preference.save();
+                                return cb(err, winners);
+                            } else {
+                                return cb(err, null);
+                            }
+                        });
                     });
+
                 });
+
             } else {
                 logger.log('error', err);
                 return cb(err, []);

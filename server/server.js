@@ -20,10 +20,10 @@ app.start = function() {
     return app.listen(function() {
         app.emit('started');
         var baseUrl = app.get('url').replace(/\/$/, '');
-        logger.log('Web server listening at: ' + baseUrl);
+        console.log('Web server listening at: ' + baseUrl);
         if (app.get('loopback-component-explorer')) {
             var explorerPath = app.get('loopback-component-explorer').mountPath;
-            logger.log('Browse your REST API at ' + baseUrl + '/' + explorerPath);
+            console.log('Browse your REST API at ' + baseUrl + '/' + explorerPath);
         }
     });
 };

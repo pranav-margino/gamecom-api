@@ -45,7 +45,7 @@ util.prototype.getManifest = function(favouriteId, userId, model, cb) {
     var self = this;
     var _model = model.toLowerCase() + "s";
     app.models.Favourite.findById(favouriteId, function(err, favourite) {
-        console.log(favourite);
+        
         if (err) {
             return cb(err, null);
         }
@@ -89,9 +89,13 @@ util.prototype.getManifest = function(favouriteId, userId, model, cb) {
 
                         var values = self.getValues((model == "Underbid") ? favourite.bid : points, preference["max" + model + "Value"], preference["min" + model + "Value"], preference["stepsOf" + model]);
 
+                        /*
                         var userDocs = _.partition(docs, function(doc) {
                             return doc.user.id == userId;
                         })[0];
+                        */
+
+                        var userDocs = docs;
 
                         if (userDocs.length == 0) {
                             //has no doc
