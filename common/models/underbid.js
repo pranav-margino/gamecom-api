@@ -86,48 +86,45 @@
      Underbid.observe('after save', function(ctx, next) {
          if (ctx.isNewInstance) {
              app.models.Favourite.findById(ctx.instance.favouriteId, function(err, favourite) {
-                 if (!err) {
-                     
+                 if (!err && favourite != null) {
+
+                     app.models.Favourite.setModelStatsCache(favourite, "Underbid");
+
+                     app.models.Consumer.updatePointsCache(ctx.instance.user.id, ctx.instance.value, function(err, data) {
+                         if (err) {
+                             next();
+                         } else {
+                             favourite.bid = Math.max(0, parseInt(favourite.bid) - parseInt(ctx.instance.value));
+                             favourite.save(function(err, instance) {
+                                 if (err) {
+                                     next();
+                                 } else {
+
+                                     app.models.Favourite.rank(favourite.preferenceId, function(err, data) {
+                                         if (err) {
+                                             next();
+                                         } else {
+                                             app.models.Favourite.broadcastRank(favourite.preferenceId, function(err, data) {
+                                                 if (err) {
+                                                     next();
+                                                 }
+                                                 app.models.Favourite.findById(favourite.id, function(err, favourite) {
+                                                     if (!err) {
+                                                         app.models.Favourite.broadcastFavouriteUpdate(favourite);
+                                                     }
+                                                     next();
+                                                 })
+
+                                             });
+                                         }
+                                     });
 
 
-                    app.models.Consumer.updatePoints(ctx.instance.user.id, ctx.instance.value, function(err, data) {
-                                if (err) {
-                                    next();
-                                } else {
-                                    favourite.bid = Math.max(0, parseInt(favourite.bid) - parseInt(ctx.instance.value));
-                                    favourite.save(function(err, instance) {
-                                        if (err) {
-                                            next();
-                                        } else {
+                                 }
 
-                                            app.models.Favourite.rank(favourite.preferenceId, function(err, data) {
-                                                if (err) {
-                                                    next();
-                                                } else {
-                                                    app.models.Favourite.broadcastRank(favourite.preferenceId, function(err, data) {
-                                                        if (err) {
-                                                            next();
-                                                        }
-                                                        app.models.Favourite.findById(favourite.id, function(err, favourite) {
-                                                            if (!err) {
-                                                                app.models.Favourite.broadcastFavouriteUpdate(favourite);
-                                                            }
-                                                            next();
-                                                        })
-
-                                                    });
-                                                }
-                                            });
-
-
-                                        }
-
-                                    });
-                                }
-                            });
-
-
-
+                             });
+                         }
+                     });
 
 
 
@@ -137,7 +134,10 @@
 
 
 
-                     
+
+
+
+
 
 
 

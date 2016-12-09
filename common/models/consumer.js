@@ -13,6 +13,7 @@ module.exports = function(Consumer) {
 
     cache.on('ready', function(client) {
         self.cClient = client;
+        debug('cache connected'.green);
     });
 
     Consumer.getFacebookUser = function(id, cb) {
@@ -39,16 +40,21 @@ module.exports = function(Consumer) {
     Consumer.getPointsCache = function(id, cb) {
         if (!self.cClient) {
             debug("no cache client".red);
-            Consumer.getPoints.call(null, id, cb);
+            Consumer.getPoints.apply(null, arguments);
         } else {
-            self.cClient.hget('points', id, function(err, points) {
+            var key = ["user-points", id].join("-");
+            self.cClient.get(key, function(err, points) {
                 if (!err && points != null) {
-                    debug("from cache".green);
+                    debug("getPointsCache".green);
+                    debug("points", points);
                     cb(null, points);
                 } else {
                     Consumer.getPoints(id, function(err, points) {
                         if (!err) {
-                            self.cClient.hset('points', id, points);
+                            debug("getPointsDisc".red);
+                            debug("points %d", points);
+                            self.cClient.set(key, points);
+                            self.cClient.expire(key, 60);
                             cb(null, points);
                         } else {
                             cb(err, null);
@@ -64,14 +70,37 @@ module.exports = function(Consumer) {
 
 
     Consumer.updatePoints = function(id, points, cb) {
+        debug("updatePoints %d", points);
         if (isNaN(points)) {
             return cb(true, null);
         }
         Consumer.findById(id, function(err, consumer) {
-            consumer.points = Math.max(0, parseInt(consumer.points) + parseInt(points));
+            points = Math.max(0, parseInt(consumer.points) + parseInt(points));
+            consumer.points = points;
             consumer.save();
-            return cb(null, consumer.points);
+            cb(null, points);
+            
         });
+    }
+
+    Consumer.updatePointsCache = function(id, points, cb) {
+        if (!self.cClient) {
+            debug("no cache client".red);
+            Consumer.updatePoints.apply(null, arguments);
+        } else {
+            Consumer.updatePoints(id, points, function(err, points) {
+                debug(err);
+                debug(points);
+                if (!err) {
+                    var key = ["user-points", id].join("-");
+                    self.cClient.set(key, points);
+                    self.cClient.expire(key, 60);
+                    cb(null, points);
+                } else {
+                    cb(err, null);
+                }
+            });
+        }
     }
 
     Consumer.cleanupPoints = function() {

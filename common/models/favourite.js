@@ -15,7 +15,9 @@ module.exports = function(Favourite) {
     self.cClient = null;
 
     cache.on('ready', function(client) {
+
         self.cClient = client;
+        debug("Favourite cache connected".green);
     });
 
     io.on('ready', function(socket, sockets) {
@@ -270,17 +272,347 @@ module.exports = function(Favourite) {
         });
     };
 
+    Favourite.getManifestVars = function(id, cb) {
+        Favourite.findById(id, { fields: { userId: 1, preferenceId: 1, productId: 1, bid: 1 } }, function(err, vars) {
+            cb(err, vars);
+        });
+    }
+
+    Favourite.getManifestVarsCache = function(id, cb) {
+        if (!self.cClient) {
+            debug("no cache client");
+            Favourite.getManifestVars.apply(null, arguments);
+        } else {
+            var key = ["manifest-vars-favourite", id].join("-");
+
+            self.cClient.hmget(key, [
+                "preferenceId",
+                "productId",
+                "userId",
+                "bid"
+            ], function(err, vars) {
+                if (!err && vars.length == 4 && vars[0] != null && vars[1] != null && vars[2] != null && vars[3] != null) {
+                    debug('FavouriteManifestVarsCache'.blue);
+                    debug('key: %s', key);
+                    debug(vars);
+                    cb(null, { preferenceId: vars[0], productId: vars[1], userId: vars[2], bid: vars[3] });
+                } else {
+                    Favourite.getManifestVars(id, function(err, vars) {
+                        if (!err) {
+                            debug('FavouriteManifestVarsDisc'.red);
+                            debug(vars);
+                            self.cClient.hmset(key, 'preferenceId', vars.preferenceId.toString(), 'productId', vars.productId, 'userId', vars.userId, 'bid', vars.bid, require('redis').print);
+                            self.cClient.expire(key, 10);
+                            cb(null, vars);
+                        } else {
+                            cb(err, null);
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    Favourite.setManifestVarsCache = function(favourite) {
+        if (!self.cClient) {
+            debug("no cache client".red);
+            return;
+        } else {
+            var key = ["manifest-vars-favourite", favourite.id].join("-");
+            //preferenceId = (typeof preferenceId == "string") preferenceId
+            if (!favourite.preferenceId || !favourite.userId || !favourite.bid || !favourite.productId) {
+                return;
+            }
+            self.cClient.hmset(key, 'preferenceId', favourite.preferenceId.toString(), 'productId', favourite.productId, 'userId', favourite.userId, 'bid', favourite.bid);
+            self.cClient.expire(key, 60);
+            debug('setManifestVarsCache %s'.green, favourite.id);
+        }
+    };
+
+    Favourite.unsetManifestVarsCache = function(favourite) {
+        if (!self.cClient) {
+            debug("no cache client".red);
+            return;
+        } else {
+            var key = ["manifest-vars-favourite", favourite.id].join("-");
+
+            self.cClient.del(key);
+
+
+            debug('unsetManifestVarsCache %s'.green, favourite.id);
+        }
+    }
+
+    Favourite.getActionStats = function(id, cb) {
+        Favourite.findById(id, function(err, favourite) {
+            if (!err) {
+                async.parallel({
+                    endorsements: function(callback) {
+                        favourite.endorsements({}, function(err, endorsements) {
+                            if (!err && endorsements != null && endorsements.length > 0) {
+                                callback(null, { count: endorsements.length, lastAt: _.sortBy(endorsements, 'createdAt').pop().createdAt });
+                            } else {
+                                callback(null, { count: 0, lastAt: null });
+                            }
+                        })
+                    },
+                    contests: function(callback) {
+                        favourite.contests({}, function(err, contests) {
+                            if (!err && contests != null && contests.length > 0) {
+                                callback(null, { count: contests.length, lastAt: _.sortBy(contests, 'createdAt').pop().createdAt });
+                            } else {
+                                callback(null, { count: 0, lastAt: null });
+                            }
+                        })
+                    },
+                    overbids: function(callback) {
+                        favourite.overbids({}, function(err, overbids) {
+                            if (!err && overbids != null && overbids.length > 0) {
+                                callback(null, { count: overbids.length, lastAt: _.sortBy(overbids, 'createdAt').pop().createdAt });
+                            } else {
+                                callback(null, { count: 0, lastAt: null });
+                            }
+                        })
+                    },
+                    underbids: function(callback) {
+                        favourite.underbids({}, function(err, underbids) {
+                            if (!err && underbids != null && underbids.length > 0) {
+                                callback(null, { count: underbids.length, lastAt: _.sortBy(underbids, 'createdAt').pop().createdAt });
+                            } else {
+                                callback(null, { count: 0, lastAt: null });
+                            }
+
+                        })
+                    }
+                }, function(err, results) {
+                    cb(err, results);
+                });
+            } else {
+                cb(err, null);
+            }
+        });
+    }
+
+    Favourite.getModelStats = function(id, modelName, cb) {
+        var _modelName = modelName.toLowerCase() + "s";
+        Favourite.findById(id, function(err, favourite) {
+            if (!err) {
+                favourite[_modelName]({}, function(err, docs) {
+                    if (!err && docs != null && docs.length > 0) {
+                        cb(null, { count: docs.length, lastAt: _.sortBy(docs, 'createdAt').pop().createdAt });
+                    } else {
+                        //very old date is needed
+                        cb(null, { count: 0, lastAt: new Date("1 Jan 1970") });
+                    }
+                })
+
+            } else {
+                cb(err, null)
+            }
+        });
+    }
+
+    Favourite.getModelStatsCache = function(id, modelName, cb) {
+        if (!self.cClient) {
+            Favourite.getModelStats.apply(null, arguments);
+        } else {
+            var key = ['favourite', id, modelName.toLowerCase() + "s"].join("-");
+            debug(key);
+
+            self.cClient.hmget(key, 'count', 'lastAt', function(err, stats) {
+                if (!err && stats.length == 2 && stats[0] != null) {
+
+                    debug("FavouriteModelStatsCache".blue);
+                    debug('key: %s', key);
+                    debug(stats);
+                    cb(null, { count: parseInt(stats[0]), lastAt: new Date(stats[1]) });
+                } else {
+                    Favourite.getModelStats(id, modelName, function(err, stats) {
+                        if (!err) {
+                            debug("FavouriteModelStatsDisc".red);
+                            debug(stats);
+                            self.cClient.hmset(key, 'count', stats.count, 'lastAt', stats.lastAt);
+                            self.cClient.expire(key, 10);
+                            cb(null, stats);
+                        } else {
+                            cb(err, null);
+                        }
+
+                    });
+                }
+            })
+        }
+    }
+
+    Favourite.setModelStatsCache = function(favourite, modelName) {
+        if (!self.cClient) {
+            debug("no cache client".red);
+            return;
+        } else {
+            var key = ['favourite', favourite.id, modelName.toLowerCase() + "s"].join("-");
+            self.cClient.hincrby(key, 'count', 1);
+            self.cClient.hset(key, 'createdAt', new Date());
+            self.cClient.expire(key, 10);
+        }
+    }
+
+
+    Favourite.remoteMethod('getModelStatsCache', {
+        http: {
+            path: '/getModelStatsCache',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'id',
+            type: 'string'
+        }, {
+            arg: 'modelName',
+            type: "string"
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Object'
+        }
+    });
+
+
+
+    Favourite.remoteMethod('getModelStats', {
+        http: {
+            path: '/getModelStats',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'id',
+            type: 'string'
+        }, {
+            arg: 'modelName',
+            type: "string"
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Object'
+        }
+    });
+
+
+
+    Favourite.remoteMethod('getActionStats', {
+        http: {
+            path: '/getActionStats',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'id',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Object'
+        }
+    });
+
+    Favourite.remoteMethod('getManifestVars', {
+        http: {
+            path: '/getManifestVars',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'id',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Object'
+        }
+    });
+
+    Favourite.remoteMethod('getManifestVarsCache', {
+        http: {
+            path: '/getManifestVarsCache',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'id',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Object'
+        }
+    });
+
+
+
+    Favourite.userStatsCache = function(preferenceId, userId, cb) {
+
+        //check if preferenceId AND userId EXIST
+
+        var key = ["user-stats", preferenceId, userId].join("-");
+        debug(key.green);
+
+        if (!self.cClient) {
+            debug("no cache client".red);
+            Favourite.userStats.apply(self, arguments);
+        } else {
+            self.cClient.hmget(key, [
+                "endorsedByCount",
+                "endorsedCount",
+                "contestedByCount",
+                "contestsCount",
+                "overbidsCount",
+                "underbidsCount"
+            ], function(err, stats) {
+                if (!err && stats.length == 6 && stats[0] != null && stats[1] != null && stats[2] != null && stats[3] != null && stats[4] != null && stats[5] != null) {
+                    debug('statsCache'.blue);
+                    debug(stats);
+                    cb(null, {
+                        endorsedByCount: stats[0],
+                        endorsedCount: stats[1],
+                        contestedByCount: stats[2],
+                        contestsCount: stats[3],
+                        overbidsCount: stats[4],
+                        underbidsCount: stats[5]
+                    });
+                } else {
+                    Favourite.userStats(preferenceId, userId, function(err, stats) {
+                        debug('statsDisc'.red);
+                        debug(stats);
+                        if (!err && stats != null) {
+                            self.cClient.hmset(key,
+                                'endorsedByCount',
+                                stats.endorsedByCount,
+                                'endorsedCount',
+                                stats.endorsedCount,
+                                'contestedByCount',
+                                stats.contestedByCount,
+                                'contestsCount',
+                                stats.contestsCount,
+                                'overbidsCount',
+                                stats.overbidsCount,
+                                'underbidsCount',
+                                stats.underbidsCount);
+                            self.cClient.expire(key, 30);
+                            cb(null, stats);
+                        } else {
+                            cb(err, null);
+                        }
+
+                    });
+                }
+            });
+        }
+
+
+
+    };
+
 
 
     Favourite.rank = function(preferenceId, cb) {
         Favourite.find({
-            where: { preferenceId: preferenceId },
-            fields: {
-                id: true,
-                productId: true,
-                bid: true,
-                createdAt: true
-            }
+            where: { preferenceId: preferenceId }
+
         }, function(err, favourites) {
             if (err) {
                 return cb(err, null);
@@ -310,9 +642,11 @@ module.exports = function(Favourite) {
                 }
             }
             async.each(rankedFavourites, function(favourite, callback) {
+
                 favourite.updateAttribute('rank', favourite.rank, function(err, instance) {
                     callback(err);
                 })
+
             }, function(err) {
                 if (err) {
                     return cb(err, null)
@@ -388,6 +722,7 @@ module.exports = function(Favourite) {
     });
 
     Favourite.observe('after save', function(ctx, next) {
+        debug("after save");
         if (ctx.isNewInstance) {
             var instance = ctx.instance;
             var value = 0;
@@ -419,7 +754,19 @@ module.exports = function(Favourite) {
                 }
             });
         } else {
-            next();
+            //cache manifest vars
+            var instance = ctx.instance;
+
+            if (!self.cClient) {
+                next();
+            } else {
+                debug(ctx.instance);
+                Favourite.setManifestVarsCache(ctx.instance);
+
+                next();
+            }
+
+
         }
     });
 
@@ -431,12 +778,14 @@ module.exports = function(Favourite) {
         if (instance.product && instance.product.value) {
             value = instance.product.value;
         }
-        app.models.Consumer.updatePoints(instance.user.id, value, function(err, cb) {
+        app.models.Consumer.updatePointsCache(instance.user.id, value, function(err, cb) {
             next();
         });
     });
 
     Favourite.observe('after delete', function(ctx, next) {
+
+        Favourite.unsetManifestVarsCache(ctx.instance);
 
         Favourite.rank(ctx.instance.preferenceId, function(err, data) {
             if (err) {
@@ -444,6 +793,7 @@ module.exports = function(Favourite) {
             } else {
                 Favourite.broadcastRank(ctx.instance.preferenceId, function(err, data) {
                     Favourite.broadcastUnfavourite(ctx.instance);
+
                     next();
                 });
             }
@@ -465,6 +815,25 @@ module.exports = function(Favourite) {
     Favourite.remoteMethod('userStats', {
         http: {
             path: '/userStats',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'preferenceId',
+            type: 'string'
+        }, {
+            arg: 'userId',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Object'
+        }
+    });
+
+
+    Favourite.remoteMethod('userStatsCache', {
+        http: {
+            path: '/userStatsCache',
             verb: 'GET'
         },
         accepts: [{

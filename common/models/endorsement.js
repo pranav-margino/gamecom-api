@@ -52,7 +52,7 @@ module.exports = function(Endorsement) {
 
 
     Endorsement.getManifest = function(favouriteId, userId, cb) {
-        util.getManifest(favouriteId, userId, "Endorsement", function(err, data) {
+        util.getManifestCache(favouriteId, userId, "Endorsement", function(err, data) {
             return cb(err, data);
         });
 
@@ -72,13 +72,15 @@ module.exports = function(Endorsement) {
     Endorsement.observe('after save', function(ctx, next) {
         if (ctx.isNewInstance) {
             app.models.Favourite.findById(ctx.instance.favouriteId, function(err, favourite) {
-                if (!err) {
-                    app.models.Consumer.getPoints(ctx.instance.user.id, function(err, points) {
+                if (!err && favourite != null) {
+                    app.models.Favourite.setModelStatsCache(favourite, "Endorsement");
+                    
+                    app.models.Consumer.getPointsCache(ctx.instance.user.id, function(err, points) {
                         if (err) {
                             next();
                         }
                         if (points >= ctx.instance.value) {
-                            app.models.Consumer.updatePoints(ctx.instance.user.id, -ctx.instance.value, function(err, data) {
+                            app.models.Consumer.updatePointsCache(ctx.instance.user.id, -ctx.instance.value, function(err, data) {
                                 if (err) {
                                     next();
                                 } else {
