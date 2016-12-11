@@ -89,16 +89,14 @@ module.exports = function(Overbid) {
 
 
     Overbid.observe('after save', function(ctx, next) {
-        debug('after save');
+        debug('after save overbid');
         if (ctx.isNewInstance) {
             debug('new instance');
             debug('instance id %s', ctx.instance.id);
             app.models.Favourite.findById(ctx.instance.favouriteId, function(err, favourite) {
                 if (!err && favourite != null) {
-                    debug(favourite);
                     app.models.Favourite.setModelStatsCache(favourite, "Overbid");
                     app.models.Consumer.getPointsCache(ctx.instance.user.id, function(err, points) {
-                        debug('user points %d', points);
                         if (points >= ctx.instance.value) {
                             app.models.Consumer.updatePointsCache(ctx.instance.user.id, -ctx.instance.value, function(err, data) {
                                 if (err) {
@@ -109,7 +107,8 @@ module.exports = function(Overbid) {
                                         if (err) {
                                             next();
                                         } else {
-
+                                            //push favourite to cache
+                                            app.models.Favourite.setInRankCache(instance);
                                             app.models.Favourite.rank(favourite.preferenceId, function(err, data) {
                                                 if (err) {
                                                     next();
@@ -121,11 +120,6 @@ module.exports = function(Overbid) {
                                                         app.models.Favourite.findById(favourite.id, function(err, favourite) {
                                                             if (!err) {
                                                                 app.models.Favourite.broadcastFavouriteUpdate(favourite);
-
-                                                                //dirty user stats cache
-
-
-
                                                             }
                                                             next();
                                                         })
@@ -133,8 +127,6 @@ module.exports = function(Overbid) {
                                                     });
                                                 }
                                             });
-
-
                                         }
 
                                     });
@@ -159,16 +151,14 @@ module.exports = function(Overbid) {
 
     function broadcastFavouriteUpdate(favouriteObj) {
         if (!self.sockets) {
-            //console.warn("No Favourite sockets.");
+            debug("No Favourite sockets.".red);
             return;
         }
-        //console.log('broadcastFavouriteUpdate');
         self.sockets.emit("updateModel:Favourite", favouriteObj);
     }
 
     io.on('ready', function(socket, sockets) {
         self.sockets = sockets;
-        //console.log("Overbid sockets working.");
 
     });
 

@@ -89,7 +89,7 @@ module.exports = function(Endorsement) {
                                         if (err) {
                                             next();
                                         } else {
-
+                                            app.models.Favourite.setInRankCache(instance);
                                             app.models.Favourite.rank(favourite.preferenceId, function(err, data) {
                                                 if (err) {
                                                     next();

@@ -6,18 +6,6 @@ var cache = require('../../modules/cache');
 var debug = require('debug')('preference');
 var colors = require('colors');
 
-/*
-var cron = require('../../modules/cron');
-var moment = require('moment');
-var fs = require('fs');
-var winston = require('winston');
-var logger = new(winston.Logger)({
-    transports: [
-        new(winston.transports.Console)(),
-        new(winston.transports.File)({ filename: 'file.log' })
-    ]
-});
-*/
 
 
 module.exports = function(Preference) {
@@ -27,11 +15,14 @@ module.exports = function(Preference) {
 
     self.sockets = null;
     self.cClient = null;
+    self.cConfig = {};
 
-    cache.on('ready', function(client) {
+    cache.on('ready', function(client, config) {
 
         self.cClient = client;
+        self.cConfig = config;
         debug("preference cache connected".green);
+        debug("cache config %s", JSON.stringify(config));
     });
 
     io.on('ready', function(socket, sockets) {
@@ -124,7 +115,7 @@ module.exports = function(Preference) {
             debug("cache client not found".red);
             Preference.getManifestVars.apply(null, arguments);
         } else {
-            
+
             var key = ["manifest-vars-preference", id].join("-");
             var keys = [
                 "maxEndorsementValue",
@@ -182,7 +173,7 @@ module.exports = function(Preference) {
                                 keys[18], vars[keys[18]],
                                 keys[19], vars[keys[19]],
                                 keys[20], vars[keys[20]]);
-                            self.cClient.expire(key, 5);
+                            self.cClient.expire(key, self.cConfig.MANIFEST_VARS_PREFERENCE);
                             cb(null, vars);
                         } else {
                             cb(err, vars);
@@ -246,7 +237,7 @@ module.exports = function(Preference) {
                 keys[20], preference[keys[20]]);
 
             debug('setManifestVarsCache %s'.green, preference.id);
-            self.cClient.expire(key, 60);
+            self.cClient.expire(key, self.cConfig.MANIFEST_VARS_PREFERENCE);
 
         }
     }

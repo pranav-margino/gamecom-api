@@ -3,12 +3,21 @@ var colors = require('colors');
 
 var redis = require("redis");
 var debug = require('debug')('cache');
+var RedisNotifier = require('redis-notifier');
+var _ = require('lodash');
+
 
 
 var cache = cache || function(config) {
     var self = this;
-    self.config = config || {};
-
+    self.config = _.merge({
+        MANIFEST_VARS_PREFERENCE: 120,
+        MANIFEST_VARS_FAVOURITE: 60,
+        MODEL_STATS_FAVOURITE: 60,
+        RANK_FAVOURITE: 60,
+        POINTS_CONSUMER: 60,
+        USER_STATS_FAVOURITE:60
+    }, config);
 }
 
 
@@ -20,7 +29,15 @@ cache.prototype.init = function() {
     self.client.on('ready', function() {
         debug("Redis connected".green);
         debug("Cache ready".green);
-        self.emit('ready', self.client);
+        var eventNotifier = new RedisNotifier(redis, {
+            redis: { host: '127.0.0.1', port: 6379 },
+            expired: true,
+            evicted: true,
+            //logLevel: 'DEBUG' //Defaults To INFO 
+        });
+        self.client.notifier = eventNotifier;
+
+        self.emit('ready', self.client, self.config);
     });
 
 

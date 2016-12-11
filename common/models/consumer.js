@@ -11,8 +11,13 @@ var colors = require('colors');
 module.exports = function(Consumer) {
     var self = this;
 
-    cache.on('ready', function(client) {
+    self.sockets = null;
+    self.cClient = null;
+    self.cConfig = {};
+
+    cache.on('ready', function(client, config) {
         self.cClient = client;
+        self.cConfig = config;
         debug('cache connected'.green);
     });
 
@@ -79,7 +84,7 @@ module.exports = function(Consumer) {
             consumer.points = points;
             consumer.save();
             cb(null, points);
-            
+
         });
     }
 
@@ -94,7 +99,7 @@ module.exports = function(Consumer) {
                 if (!err) {
                     var key = ["user-points", id].join("-");
                     self.cClient.set(key, points);
-                    self.cClient.expire(key, 60);
+                    self.cClient.expire(key, self.cConfig.POINTS_CONSUMER);
                     cb(null, points);
                 } else {
                     cb(err, null);

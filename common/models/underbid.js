@@ -55,7 +55,7 @@
      }, { message: 'invalid manifest values' });
 
      Underbid.getManifest = function(favouriteId, userId, cb) {
-         util.getManifest(favouriteId, userId, "Underbid", function(err, data) {
+         util.getManifestCache(favouriteId, userId, "Underbid", function(err, data) {
              return cb(err, data);
          });
 
@@ -99,7 +99,7 @@
                                  if (err) {
                                      next();
                                  } else {
-
+                                    app.models.Favourite.setInRankCache(instance);
                                      app.models.Favourite.rank(favourite.preferenceId, function(err, data) {
                                          if (err) {
                                              next();
