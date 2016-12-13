@@ -56,14 +56,15 @@ util.prototype.getManifestCache = function(favouriteId, userId, model, cb) {
                 return cb(err, null);
             }
             app.models.Favourite.getModelStatsCache(favouriteId, model, function(err, stats) {
-                
+
                 debug(err);
                 debug(stats);
                 if (err || stats == null) {
                     return cb(err, null);
                 }
 
-                var interval = preference[model.toLowerCase() + "Interval"];
+                var interval = parseInt(preference[model.toLowerCase() + "Interval"]);
+                debug('interval %d', interval);
 
 
                 var manifest = {
@@ -93,7 +94,7 @@ util.prototype.getManifestCache = function(favouriteId, userId, model, cb) {
                         }
                         var values = self.getValues((model == "Underbid") ? parseInt(favourite.bid) : parseInt(points), parseInt(preference["max" + model + "Value"]), parseInt(preference["min" + model + "Value"]), parseInt(preference["stepsOf" + model]));
 
-                        debug('values %s',values.toString());
+                        debug('values %s', values.toString());
 
                         if (stats.count == 0) {
                             manifest.values = values;
@@ -103,7 +104,9 @@ util.prototype.getManifestCache = function(favouriteId, userId, model, cb) {
                         }
 
                         if (stats.count > 0) {
-                            if (new Date(stats.lastAt).getTime() > new Date().getTime() - (interval * 1000)) {
+                            debug("lastAt %d", new Date(stats.lastAt));
+                            debug("lastAtThreshhold %d", new Date().getTime() - (interval * 1000));
+                            if (new Date(stats.lastAt).getTime() > (new Date().getTime() - (interval * 1000))) {
                                 debug("hasRecent %s", model);
                                 var nextPossible = moment(moment(stats.lastAt).add((interval / 60), 'minutes')).toDate();
                                 manifest.hasRecent = true;

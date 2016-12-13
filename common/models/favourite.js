@@ -20,7 +20,7 @@ module.exports = function(Favourite) {
         self.cClient = client;
         self.cConfig = config;
         debug("Favourite cache connected".green);
-        
+
 
         if (self.cClient) {
             self.cClient.notifier.on('message', function(pattern, channelPattern, emittedKey) {
@@ -28,7 +28,7 @@ module.exports = function(Favourite) {
                 if (channel.key == 'expired') {
 
                     if (/preference-.*-rank/.test(emittedKey)) {
-                        
+
                         Favourite.rankFromDb(emittedKey.split("-")[1], function() {});
                     }
                 }
@@ -311,13 +311,13 @@ module.exports = function(Favourite) {
                 if (!err && vars.length == 4 && vars[0] != null && vars[1] != null && vars[2] != null && vars[3] != null) {
                     debug('FavouriteManifestVarsCache'.blue);
                     debug('key: %s', key);
-                    
+
                     cb(null, { preferenceId: vars[0], productId: vars[1], userId: vars[2], bid: vars[3] });
                 } else {
                     Favourite.getManifestVars(id, function(err, vars) {
                         if (!err) {
                             debug('FavouriteManifestVarsDisc'.red);
-                           
+
                             self.cClient.hmset(key, 'preferenceId', vars.preferenceId.toString(), 'productId', vars.productId, 'userId', vars.userId, 'bid', vars.bid);
                             self.cClient.expire(key, self.cConfig.MANIFEST_VARS_FAVOURITE);
                             cb(null, vars);
@@ -441,13 +441,13 @@ module.exports = function(Favourite) {
 
                     debug("FavouriteModelStatsCache".blue);
                     debug('key: %s', key);
-                   
+
                     cb(null, { count: parseInt(stats[0]), lastAt: new Date(stats[1]) });
                 } else {
                     Favourite.getModelStats(id, modelName, function(err, stats) {
                         if (!err) {
                             debug("FavouriteModelStatsDisc".red);
-                           
+
                             self.cClient.hmset(key, 'count', stats.count, 'lastAt', stats.lastAt);
                             self.cClient.expire(key, self.cConfig.MODEL_STATS_FAVOURITE);
                             cb(null, stats);
@@ -468,7 +468,7 @@ module.exports = function(Favourite) {
         } else {
             var key = ['favourite', favourite.id, modelName.toLowerCase() + "s"].join("-");
             self.cClient.hincrby(key, 'count', 1);
-            self.cClient.hset(key, 'createdAt', new Date());
+            self.cClient.hset(key, 'lastAt', new Date());
             self.cClient.expire(key, self.cConfig.MODEL_STATS_FAVOURITE);
 
 
@@ -491,6 +491,31 @@ module.exports = function(Favourite) {
         returns: {
             arg: 'result',
             type: 'Object'
+        }
+    });
+
+    Favourite.getBid = function(id, cb) {
+        Favourite.findById(id, function(err, favourite) {
+            if (err) {
+                cb(err, null);
+            } else {
+                cb(null, favourite.bid);
+            }
+        });
+    }
+
+    Favourite.remoteMethod('getBid', {
+        http: {
+            path: '/getBid',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'id',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Number'
         }
     });
 

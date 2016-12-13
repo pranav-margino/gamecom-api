@@ -20,33 +20,40 @@ module.exports = function(Overbid) {
     Overbid.validateAsync('validManifest', function(err, done) {
         var self = this;
 
-        app.models.Manifest.findById(this.manifestId, function(error, manifest) {
+        app.models.Manifest.findByIdCache(this.manifestId, function(error, manifest) {
             if (error || !manifest) {
                 err();
                 done();
             } else {
                 //has recent overbid
                 if (manifest.hasRecent) {
+                    debug('manifest hasRecent'.red);
                     err();
                 }
                 //check if user id is matched
                 if (manifest.userId !== self.user.id) {
+                    debug('manifest userId not matched'.red);
                     err();
                 }
                 //check if productId is matched
                 if (manifest.productId !== self.product.id) {
+                    debug('manifest productId not matched'.red);
                     err();
                 }
                 //check if favouriteId is matched
                 if (manifest.favouriteId != self.favouriteId) {
+                    debug('manifest favouriteId not matched'.red);
                     err();
                 }
                 // check if values are in range
+                debug(manifest.values);
                 if (manifest.values.indexOf(self.value) == -1) {
+                    debug('manifest values not in range'.red);
                     err();
                 }
 
                 if (new Date(manifest.createdAt).getTime() < (new Date().getTime() - (manifest.expiresIn * 1000))) {
+                    debug('manifest expired'.red);
                     err();
                 }
                 done();
