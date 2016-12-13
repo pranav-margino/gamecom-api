@@ -438,7 +438,7 @@ module.exports = function(Preference) {
                 //choose winners randomly
                 var winners = [];
                 app.models.Favourite.rank(id, function(err, data) {
-                    preference.products({}, function(err, productsWinnersCount) {
+                    preference.products({}, function(err, products) {
                         if (err) {
                             return cb(err, null);
                         }
