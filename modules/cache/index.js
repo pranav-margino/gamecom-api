@@ -16,7 +16,7 @@ var cache = cache || function(config) {
         MODEL_STATS_FAVOURITE: 180,
         RANK_FAVOURITE: 180,
         POINTS_CONSUMER: 180,
-        USER_STATS_FAVOURITE:60
+        USER_STATS_FAVOURITE:300
     }, config);
 }
 
