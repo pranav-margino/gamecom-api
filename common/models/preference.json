@@ -42,6 +42,10 @@
             "type": "Boolean",
             "default": false
         },
+        "hasSentInvite": {
+            "type": "Boolean",
+            "default": false
+        },
         "winners": {
             "type": ["Object"]
         },

@@ -11,11 +11,11 @@ var _ = require('lodash');
 var cache = cache || function(config) {
     var self = this;
     self.config = _.merge({
-        MANIFEST_VARS_PREFERENCE: 120,
-        MANIFEST_VARS_FAVOURITE: 60,
-        MODEL_STATS_FAVOURITE: 60,
-        RANK_FAVOURITE: 60,
-        POINTS_CONSUMER: 60,
+        MANIFEST_VARS_PREFERENCE: 180,
+        MANIFEST_VARS_FAVOURITE: 180,
+        MODEL_STATS_FAVOURITE: 180,
+        RANK_FAVOURITE: 180,
+        POINTS_CONSUMER: 180,
         USER_STATS_FAVOURITE:60
     }, config);
 }

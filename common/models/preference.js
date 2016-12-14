@@ -30,6 +30,63 @@ module.exports = function(Preference) {
         debug("preference sockets connected.".green);
     });
 
+    Preference.getMailingList = function(cb) {
+        app.models.Consumer.find({ fields: { name: true, email: true, id: true } }, function(err, consumers) {
+            if (err) {
+                return cb(err, null);
+            } else {
+                return cb(null, consumers);
+            }
+        })
+    }
+
+    Preference.sendMailInvite = function(id, cb) {
+        if (!self.sockets || !id) {
+            debug("sendMailInvite has no sockets or preferenceId is absent".red);
+            return cb("sendMailInvite has no sockets", null);
+        } else {
+
+            Preference.findById(id, function(err, preference) {
+                if (err) {
+                    cb(err, null);
+                } else {
+                    self.sockets.emit("preferenceInviteMail", { id: id });
+                    preference.hasSentInvite = true;
+                    preference.save();
+                    cb(null, preference);
+                }
+            });
+
+        }
+    }
+
+    Preference.remoteMethod('sendMailInvite', {
+        http: {
+            path: '/sendMailInvite',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'id',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Object'
+        }
+    });
+
+    Preference.remoteMethod('getMailingList', {
+        http: {
+            path: '/getMailingList',
+            verb: 'GET'
+        },
+        accepts: [],
+        returns: {
+            arg: 'result',
+            type: 'Array'
+        }
+    });
+
     Preference.setResult = function(id, result, cb) {
         if (id == null || id == undefined) {
             return cb(null, []);
