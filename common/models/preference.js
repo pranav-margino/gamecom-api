@@ -60,6 +60,26 @@ module.exports = function(Preference) {
         }
     }
 
+    Preference.sendMailResult = function(id, cb) {
+        if (!self.sockets || !id) {
+            debug("sendMailResult has no sockets or preferenceId is absent".red);
+            return cb("sendMailResult has no sockets", null);
+        } else {
+
+            Preference.findById(id, function(err, preference) {
+                if (err) {
+                    cb(err, null);
+                } else {
+                    self.sockets.emit("preferenceResultMail", { id: id });
+                    preference.hasSentResult = true;
+                    preference.save();
+                    cb(null, preference);
+                }
+            });
+
+        }
+    }
+
     Preference.remoteMethod('sendMailInvite', {
         http: {
             path: '/sendMailInvite',

@@ -46,6 +46,13 @@
             "type": "Boolean",
             "default": false
         },
+        "hasSentResult": {
+            "type": "Boolean",
+            "default": false
+        },
+        "countdownMails":{
+            "type": ["Object"]
+        },
         "winners": {
             "type": ["Object"]
         },
