@@ -13,12 +13,16 @@
         "minWinnersCount": {
             "type": "Number"
         },
-        "winnersCount":{
+        "winnersCount": {
             "type": "Number"
         },
-        "value":{
+        "value": {
             "type": "Number",
             "default": 0
+        },
+        "isSponsered": {
+            "type": "Boolean",
+            "default": false
         }
     },
     "validations": [],
