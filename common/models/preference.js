@@ -169,10 +169,19 @@ module.exports = function(Preference) {
                 async.map(favourites, function(favourite, cb) {
 
                     favourite.contests({}, function(err, contests) {
-                        if (contests.length == 0) {
-                            console.log("no contests");
-                        }
+
+
+                        contests = _.map(contests, function(contest) {
+                            return _.merge(contest, {
+                                contested: {
+                                    name: favourite.user.name,
+                                    pictureUrl: favourite.user.pictureUrl
+                                }
+                            });
+                        });
                         cb(err, contests);
+
+
                     });
                 }, function(err, results) {
                     return cb(null, _.flatten(results));
