@@ -186,7 +186,11 @@
         "dataSource": "mongoDs",
         "public": true
     },
-    "Manifest":{
+    "Manifest": {
+        "dataSource": "mongoDs",
+        "public": true
+    },
+    "Blacklist": {
         "dataSource": "mongoDs",
         "public": true
     }

@@ -1,0 +1,28 @@
+{
+    "name": "Blacklist",
+    "plural": "blacklists",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "mixins": {
+        "TimeStamp": true
+    },
+    "properties": {
+        "userId": {
+            "type": "String"
+        },
+        "reason": {
+            "type": "String"
+        },
+        "user": {
+            "type": "Object"
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}

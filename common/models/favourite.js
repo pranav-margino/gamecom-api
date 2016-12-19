@@ -660,6 +660,29 @@ module.exports = function(Favourite) {
 
     }
 
+    Favourite.setInUsersSetCache = function(favourite) {
+        debug("setInUsersSetCache".blue);
+        if (!self.cClient) {
+            return;
+        }
+        var key = ['preference', favourite.preferenceId.toString(), 'favourites', 'list'].join("-");
+        debug("key %s", key);
+        self.cClient.sadd(key, favourite.user.id.toString());
+        self.cClient.expire(key, self.cConfig.USERS_SET_FAVOURITE);
+    }
+
+    Favourite.unsetInUsersSetCache = function(favourite) {
+        debug("unsetInUsersSetCache".blue);
+        if (!self.cClient) {
+            return;
+        }
+        var key = ['preference', favourite.preferenceId.toString(), 'favourites', 'list'].join("-");
+        debug("key %s", key);
+        self.cClient.srem(key, favourite.user.id.toString());
+    }
+
+
+
     Favourite.getRankFromCache = function() {
 
     }
@@ -925,6 +948,7 @@ module.exports = function(Favourite) {
                                 }
                                 Favourite.findById(instance.id, function(err, favourite) {
                                     if (!err) {
+                                        app.models.Favourite.setInUsersSetCache(favourite);
                                         app.models.Favourite.broadcastFavourite(favourite);
                                     }
                                     next();
@@ -972,12 +996,14 @@ module.exports = function(Favourite) {
     Favourite.observe('after delete', function(ctx, next) {
 
         Favourite.unsetManifestVarsCache(ctx.instance);
+        app.models.Favourite.unsetInUsersSetCache(ctx.instance);
 
         Favourite.rank(ctx.instance.preferenceId, function(err, data) {
             if (err) {
                 next();
             } else {
                 Favourite.broadcastRank(ctx.instance.preferenceId, function(err, data) {
+
                     Favourite.broadcastUnfavourite(ctx.instance);
 
                     next();

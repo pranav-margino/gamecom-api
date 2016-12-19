@@ -38,6 +38,10 @@
         "expiresIn": {
             "type": "number",
             "default": 10
+        },
+        "isBlacklisted": {
+            "type": "Boolean",
+            "default": false
         }
     },
     "validations": [],

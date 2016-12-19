@@ -41,12 +41,6 @@
         "principalType": "ROLE",
         "principalId": "$everyone",
         "permission": "ALLOW"
-    }, {
-        "property": "login",
-        "accessType": "READ",
-        "principalType": "ROLE",
-        "principalId": "$everyone",
-        "permission": "ALLOW"
     }],
     "methods": {}
 }

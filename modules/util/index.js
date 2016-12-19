@@ -44,98 +44,110 @@ util.prototype.validateManifest = function(err) {
 
 util.prototype.getManifestCache = function(favouriteId, userId, model, cb) {
     var self = this;
-    app.models.Favourite.getManifestVarsCache(favouriteId, function(err, favourite) {
-        if (err || favourite == null) {
-            return cb(err, null);
-        }
-        if (model == "Overbid" && favourite.userId !== userId) {
-            return cb("mismatched favourite and user", null);
-        }
-        app.models.Preference.getManifestVarsCache(favourite.preferenceId, function(err, preference) {
-            if (err || preference == null) {
-                return cb(err, null);
-            }
-            app.models.Favourite.getModelStatsCache(favouriteId, model, function(err, stats) {
 
-                debug(err);
-                debug(stats);
-                if (err || stats == null) {
+    app.models.Blacklist.isListedCache(userId, function(err, flag) {
+        if (flag) {
+            return cb("BLACKLISTED_USER", null);
+        } else {
+
+            app.models.Favourite.getManifestVarsCache(favouriteId, function(err, favourite) {
+                if (err || favourite == null) {
                     return cb(err, null);
                 }
+                if (model == "Overbid" && favourite.userId !== userId) {
+                    return cb("mismatched favourite and user", null);
+                }
+                app.models.Preference.getManifestVarsCache(favourite.preferenceId, function(err, preference) {
+                    if (err || preference == null) {
+                        return cb(err, null);
+                    }
+                    app.models.Favourite.getModelStatsCache(favouriteId, model, function(err, stats) {
 
-                var interval = parseInt(preference[model.toLowerCase() + "Interval"]);
-                debug('interval %d', interval);
-
-
-                var manifest = {
-                    context: model.toLowerCase(),
-                    userId: userId,
-                    productId: favourite.productId,
-                    favouriteId: favouriteId,
-                    expiresIn: preference.expiresManifestIn
-                };
-
-
-                var maxCount = preference["max" + model + "Count"];
-
-                debug(maxCount);
-
-                if (stats.count && stats.count >= ((maxCount == -1) ? Number.POSITIVE_INFINITY : maxCount)) {
-                    manifest.hasVacant = false;
-                    debug('exceeded max allowed %s', model);
-                    app.models.Manifest.create(manifest, function(err, manifest) {
-                        return cb(err, manifest);
-                    });
-                } else {
-                    app.models.Consumer.getPointsCache(userId, function(err, points) {
-                        debug("hasVacant %s", model);
-                        if (err) {
+                        debug(err);
+                        debug(stats);
+                        if (err || stats == null) {
                             return cb(err, null);
                         }
-                        var values = self.getValues((model == "Underbid") ? parseInt(favourite.bid) : parseInt(points), parseInt(preference["max" + model + "Value"]), parseInt(preference["min" + model + "Value"]), parseInt(preference["stepsOf" + model]));
 
-                        debug('values %s', values.toString());
+                        var interval = parseInt(preference[model.toLowerCase() + "Interval"]);
+                        debug('interval %d', interval);
 
-                        if (stats.count == 0) {
-                            manifest.values = values;
+
+                        var manifest = {
+                            context: model.toLowerCase(),
+                            userId: userId,
+                            productId: favourite.productId,
+                            favouriteId: favouriteId,
+                            expiresIn: preference.expiresManifestIn
+                        };
+
+
+                        var maxCount = preference["max" + model + "Count"];
+
+                        debug(maxCount);
+
+                        if (stats.count && stats.count >= ((maxCount == -1) ? Number.POSITIVE_INFINITY : maxCount)) {
+                            manifest.hasVacant = false;
+                            debug('exceeded max allowed %s', model);
                             app.models.Manifest.create(manifest, function(err, manifest) {
                                 return cb(err, manifest);
                             });
+                        } else {
+                            app.models.Consumer.getPointsCache(userId, function(err, points) {
+                                debug("hasVacant %s", model);
+                                if (err) {
+                                    return cb(err, null);
+                                }
+                                var values = self.getValues((model == "Underbid") ? parseInt(favourite.bid) : parseInt(points), parseInt(preference["max" + model + "Value"]), parseInt(preference["min" + model + "Value"]), parseInt(preference["stepsOf" + model]));
+
+                                debug('values %s', values.toString());
+
+                                if (stats.count == 0) {
+                                    manifest.values = values;
+                                    app.models.Manifest.create(manifest, function(err, manifest) {
+                                        return cb(err, manifest);
+                                    });
+                                }
+
+                                if (stats.count > 0) {
+                                    debug("lastAt %d", new Date(stats.lastAt));
+                                    debug("lastAtThreshhold %d", new Date().getTime() - (interval * 1000));
+                                    if (new Date(stats.lastAt).getTime() > (new Date().getTime() - (interval * 1000))) {
+                                        debug("hasRecent %s", model);
+                                        var nextPossible = moment(moment(stats.lastAt).add((interval / 60), 'minutes')).toDate();
+                                        manifest.hasRecent = true;
+                                        manifest.nextPossible = nextPossible;
+                                        app.models.Manifest.create(manifest, function(err, manifest) {
+                                            return cb(err, manifest);
+                                        });
+                                    } else {
+                                        debug("noRecent %s", model);
+                                        manifest.values = values;
+                                        app.models.Manifest.create(manifest, function(err, manifest) {
+                                            return cb(err, manifest);
+                                        });
+                                    }
+
+                                }
+
+
+
+
+                            });
                         }
-
-                        if (stats.count > 0) {
-                            debug("lastAt %d", new Date(stats.lastAt));
-                            debug("lastAtThreshhold %d", new Date().getTime() - (interval * 1000));
-                            if (new Date(stats.lastAt).getTime() > (new Date().getTime() - (interval * 1000))) {
-                                debug("hasRecent %s", model);
-                                var nextPossible = moment(moment(stats.lastAt).add((interval / 60), 'minutes')).toDate();
-                                manifest.hasRecent = true;
-                                manifest.nextPossible = nextPossible;
-                                app.models.Manifest.create(manifest, function(err, manifest) {
-                                    return cb(err, manifest);
-                                });
-                            } else {
-                                debug("noRecent %s", model);
-                                manifest.values = values;
-                                app.models.Manifest.create(manifest, function(err, manifest) {
-                                    return cb(err, manifest);
-                                });
-                            }
-
-                        }
-
 
 
 
                     });
-                }
-
-
+                });
 
             });
-        });
 
+        }
     });
+
+
+
 }
 
 

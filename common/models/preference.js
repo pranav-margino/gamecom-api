@@ -135,6 +135,149 @@ module.exports = function(Preference) {
         });
     }
 
+    Preference.getEndorsements = function(id, cb) {
+        app.models.Favourite.find({ where: { preferenceId: id } }, function(err, favourites) {
+            if (err) {
+                return cb(err, []);
+            } else {
+                async.map(favourites, function(favourite, cb) {
+                    favourite.endorsements({}, function(err, endorsements) {
+                        endorsements = _.map(endorsements, function(endorsement) {
+                            return _.merge(endorsement, {
+                                endorsee: {
+                                    name: favourite.user.name,
+                                    pictureUrl: favourite.user.pictureUrl
+                                }
+                            });
+                        });
+                        cb(err, endorsements);
+                    });
+                }, function(err, results) {
+                    return cb(null, _.flatten(results));
+                });
+
+            }
+        });
+    }
+
+    Preference.getContests = function(id, cb) {
+        app.models.Favourite.find({ where: { preferenceId: id } }, function(err, favourites) {
+            if (err) {
+                return cb(err, []);
+            } else {
+                console.log(favourites.length);
+                async.map(favourites, function(favourite, cb) {
+
+                    favourite.contests({}, function(err, contests) {
+                        if (contests.length == 0) {
+                            console.log("no contests");
+                        }
+                        cb(err, contests);
+                    });
+                }, function(err, results) {
+                    return cb(null, _.flatten(results));
+                });
+
+            }
+        });
+    }
+
+    Preference.getOverbids = function(id, cb) {
+        app.models.Favourite.find({ where: { preferenceId: id } }, function(err, favourites) {
+            if (err) {
+                return cb(err, []);
+            } else {
+                console.log(favourites.length);
+                async.map(favourites, function(favourite, cb) {
+                    favourite.overbids({}, function(err, overbids) {
+                        cb(err, overbids);
+                    });
+                }, function(err, results) {
+                    return cb(null, _.flatten(results));
+                });
+
+            }
+        });
+    }
+
+    Preference.getUnderbids = function(id, cb) {
+        app.models.Favourite.find({ where: { preferenceId: id } }, function(err, favourites) {
+            if (err) {
+                return cb(err, []);
+            } else {
+                console.log(favourites.length);
+                async.map(favourites, function(favourite, cb) {
+                    favourite.underbids({}, function(err, underbids) {
+                        cb(err, underbids);
+                    });
+                }, function(err, results) {
+                    return cb(null, _.flatten(results));
+                });
+
+            }
+        });
+    }
+
+    Preference.remoteMethod('getUnderbids', {
+        http: {
+            path: '/getUnderbids',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'id',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Array'
+        }
+    });
+
+    Preference.remoteMethod('getOverbids', {
+        http: {
+            path: '/getOverbids',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'id',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Array'
+        }
+    });
+
+    Preference.remoteMethod('getEndorsements', {
+        http: {
+            path: '/getEndorsements',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'id',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Array'
+        }
+    });
+
+    Preference.remoteMethod('getContests', {
+        http: {
+            path: '/getContests',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'id',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Array'
+        }
+    });
+
     Preference.getManifestVars = function(id, cb) {
         Preference.findById(id, {
             fields: {
