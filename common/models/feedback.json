@@ -1,0 +1,65 @@
+{
+    "name": "Feedback",
+    "plural": "feedbacks",
+    "base": "PersistedModel",
+    "mixins": {
+        "TimeStamp": true
+    },
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "slowSpeed": {
+            "type": "Boolean",
+            "default": false
+        },
+        "fakeIds": {
+            "type": "Boolean",
+            "default": false
+        },
+        "lateComer": {
+            "type": "Boolean",
+            "default": false
+        },
+        "lessPoints": {
+            "type": "Boolean",
+            "default": false
+        },
+        "lostHope": {
+            "type": "Boolean",
+            "default": false
+        },
+        "lostHope": {
+            "type": "Boolean",
+            "default": false
+        },
+        "donotUnderstand": {
+            "type": "Boolean",
+            "default": false
+        },
+        "badProduct": {
+            "type": "Boolean",
+            "default": false
+        },
+        "longDuration": {
+            "type": "Boolean",
+            "default": false
+        },
+        "notFree": {
+            "type": "Boolean",
+            "default": false
+        },
+        "comment": {
+            "type": "String"
+        },
+        "user": {
+            "type": "Object"
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}

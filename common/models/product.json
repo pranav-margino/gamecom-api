@@ -6,6 +6,9 @@
     "options": {
         "validateUpsert": true
     },
+    "mixins": {
+        "TimeStamp": true
+    },
     "properties": {
         "title": {
             "type": "String"
@@ -29,7 +32,11 @@
     "validations": [],
     "hidden": [],
     "relations": {
+        "vendor": {
+            "type": "belongsTo",
+            "model": "Vendor"
 
+        }
     },
     "acls": [],
     "methods": {}

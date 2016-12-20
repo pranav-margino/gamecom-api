@@ -50,7 +50,7 @@
             "type": "Boolean",
             "default": false
         },
-        "countdownMails":{
+        "countdownMails": {
             "type": ["Object"]
         },
         "winners": {
@@ -160,6 +160,10 @@
             "type": "hasMany",
             "model": "Favourite"
 
+        },
+        "feedback": {
+            "type": "hasMany",
+            "model": "Feedback"
         }
     },
     "acls": [],
