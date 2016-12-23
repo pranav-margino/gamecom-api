@@ -34,7 +34,8 @@ module.exports = function(Preference) {
         Preference.find({
                 where: {
                     and: [{ scheduledAt: { gt: new Date() } },
-                        { scheduledStart: { lte: new Date() } }
+                        { scheduledStart: { lte: new Date() } },
+                        { isActive: true }
                     ]
                 },
                 fields: { scheduledAt: 1, scheduledStart: 1, id: 1 }
