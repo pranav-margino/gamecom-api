@@ -70,42 +70,49 @@ module.exports = function(Bboost) {
                 } else {
                     app.models.Favourite.findById(bboost.favouriteId, function(err, favourite) {
                         if (!err) {
-                            favourite.bid = Math.max(0, parseInt(favourite.bid) + parseInt(bboost.value));
-                            bboost.isUsed = true;
-                            bboost.save();
-                            favourite.save(function(err, instance) {
-                                if (err) {
-                                    cb(err, null);
+                            app.models.Blacklist.isListedCache(favourite.user.id, function(err, flag) {
+                                if (flag) {
+                                    return cb("BLACKLISTED_USER", null);
                                 } else {
-                                    app.models.Favourite.setInRankCache(instance);
-                                    app.models.Favourite.rank(favourite.preferenceId, function(err, data) {
+                                    favourite.bid = Math.max(0, parseInt(favourite.bid) + parseInt(bboost.value));
+                                    bboost.isUsed = true;
+                                    bboost.save();
+                                    favourite.save(function(err, instance) {
                                         if (err) {
                                             cb(err, null);
                                         } else {
-                                            app.models.Favourite.broadcastRank(favourite.preferenceId, function(err, data) {
+                                            app.models.Favourite.setInRankCache(instance);
+                                            app.models.Favourite.rank(favourite.preferenceId, function(err, data) {
                                                 if (err) {
                                                     cb(err, null);
                                                 } else {
-                                                    app.models.Favourite.findById(favourite.id, function(err, favourite) {
+                                                    app.models.Favourite.broadcastRank(favourite.preferenceId, function(err, data) {
                                                         if (err) {
                                                             cb(err, null);
-                                                            app.models.Favourite.broadcastFavouriteUpdate(favourite);
                                                         } else {
-                                                            app.models.Favourite.broadcastFavouriteUpdate(favourite);
+                                                            app.models.Favourite.findById(favourite.id, function(err, favourite) {
+                                                                if (err) {
+                                                                    cb(err, null);
+                                                                    app.models.Favourite.broadcastFavouriteUpdate(favourite);
+                                                                } else {
+                                                                    app.models.Favourite.broadcastFavouriteUpdate(favourite);
 
-                                                            cb(null, bboost.value);
+                                                                    cb(null, bboost.value);
+                                                                }
+
+                                                            })
                                                         }
 
-                                                    })
+                                                    });
                                                 }
-
                                             });
+
+
                                         }
                                     });
-
-
                                 }
-                            });
+                            })
+
                         } else {
                             cb(err, null);
                         }
