@@ -197,5 +197,9 @@
     "Feedback": {
         "dataSource": "mongoDs",
         "public": true
+    },
+    "Bboost": {
+        "dataSource": "mongoDs",
+        "public": true
     }
 }

@@ -1,0 +1,31 @@
+{
+    "name": "Bboost",
+    "plural": "bboosts",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "mixins": {
+        "TimeStamp": true
+    },
+    "properties": {
+        "name":{
+            "type": "string"
+        },
+        "value": {
+            "type": "number",
+            "default": 0
+        },
+        "isUsed": {
+            "type": "Boolean",
+            "default": false
+        }
+    },
+    "validations": [],
+    "hidden": ["value"],
+    "relations": {},
+    "acls": [],
+    "methods": {},
+    "indexes": {}
+}

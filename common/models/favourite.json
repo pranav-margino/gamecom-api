@@ -80,12 +80,22 @@
                 "forceId": true,
                 "presistent": true
             }
+        },
+        "bboosts": {
+            "type": "hasMany",
+            "model": "Bboost",
+            "property": "bboost",
+            "options": {
+                "validate": false,
+                "forceId": true,
+                "presistent": true
+            }
         }
     },
     "acls": [],
     "methods": {},
     "indexes": {
-        "id_index":{
+        "id_index": {
             "id": 1
         },
         "preference_id_index": {

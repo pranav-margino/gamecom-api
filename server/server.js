@@ -11,6 +11,7 @@ var _ = require('lodash');
 var stats = require("stats-lite");
 var debug = require('debug')('server');
 var colors = require('colors');
+var async = require('async');
 
 
 //var consumerAcls = require('./acls/consumer.json');
@@ -36,6 +37,20 @@ boot(app, __dirname, function(err) {
         app.start();
         io.init(app);
         cache.init();
+
+        cron.addTask('issueBoosts', '30sec', function() {
+            debug('issueBoosts');
+            app.models.Preference.getRunningPreferences(function(err, preferences) {
+                debug(err);
+                debug(preferences);
+                async.each(preferences, function(preference, cb) {
+                    app.models.Bboost.issueBoosts(preference.id);
+                    cb(null);
+                }, function(err) {
+                    debug(err);
+                });
+            });
+        });
 
         app.models.Consumer.find({}, function(err, consumers) {
             if (!err) {

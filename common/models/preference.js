@@ -30,6 +30,21 @@ module.exports = function(Preference) {
         debug("preference sockets connected.".green);
     });
 
+    Preference.getRunningPreferences = function(cb) {
+        Preference.find({
+                where: {
+                    and: [{ scheduledAt: { gt: new Date() } },
+                        { scheduledStart: { lte: new Date() } }
+                    ]
+                },
+                fields: { scheduledAt: 1, scheduledStart: 1, id: 1 }
+            },
+            function(err, preferences) {
+
+                cb(err, preferences);
+            })
+    }
+
     Preference.getMailingList = function(cb) {
         app.models.Consumer.find({ fields: { name: true, email: true, id: true } }, function(err, consumers) {
             if (err) {
