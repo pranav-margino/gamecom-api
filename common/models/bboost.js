@@ -10,7 +10,7 @@ var colors = require('colors');
 
 module.exports = function(Bboost) {
 
-	var self = this;
+    var self = this;
 
 
     self.sockets = null;
@@ -38,7 +38,7 @@ module.exports = function(Bboost) {
     }
 
     Bboost.getValue = function() {
-        var values = [-1000, -900, -800, -700, -600, -500, -400, -300, -200, -100, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
+        var values = [-1000, -900, -800, -700, -600, -500, -400, -300, -200, -100, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 5000, 10000];
         return values[parseInt(Math.random() * values.length)];
     }
 
@@ -50,9 +50,9 @@ module.exports = function(Bboost) {
             async.each(favourites, function(favourite, cb) {
                 debug('favourite id %s', favourite.id);
                 favourite.bboosts.create({ value: Bboost.getValue(), name: Bboost.getName() }, function(err, bboost) {
-                	if(!err){
-                		Bboost.broadcastBboost(bboost);
-                	}
+                    if (!err) {
+                        Bboost.broadcastBboost(bboost);
+                    }
                     cb(err);
                 });
             }, function(err) {
@@ -92,7 +92,7 @@ module.exports = function(Bboost) {
                                                             app.models.Favourite.broadcastFavouriteUpdate(favourite);
                                                         } else {
                                                             app.models.Favourite.broadcastFavouriteUpdate(favourite);
-                                                            
+
                                                             cb(null, bboost.value);
                                                         }
 
