@@ -45,7 +45,7 @@ module.exports = function(Xtime) {
                 favourite.xtimes.create({
                     value: Xtime.getValue(),
                     name: Xtime.getName(),
-                    expiresOn: moment().add(60, 's')
+                    expiresOn: moment().add(120, 's')
                 }, function(err, xtime) {
                     //debug(JSON.stringify(xtime));
                     if (!err) {
