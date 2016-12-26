@@ -1,0 +1,35 @@
+{
+    "name": "Xtime",
+    "plural": "xtimes",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "mixins": {
+        "TimeStamp": true
+    },
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "value": {
+            "type": "Number",
+            "default": 0
+        },
+        "isUsed": {
+            "type": "Boolean",
+            "default": false
+        },
+        "expiresOn": {
+            "type": "Date"
+
+        }
+    },
+    "validations": [],
+    "hidden": [],
+    "relations": {},
+    "acls": [],
+    "methods": {},
+    "indexes": {}
+}

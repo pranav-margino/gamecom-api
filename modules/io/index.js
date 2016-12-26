@@ -22,7 +22,7 @@ function sockets(client) {
 sockets.prototype.emit = function(event, data) {
     debug('event %s : data %s'.white.bgBlue, event, JSON.stringify(data));
     debug(this.client.ping());
-    this.client.publish('testfav', JSON.stringify({data:data,event:event}));
+    this.client.publish('testfav', JSON.stringify({ data: data, event: event }));
 }
 
 
@@ -40,5 +40,5 @@ io.prototype.init = function(app, config) {
 
 io.prototype.__proto__ = events.EventEmitter.prototype;
 
-
+io.prototype.setMaxListeners(0);
 module.exports = new io;

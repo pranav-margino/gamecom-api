@@ -201,5 +201,9 @@
     "Bboost": {
         "dataSource": "mongoDs",
         "public": true
+    },
+    "Xtime": {
+        "dataSource": "mongoDs",
+        "public": true
     }
 }

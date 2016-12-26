@@ -74,13 +74,13 @@ module.exports = function(Endorsement) {
             app.models.Favourite.findById(ctx.instance.favouriteId, function(err, favourite) {
                 if (!err && favourite != null) {
                     app.models.Favourite.setModelStatsCache(favourite, "Endorsement");
-                    
+
                     app.models.Consumer.getPointsCache(ctx.instance.user.id, function(err, points) {
                         if (err) {
                             next();
                         }
                         if (points >= ctx.instance.value) {
-                            app.models.Consumer.updatePointsCache(ctx.instance.user.id, -ctx.instance.value, function(err, data) {
+                            app.models.Consumer.updatePointsCache(ctx.instance.user.id, -parseInt(ctx.instance.value / favourite.xtimeValue), function(err, data) {
                                 if (err) {
                                     next();
                                 } else {

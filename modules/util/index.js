@@ -8,7 +8,9 @@ var util = function() {
 
 }
 
-util.prototype.getValues = function(points, maxValue, minValue, stepsOf) {
+util.prototype.getValues = function(points, maxValue, minValue, stepsOf, xtimeValue, xtimeExpiresOn) {
+
+    debug('xtimeValue : %d', xtimeValue);
 
     var range;
     var values = [];
@@ -28,6 +30,18 @@ util.prototype.getValues = function(points, maxValue, minValue, stepsOf) {
             values.push(values[values.length - 1] + stepsOf);
         }
     }
+
+    debug('xtimeExpiresOn %s', xtimeExpiresOn);
+
+    if (new Date(xtimeExpiresOn).getTime() > new Date().getTime()) {
+        values = _.map(values, function(value) {
+            return value * xtimeValue;
+        });
+    }
+
+
+
+
 
     return values;
 
@@ -57,6 +71,8 @@ util.prototype.getManifestCache = function(favouriteId, userId, model, cb) {
                 if (model == "Overbid" && favourite.userId !== userId) {
                     return cb("mismatched favourite and user", null);
                 }
+                //debug('favourite %s', JSON.stringify(favourite));
+                console.log(favourite);
                 app.models.Preference.getManifestVarsCache(favourite.preferenceId, function(err, preference) {
                     if (err || preference == null) {
                         return cb(err, null);
@@ -78,7 +94,8 @@ util.prototype.getManifestCache = function(favouriteId, userId, model, cb) {
                             userId: userId,
                             productId: favourite.productId,
                             favouriteId: favouriteId,
-                            expiresIn: preference.expiresManifestIn
+                            expiresIn: preference.expiresManifestIn,
+                            xtimeValue: (new Date(favourite.xtimeExpiresOn).getTime() > new Date().getTime()) ? favourite.xtimeValue : 1
                         };
 
 
@@ -98,7 +115,7 @@ util.prototype.getManifestCache = function(favouriteId, userId, model, cb) {
                                 if (err) {
                                     return cb(err, null);
                                 }
-                                var values = self.getValues((model == "Underbid") ? parseInt(favourite.bid) : parseInt(points), parseInt(preference["max" + model + "Value"]), parseInt(preference["min" + model + "Value"]), parseInt(preference["stepsOf" + model]));
+                                var values = self.getValues((model == "Underbid") ? parseInt(favourite.bid) : parseInt(points), parseInt(preference["max" + model + "Value"]), parseInt(preference["min" + model + "Value"]), parseInt(preference["stepsOf" + model]), parseInt(favourite.xtimeValue), favourite.xtimeExpiresOn);
 
                                 debug('values %s', values.toString());
 

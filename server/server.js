@@ -16,6 +16,8 @@ var async = require('async');
 
 //var consumerAcls = require('./acls/consumer.json');
 
+
+
 app.start = function() {
     // start the web server
     return app.listen(function() {
@@ -38,13 +40,24 @@ boot(app, __dirname, function(err) {
         io.init(app);
         cache.init();
 
-        cron.addTask('issueBoosts', '30sec', function() {
+        cron.addTask('issueBoosts', '30sec', function(task) {
             debug('issueBoosts');
             app.models.Preference.getRunningPreferences(function(err, preferences) {
-                debug(err);
-                debug(preferences);
                 async.each(preferences, function(preference, cb) {
                     app.models.Bboost.issueBoosts(preference.id);
+                    app.models.Xtime.issueXtimes(preference.id);
+                    cb(null);
+                }, function(err) {
+                    debug(err);
+                });
+            });
+        });
+
+        cron.addTask('issueXtimes', '30sec', function(task) {
+            debug('issueXtimes');
+            app.models.Preference.getRunningPreferences(function(err, preferences) {
+                async.each(preferences, function(preference, cb) {
+                    app.models.Xtime.issueXtimes(preference.id);
                     cb(null);
                 }, function(err) {
                     debug(err);

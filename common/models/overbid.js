@@ -105,7 +105,7 @@ module.exports = function(Overbid) {
                     app.models.Favourite.setModelStatsCache(favourite, "Overbid");
                     app.models.Consumer.getPointsCache(ctx.instance.user.id, function(err, points) {
                         if (points >= ctx.instance.value) {
-                            app.models.Consumer.updatePointsCache(ctx.instance.user.id, -ctx.instance.value, function(err, data) {
+                            app.models.Consumer.updatePointsCache(ctx.instance.user.id, -parseInt(ctx.instance.value / favourite.xtimeValue), function(err, data) {
                                 if (err) {
                                     next();
                                 } else {

@@ -3,55 +3,53 @@ var io = require('../../modules/io');
 var cache = require('../../modules/cache');
 var _ = require('lodash');
 var async = require('async');
-var debug = require('debug')('bboost');
+var debug = require('debug')('xtime');
 var colors = require('colors');
+var moment = require('moment');
 
-
-
-module.exports = function(Bboost) {
+module.exports = function(Xtime) {
 
     var self = this;
 
 
     self.sockets = null;
 
+
+
     io.on('ready', function(socket, sockets) {
         self.sockets = sockets;
         debug("bboost sockets connected.".green);
     });
 
-    Bboost.getName = function() {
+    Xtime.getName = function() {
         var names = [
-            "Amelia Bloomer boost",
-            "Simone de Beauvoir boost",
-            "Alice Paul boost",
-            "Lucy Stone boost",
-            "Betty Friedan boost",
-            "Sojourner Truth boost",
-            "Susan B. Anthony boost",
-            "Elizabeth Stanton boost",
-            "Gloria Steinem boost"
+            "Engineering special",
+            "Medical special"
         ];
-        return names[parseInt(Math.random() * names.length)]
+        return names[parseInt(Math.random() * names.length)];
     }
 
-    Bboost.getValue = function() {
-        var values = [-1000, -900, -800, -700, -600, -500, -400, -300, -200, -100, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 5000, 10000];
+    Xtime.getValue = function() {
+        var values = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 10, 10, 10, 30];
         return values[parseInt(Math.random() * values.length)];
     }
 
-    Bboost.issueBoosts = function(preferenceId) {
-        debug('boosting preference %s', preferenceId);
+    Xtime.issueXtimes = function(preferenceId) {
+        debug('xtiming preference %s', preferenceId);
         app.models.Favourite.find({ where: { preferenceId: preferenceId } }, function(err, favourites) {
             debug("Error %s".red, err);
             debug("favourites count %d".green, favourites.length);
             async.each(favourites, function(favourite, cb) {
                 debug('issued on favourite id %s', favourite.id);
-                favourite.bboosts.create({ value: Bboost.getValue(), name: Bboost.getName() }, function(err, bboost) {
+                debug(Xtime.getValue());
+                favourite.xtimes.create({
+                    value: Xtime.getValue(),
+                    name: Xtime.getName(),
+                    expiresOn: moment().add(60, 's')
+                }, function(err, xtime) {
+                    //debug(JSON.stringify(xtime));
                     if (!err) {
-                        debug(JSON.stringify(bboost));
-
-                        Bboost.broadcastBboost(bboost);
+                        Xtime.broadcastXtime(xtime);
                     }
                     cb(err);
                 });
@@ -59,48 +57,31 @@ module.exports = function(Bboost) {
                 debug(err);
             });
         });
-
     }
 
-    Bboost.calcTemp = function(favourite) {
-        var delta;
-        var d = new Date();
-        if (favourite.bboostTempLastMeasured) {
-            delta = d.getTime() - favourite.bboostTempLastMeasured.getTime();
-
-        } else {
-            delta = Number.POSITIVE_INFINITY;
-        }
-        debug("delta %d", delta);
-        var tempDelta = 2 * (Math.pow(Math.E, (-(delta / 1000))));
-        debug('tempDelta %d', tempDelta);
-        favourite.bboostTemp = Math.pow(Math.E, (-(delta / 10000))) * favourite.bboostTemp + tempDelta;
-        favourite.bboostTempLastMeasured = d;
-        return favourite;
-    }
-
-    Bboost.redeemBoosts = function(ids, cb) {
-
-    }
-
-    Bboost.redeemBoost = function(id, cb) {
-        Bboost.findById(id, function(err, bboost) {
+    Xtime.redeemXtime = function(id, cb) {
+        Xtime.findById(id, function(err, xtime) {
             if (!err) {
-                if (bboost.isUsed) {
-                    cb('BOOST_USED', null);
+                if (xtime.isUsed) {
+                    cb('XTIME_USED', null);
                 } else {
-                    app.models.Favourite.findById(bboost.favouriteId, function(err, favourite) {
+                    app.models.Favourite.findById(xtime.favouriteId, function(err, favourite) {
                         if (!err) {
                             app.models.Blacklist.isListedCache(favourite.user.id, function(err, flag) {
                                 if (flag) {
                                     return cb("BLACKLISTED_USER", null);
                                 } else {
-                                    favourite.bid = Math.max(0, parseInt(favourite.bid) + parseInt(bboost.value));
-                                    bboost.isUsed = true;
-                                    bboost.save();
-                                    favourite = Bboost.calcTemp(favourite);
-                                    debug('bboost temp %d', favourite.bboostTemp);
-                                    debug('bboostTempLastMeasured %s', favourite.bboostTempLastMeasured.getTime());
+
+
+
+
+                                    favourite.xtimeValue = xtime.value;
+                                    favourite.xtimeExpiresOn = xtime.expiresOn;
+                                    xtime.isUsed = true;
+                                    xtime.save();
+
+
+
                                     favourite.save(function(err, instance) {
                                         if (err) {
                                             cb(err, null);
@@ -121,7 +102,7 @@ module.exports = function(Bboost) {
                                                                 } else {
                                                                     app.models.Favourite.broadcastFavouriteUpdate(favourite);
 
-                                                                    cb(null, bboost.value);
+                                                                    cb(null, true);
                                                                 }
 
                                                             })
@@ -148,17 +129,17 @@ module.exports = function(Bboost) {
         })
     }
 
-    Bboost.broadcastBboost = function(bboost) {
+    Xtime.broadcastXtime = function(xtime) {
         if (!self.sockets) {
-            console.warn("No Favourite sockets.");
+            console.warn("No Xtime sockets.");
             return;
         }
-        self.sockets.emit("readModel:Bboost", bboost);
+        self.sockets.emit("readModel:Xtime", xtime);
     }
 
-    Bboost.remoteMethod('redeemBoost', {
+    Xtime.remoteMethod('redeemXtime', {
         http: {
-            path: '/redeemBoost',
+            path: '/redeemXtime',
             verb: 'GET'
         },
         accepts: [{

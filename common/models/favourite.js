@@ -290,7 +290,7 @@ module.exports = function(Favourite) {
     };
 
     Favourite.getManifestVars = function(id, cb) {
-        Favourite.findById(id, { fields: { userId: 1, preferenceId: 1, productId: 1, bid: 1 } }, function(err, vars) {
+        Favourite.findById(id, { fields: { userId: 1, preferenceId: 1, productId: 1, bid: 1, xtimeValue: 1, xtimeExpiresOn: 1 } }, function(err, vars) {
             cb(err, vars);
         });
     }
@@ -306,19 +306,21 @@ module.exports = function(Favourite) {
                 "preferenceId",
                 "productId",
                 "userId",
-                "bid"
+                "bid",
+                "xtimeValue",
+                "xtimeExpiresOn"
             ], function(err, vars) {
-                if (!err && vars.length == 4 && vars[0] != null && vars[1] != null && vars[2] != null && vars[3] != null) {
+                if (!err && vars.length == 4 && vars[0] != null && vars[1] != null && vars[2] != null && vars[3] != null && vars[4] != null && vars[5] != null) {
                     debug('FavouriteManifestVarsCache'.blue);
                     debug('key: %s', key);
 
-                    cb(null, { preferenceId: vars[0], productId: vars[1], userId: vars[2], bid: vars[3] });
+                    cb(null, { preferenceId: vars[0], productId: vars[1], userId: vars[2], bid: vars[3], xtimeValue: vars[4], xtimeExpiresOn: vars[5] });
                 } else {
                     Favourite.getManifestVars(id, function(err, vars) {
                         if (!err) {
                             debug('FavouriteManifestVarsDisc'.red);
 
-                            self.cClient.hmset(key, 'preferenceId', vars.preferenceId.toString(), 'productId', vars.productId, 'userId', vars.userId, 'bid', vars.bid);
+                            self.cClient.hmset(key, 'preferenceId', vars.preferenceId.toString(), 'productId', vars.productId, 'userId', vars.userId, 'bid', vars.bid, 'xtimeValue', vars.xtimeValue, 'xtimeExpiresOn', vars.xtimeExpiresOn);
                             self.cClient.expire(key, self.cConfig.MANIFEST_VARS_FAVOURITE);
                             cb(null, vars);
                         } else {
@@ -337,10 +339,10 @@ module.exports = function(Favourite) {
         } else {
             var key = ["manifest-vars-favourite", favourite.id].join("-");
             //preferenceId = (typeof preferenceId == "string") preferenceId
-            if (!favourite.preferenceId || !favourite.userId || !favourite.bid || !favourite.productId) {
+            if (!favourite.preferenceId || !favourite.userId || !favourite.bid || !favourite.productId || !favourite.xtimeValue || !favourite.xtimeExpiresOn) {
                 return;
             }
-            self.cClient.hmset(key, 'preferenceId', favourite.preferenceId.toString(), 'productId', favourite.productId, 'userId', favourite.userId, 'bid', favourite.bid);
+            self.cClient.hmset(key, 'preferenceId', favourite.preferenceId.toString(), 'productId', favourite.productId, 'userId', favourite.userId, 'bid', favourite.bid, 'xtimeValue', favourite.xtimeValue, 'xtimeExpiresOn', favourite.xtimeExpiresOn);
             self.cClient.expire(key, self.cConfig.MANIFEST_VARS_FAVOURITE);
             debug('setManifestVarsCache %s'.green, favourite.id);
         }

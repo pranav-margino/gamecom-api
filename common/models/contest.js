@@ -108,7 +108,7 @@ module.exports = function(Contest) {
 
 
 
-                            app.models.Consumer.updatePointsCache(ctx.instance.user.id, -ctx.instance.value, function(err, data) {
+                            app.models.Consumer.updatePointsCache(ctx.instance.user.id, -parseInt(ctx.instance.value / favourite.xtimeValue), function(err, data) {
                                 if (err) {
                                     next();
                                 } else {

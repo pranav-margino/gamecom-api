@@ -42,6 +42,10 @@
         "isBlacklisted": {
             "type": "Boolean",
             "default": false
+        },
+        "xtimeValue": {
+            "type": "Number",
+            "default": 1
         }
     },
     "validations": [],
