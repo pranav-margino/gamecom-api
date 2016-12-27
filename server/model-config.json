@@ -205,5 +205,9 @@
     "Xtime": {
         "dataSource": "mongoDs",
         "public": true
+    },
+    "VendorProduct": {
+        "dataSource": "mongoDs",
+        "public": true
     }
 }

@@ -1,0 +1,25 @@
+{
+    "name": "VendorProduct",
+    "plural": "vendorProducts",
+    "base": "Product",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+    "properties": {
+        "isApproved": {
+            "type": "Boolean",
+            "default": false
+        }
+    },
+    "validations": [],
+    "hidden": ["comments"],
+    "relations": {
+        "comments": {
+            "type": "hasMany",
+            "model": "ProductComment"
+        }
+    },
+    "acls": [],
+    "methods": {}
+}

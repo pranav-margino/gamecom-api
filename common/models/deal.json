@@ -17,11 +17,8 @@
         "valueInitial": {
             "type": "Number"
         },
-        "discountMin": {
-            "type": "number"
-        },
-        "dicountMax": {
-            "type": "number"
+        "valueDiscounted": {
+            "type": "Number"
         },
         "volume": {
             "type": "number"
@@ -32,21 +29,17 @@
         "fee": {
             "type": "number"
         },
-        "liveOn": {
+        "startsOn": {
             "type": "date",
-            "required": false
+            "required": true
         },
-        "duration": {
-            "type": "number",
-            "required": false
+        "endsOn": {
+            "type": "date",
+            "required": true
         },
-        "value": {
+        "consumerCount": {
             "type": "number",
-            "required": false
-        },
-        "volume": {
-            "type": "number",
-            "required": false
+            "default": 1
         }
     },
     "validations": [],

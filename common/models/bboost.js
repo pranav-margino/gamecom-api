@@ -79,11 +79,9 @@ module.exports = function(Bboost) {
         return favourite;
     }
 
-    Bboost.redeemBoosts = function(ids, cb) {
+    
 
-    }
-
-    Bboost.redeemBoost = function(id, cb) {
+    Bboost.redeemBboost = function(id, cb) {
         Bboost.findById(id, function(err, bboost) {
             if (!err) {
                 if (bboost.isUsed) {
@@ -156,9 +154,42 @@ module.exports = function(Bboost) {
         self.sockets.emit("readModel:Bboost", bboost);
     }
 
-    Bboost.remoteMethod('redeemBoost', {
+    Bboost.getBboosts = function(favouriteId, cb) {
+        async.parallel({
+            items: function(cb) {
+                Bboost.find({ where: { isUsed: false, favouriteId: favouriteId }, limit: 50, order: 'createdAt DESC' }, function(err, bboosts) {
+                    cb(err, bboosts);
+                })
+            },
+            count: function(cb) {
+                Bboost.count({ isUsed: false, favouriteId: favouriteId }, function(err, count) {
+                    cb(err, count)
+                })
+            }
+        }, function(err, result) {
+            cb(err, result);
+        });
+
+    };
+
+    Bboost.remoteMethod('getBboosts', {
         http: {
-            path: '/redeemBoost',
+            path: '/getBboosts',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'favouriteId',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Object'
+        }
+    });
+
+    Bboost.remoteMethod('redeemBboost', {
+        http: {
+            path: '/redeemBboost',
             verb: 'GET'
         },
         accepts: [{

@@ -137,6 +137,40 @@ module.exports = function(Xtime) {
         self.sockets.emit("readModel:Xtime", xtime);
     }
 
+    Xtime.getXtimes = function(favouriteId, cb) {
+        async.parallel({
+            items: function(cb) {
+                Xtime.find({ where: { isUsed: false, favouriteId: favouriteId }, limit: 50, order: 'createdAt DESC' }, function(err, xtimes) {
+                    cb(err, xtimes);
+                })
+            },
+            count: function(cb) {
+                Xtime.count({ isUsed: false, favouriteId: favouriteId }, function(err, count) {
+                    cb(err, count)
+                })
+            }
+        }, function(err, result) {
+            cb(err, result);
+        });
+
+    };
+
+
+    Xtime.remoteMethod('getXtimes', {
+        http: {
+            path: '/getXtimes',
+            verb: 'GET'
+        },
+        accepts: [{
+            arg: 'favouriteId',
+            type: 'string'
+        }],
+        returns: {
+            arg: 'result',
+            type: 'Object'
+        }
+    });
+
     Xtime.remoteMethod('redeemXtime', {
         http: {
             path: '/redeemXtime',

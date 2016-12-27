@@ -97,6 +97,15 @@
             "type": "hasMany",
             "model": "Store"
         },
+        "products": {
+            "type": "hasMany",
+            "model": "VendorProduct",
+            "options": {
+                "validate": true,
+                "forceId": true,
+                "presistent": true
+            }
+        },
         "address": {
             "type": "embedsOne",
             "model": "Address",
