@@ -52,7 +52,7 @@ module.exports = function(Manifest) {
         var args = arguments;
         if (!self.cClient) {
             debug("no cache client".red);
-            Manifest.findById.apply(null, args);
+            Manifest.findById.apply(Manifest, args);
         } else {
             var key = ['manifest', id].join("-");
 
@@ -78,8 +78,8 @@ module.exports = function(Manifest) {
                         expiresIn: vals[6]
                     });
                 } else {
-                    debug('findByIdDisc'.blue);
-                    Manifest.findById.apply(null, args);
+                    debug('findByIdDisc'.red);
+                    Manifest.findById.apply(Manifest, args);
                 }
             });
         }
