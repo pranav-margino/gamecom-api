@@ -8,7 +8,9 @@
     "port": 27017,
     "database": "loopback",
     "name": "mongoDs",
-    "connector": "mongodb"
+    "connector": "mongodb",
+    "username": "admin",
+    "password": "899865ca65b81b4d9c9485917ae0e560fc449104"
   },
   "storage": {
       "name": "storage",
