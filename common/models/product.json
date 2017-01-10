@@ -29,7 +29,7 @@
             "type": "String"
         },
         "category": {
-            "type": "String",
+            "type": "String"
         },
         "subCateogry": {
             "type": "String"
