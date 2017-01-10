@@ -27,6 +27,12 @@
         },
         "source": {
             "type": "String"
+        },
+        "category": {
+            "type": "String",
+        },
+        "subCateogry": {
+            "type": "String"
         }
     },
     "validations": [],

@@ -30,7 +30,7 @@ module.exports = function(Xtime) {
     }
 
     Xtime.getValue = function() {
-        var values = [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 50, 50, 50, 50, 50, 100, 100, 100, 300];
+        var values = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 10, 10, 10, 30];
         return values[parseInt(Math.random() * values.length)];
     }
 

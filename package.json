@@ -18,6 +18,7 @@
     "debug": "^2.3.3",
     "helmet": "^0.14.0",
     "kafka-node": "^0.3.2",
+    "lda": "^0.1.9",
     "lodash": "^4.7.0",
     "loopback": "^2.22.0",
     "loopback-boot": "^2.6.5",
